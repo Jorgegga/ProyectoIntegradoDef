@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/btnInicio"
+            android:enabled="true"
+            android:icon="@drawable/keystoneback"
+            android:title="@string/tvInicio"
+            android:checked="true"/>
+
+        <item
+            android:id="@+id/group1"
+            android:title="@string/tvMusica">
+            <menu >
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/btnCanciones"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvListaMusica" />
+                    <item
+                        android:id="@+id/btnSubir"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvSubirMusica" />
+                    <item
+                        android:id="@+id/btnSubirLocal"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvSubirMusicaLocal" />
+                </group>
+            </menu>
+
+        </item>
+
+
+        <item
+            android:id="@+id/group3"
+            android:title="@string/tvUsuario">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/btnPerfil"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvCambiarFoto" />
+                    <item
+                        android:id="@+id/btnSesion"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvCerrarSesión" />
+                </group>
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/group2"
+            android:title="@string/tvOtros">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/btnMaps"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvMaps" />
+                    <item
+                        android:id="@+id/btnWeb"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/tvWeb" />
+                </group>
+            </menu>
+        </item>
+    </group>
+</menu>

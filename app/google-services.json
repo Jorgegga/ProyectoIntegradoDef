@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "575086626083",
+    "firebase_url": "https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "proyectointegradodam-eef79",
+    "storage_bucket": "proyectointegradodam-eef79.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575086626083:android:ea8d1be5a7cce53c163896",
+        "android_client_info": {
+          "package_name": "com.example.proyectointegradodef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575086626083-8fa3o0v47cu7c1du6nnj8mdh4lqn4nk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1U8C0Zfj76JUo5i69eO5-eo-u2uh3bH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575086626083-8fa3o0v47cu7c1du6nnj8mdh4lqn4nk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">ProyectoIntegrado</string>
+    <string name="openNavDrawer">Navigation Drawer Open</string>
+    <string name="closeNavDrawer">Navigation Drawer Close</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name= "tvInicio">Start page</string>
+    <string name= "tvMusica">Music</string>
+    <string name= "tvListaMusica">Music list</string>
+    <string name="tvSubirMusica">Upload music</string>
+    <string name="tvSubirMusicaLocal">Upload local music</string>
+    <string name="tvUsuario">User</string>
+    <string name="tvCambiarFoto">Change profile picture</string>
+    <string name="tvCerrarSesión">Log out</string>
+    <string name="tvOtros">Others</string>
+    <string name="tvMaps">Find us</string>
+    <string name="tvWeb">Our website</string>
+    <string name="tvPortadaDescripcion">This is a database where you can upload your favorite tracks.
+        You can upload them to our server or you can add them from your storage!
+        You can start opening the menu on the top left of the screen</string>
+    <string name="tvCrearBase">Add to the database</string>
+    <string name="tvNombre">Title:</string>
+    <string name="tvAutor">Author:</string>
+    <string name="tvReset">Reset</string>
+    <string name="tvCrear">Add</string>
+    <string name="tvCrearLocal">Add locally</string>
+    <string name="tvCambio">Change</string>
+    <string name="rechazarPermisos">You have refused the permissions</string>
+    <string name="noHasProporcionadoPermisos">You have not given the required permissions</string>
+    <string name="noSeHaPodidoSubirElArchivo">The file couldnt be uploaded</string>
+    <string name="fotoActualizada">The profile picture has been updated correctly</string>
+    <string name="campoVacio">You have empty fields</string>
+    <string name="audioSubido">The audio has been uploaded</string>
+    <string name="tiendaMusica">Localization of the music store</string>
+    <string name="darPermisos">You must give the required permissions</string>
+
+</resources>

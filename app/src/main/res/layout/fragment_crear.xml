@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".databases.CrearFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#192229">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="308dp"
+            android:text="@string/tvNombre"
+            android:textColor="#C8CDD0"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/insertarNombre"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/insertarNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textColor="#C8CDD0"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="83dp"
+            android:text="@string/tvAutor"
+            android:textColor="#C8CDD0"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/insertarAutor"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <EditText
+            android:id="@+id/insertarAutor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textColor="#C8CDD0"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="97dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/tvReset"
+            android:textColor="#C8CDD0"
+            app:layout_constraintEnd_toStartOf="@+id/btnCrear"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/insertarAutor" />
+
+        <Button
+            android:id="@+id/btnCrear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:text="@string/tvCrear"
+            android:textColor="#C8CDD0"
+            app:layout_constraintBottom_toBottomOf="@+id/btnReset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnReset"
+            app:layout_constraintTop_toTopOf="@+id/btnReset" />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/ivCrearNormal"
+            android:layout_width="145dp"
+            android:layout_height="135dp"
+            android:layout_marginTop="44dp"
+            android:src="@drawable/imagen2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/tvCrearBase"
+            android:textColor="#C8CDD0"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivCrearNormal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

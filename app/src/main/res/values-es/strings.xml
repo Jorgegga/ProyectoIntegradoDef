@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">PracticaFinal2Trimestre_JorgeGonzaloGalindoAlmena</string>
+    <string name="openNavDrawer">Navigation Drawer abierto</string>
+    <string name="closeNavDrawer">Navigation Drawer cerrado</string>
+    <string name="hello_blank_fragment">Fragment vacio</string>
+    <string name= "tvInicio">Inicio</string>
+    <string name= "tvMusica">Música</string>
+    <string name= "tvListaMusica">Lista de música</string>
+    <string name="tvSubirMusica">Subir música</string>
+    <string name="tvSubirMusicaLocal">Subir música local</string>
+    <string name="tvUsuario">Usuario</string>
+    <string name="tvCambiarFoto">Cambiar foto de perfil</string>
+    <string name="tvCerrarSesión">Cerrar sesión</string>
+    <string name="tvOtros">Otros</string>
+    <string name="tvMaps">Nuestra dirección</string>
+    <string name="tvWeb">Nuestra página web</string>
+    <string name="tvPortadaDescripcion">Esta es una base de datos donde puedes subir tu música favorita.
+        ¡Puedes subirlas a nuestro servidor o añadirlas desde tu almacenamiento!
+        Para empezar abre el menu que hay arriba a la izquierda.</string>
+    <string name="tvCrearBase">Añadir a la base de datos</string>
+    <string name="tvNombre">Titulo:</string>
+    <string name="tvAutor">Autor:</string>
+    <string name="tvReset">Reset</string>
+    <string name="tvCrear">Añadir</string>
+    <string name="tvCrearLocal">Añadir de forma local</string>
+    <string name="tvCambio">Cambiar</string>
+    <string name="rechazarPermisos">Has rechazado los permisos</string>
+    <string name="noHasProporcionadoPermisos">No has dado los permisos requiridos</string>
+    <string name="noSeHaPodidoSubirElArchivo">El archivo no se pudo subir</string>
+    <string name="fotoActualizada">La foto de perfil se ha subido correctamente</string>
+    <string name="campoVacio">Tienes campos vacios</string>
+    <string name="audioSubido">Se ha subido el audio</string>
+    <string name="tiendaMusica">Localización de la tienda de música</string>
+    <string name="darPermisos">Debes dar los permisos requiridos</string>
+
+</resources>
