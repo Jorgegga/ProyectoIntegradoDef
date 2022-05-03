@@ -3,9 +3,9 @@
     <string name="openNavDrawer">Navigation Drawer Open</string>
     <string name="closeNavDrawer">Navigation Drawer Close</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name= "tvInicio">Start page</string>
-    <string name= "tvMusica">Music</string>
-    <string name= "tvListaMusica">Music list</string>
+    <string name="tvInicio">Start page</string>
+    <string name="tvMusica">Music</string>
+    <string name="tvListaMusica">Music list</string>
     <string name="tvSubirMusica">Upload music</string>
     <string name="tvSubirMusicaLocal">Upload local music</string>
     <string name="tvUsuario">User</string>

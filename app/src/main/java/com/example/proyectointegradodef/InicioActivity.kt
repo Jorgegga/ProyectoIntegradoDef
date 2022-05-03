@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
@@ -22,6 +23,7 @@ import com.example.proyectointegradodef.databases.CrearFragment
 import com.example.proyectointegradodef.databases.ReadFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
+import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.preferences.Prefs
 import com.example.proyectointegradodef.room.CrearRoomFragment
 import com.example.proyectointegradodef.webview.WebFragment
@@ -155,9 +157,9 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
 
             R.id.btnCanciones ->{
-                transaction.replace(R.id.fragmentContainerView, fragmentRead).commit()
-                transaction.addToBackStack(null)
-                item.isChecked = true
+                val i = Intent(this, MusicaActivity::class.java)
+                startActivity(i)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 binding.drawerLayout.close()
                 return true
             }
