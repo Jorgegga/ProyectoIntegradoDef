@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun irMenu(){
         val i = Intent(this, InicioActivity::class.java)
         startActivity(i)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     private fun guardarCorreo(correo: String?){
