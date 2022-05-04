@@ -31,4 +31,14 @@
         <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
+    <style name="AppTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+
+        <item name="tabTextAppearance">@color/teal_200</item>
+        <item name="tabSelectedTextColor">#C8CDD0</item>
+    </style>
+    <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">#C8CDD0</item>
+        <item name="textAllCaps">false</item>
+    </style>
 </resources>

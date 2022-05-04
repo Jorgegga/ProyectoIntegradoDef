@@ -18,6 +18,7 @@
                     <item
                         android:id="@+id/btnCanciones"
                         android:enabled="true"
+                        android:checkable="false"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvListaMusica" />
                     <item
@@ -60,11 +61,6 @@
             android:title="@string/tvOtros">
             <menu>
                 <group android:checkableBehavior="single">
-                    <item
-                        android:id="@+id/btnMaps"
-                        android:enabled="true"
-                        android:icon="@drawable/keystoneback"
-                        android:title="@string/tvMaps" />
                     <item
                         android:id="@+id/btnWeb"
                         android:enabled="true"

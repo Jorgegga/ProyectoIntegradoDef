@@ -34,4 +34,10 @@ class MusicaActivity : AppCompatActivity() {
 
         }.attach()
     }
+    
+    override fun onSupportNavigateUp() : Boolean{
+        finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        return true
+    }
 }
