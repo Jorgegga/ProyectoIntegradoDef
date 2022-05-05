@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/ivRecyclerAlbum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="15dp"
             app:layout_constraintEnd_toEndOf="@+id/tvRecyclerAlbum"
             app:layout_constraintStart_toStartOf="@+id/tvRecyclerAlbum"
@@ -28,6 +28,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="1dp"
             android:text="TextView"
+            android:textAlignment="center"
             android:textColor="#EFF3F5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
