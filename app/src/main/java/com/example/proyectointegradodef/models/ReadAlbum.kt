@@ -2,10 +2,12 @@ package com.example.proyectointegradodef.models
 
 class ReadAlbum {
     constructor()
-    constructor(idaut: Int, nom: String){
+    constructor(idaut: Int, titu: String, por: String){
         idautor = idaut
-        nombre = nom
+        titulo = titu
+        portada = por
     }
     var idautor = 0
-    var nombre = ""
+    var titulo = ""
+    var portada = ""
 }
