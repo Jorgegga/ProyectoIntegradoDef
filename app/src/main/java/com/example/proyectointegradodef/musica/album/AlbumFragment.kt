@@ -1,4 +1,4 @@
-package com.example.proyectointegradodef.musica.autor
+package com.example.proyectointegradodef.musica.album
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.FragmentAutorBinding
+import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 
-class AutorFragment : Fragment() {
-    lateinit var binding: FragmentAutorBinding
+class AlbumFragment : Fragment() {
+    lateinit var binding: FragmentAlbumBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +20,7 @@ class AutorFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentAutorBinding.inflate(inflater, container, false)
+        binding = FragmentAlbumBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -30,8 +30,8 @@ class AutorFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() : AutorFragment{
-            return AutorFragment()
+        fun newInstance() : AlbumFragment{
+            return AlbumFragment()
         }
     }
 }
