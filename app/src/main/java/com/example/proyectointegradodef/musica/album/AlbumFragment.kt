@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.google.firebase.database.*
@@ -61,8 +62,6 @@ class AlbumFragment : Fragment() {
     }
 
     private fun setRecycler(lista: ArrayList<ReadAlbum>){
-        val linearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = AlbumAdapter(lista)
         binding.recyclerview.scrollToPosition(lista.size-1)
 
