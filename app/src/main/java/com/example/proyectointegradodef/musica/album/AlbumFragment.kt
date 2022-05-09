@@ -66,15 +66,18 @@ class AlbumFragment : Fragment() {
     }
 
     private fun recogerDatosAutor(){
+        autor.clear()
         reference2.get()
         reference2.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                autor.clear()
                 for(messageSnapshot in snapshot.children){
                     val tema = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
                     if(tema != null){
                         autor.add(tema)
                     }
                 }
+                rellenarDatos()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -90,20 +93,20 @@ class AlbumFragment : Fragment() {
             var aut : ReadAutorId? = autor.find{it.id == x.idautor}
             var temp : ReadAlbumAutor
             if(aut != null) {
-                temp = ReadAlbumAutor(aut!!.nombre, x.titulo, x.portada)
+                temp = ReadAlbumAutor(aut.nombre, x.titulo, x.portada)
             }else{
                 temp = ReadAlbumAutor("default", x.titulo, x.portada)
             }
             if (temp != null){
                 albumAdapter.add(temp)
             }
-            setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
         }
+        setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
     }
 
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
         binding.recyclerview.adapter = AlbumAdapter(lista)
-        binding.recyclerview.scrollToPosition(lista.size-1)
+        binding.recyclerview.scrollToPosition(0)
 
     }
 
