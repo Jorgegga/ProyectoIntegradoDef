@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
+import com.example.proyectointegradodef.models.ReadAlbumAutor
+import com.example.proyectointegradodef.models.ReadAutorId
 import com.google.firebase.database.*
 
 
@@ -17,7 +16,10 @@ class AlbumFragment : Fragment() {
     lateinit var binding: FragmentAlbumBinding
     lateinit var db: FirebaseDatabase
     lateinit var reference: DatabaseReference
+    lateinit var reference2: DatabaseReference
     var album: MutableList<ReadAlbum> = ArrayList()
+    var autor: MutableList<ReadAutorId> = ArrayList()
+    var albumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +36,13 @@ class AlbumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initDb()
-        rellenarDatos()
+        recogerDatosAutor()
+        recogerDatosAlbum()
+
     }
 
-    private fun rellenarDatos(){
+    private fun recogerDatosAlbum(){
         album.clear()
         reference.get()
         reference.addValueEventListener(object: ValueEventListener {
@@ -51,7 +54,8 @@ class AlbumFragment : Fragment() {
                         album.add(tema)
                     }
                 }
-                setRecycler(album as ArrayList<ReadAlbum>)
+                rellenarDatos()
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -61,7 +65,43 @@ class AlbumFragment : Fragment() {
         })
     }
 
-    private fun setRecycler(lista: ArrayList<ReadAlbum>){
+    private fun recogerDatosAutor(){
+        reference2.get()
+        reference2.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children){
+                    val tema = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
+                    if(tema != null){
+                        autor.add(tema)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    private fun rellenarDatos(){
+        albumAdapter.clear()
+        for(x in album){
+            var aut : ReadAutorId? = autor.find{it.id == x.idautor}
+            var temp : ReadAlbumAutor
+            if(aut != null) {
+                temp = ReadAlbumAutor(aut!!.nombre, x.titulo, x.portada)
+            }else{
+                temp = ReadAlbumAutor("default", x.titulo, x.portada)
+            }
+            if (temp != null){
+                albumAdapter.add(temp)
+            }
+            setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
+        }
+    }
+
+    private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
         binding.recyclerview.adapter = AlbumAdapter(lista)
         binding.recyclerview.scrollToPosition(lista.size-1)
 
@@ -70,7 +110,9 @@ class AlbumFragment : Fragment() {
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         reference = db.getReference("albums")
+        reference2 = db.getReference("autors")
     }
+
 
     companion object {
         @JvmStatic

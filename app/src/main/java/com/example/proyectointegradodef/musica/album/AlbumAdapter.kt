@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadAlbum
+import com.example.proyectointegradodef.models.ReadAlbumAutor
 
-class AlbumAdapter(private val lista: ArrayList<ReadAlbum>): RecyclerView.Adapter<AlbumViewHolder>() {
+class AlbumAdapter(private val lista: ArrayList<ReadAlbumAutor>): RecyclerView.Adapter<AlbumViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.album_layout, parent, false)
