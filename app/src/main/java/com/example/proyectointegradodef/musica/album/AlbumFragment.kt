@@ -101,6 +101,7 @@ class AlbumFragment : Fragment() {
                 albumAdapter.add(temp)
             }
         }
+        binding.loadingPanel.visibility = View.GONE
         setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
     }
 

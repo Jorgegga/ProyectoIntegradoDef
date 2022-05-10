@@ -178,6 +178,7 @@ class ReadFragment : Fragment() {
                         intro.add(music)
                     }
                 }
+                binding.loadingPanel.visibility = View.GONE
                 setRecycler(intro as ArrayList<ReadMusica>)
             }
 

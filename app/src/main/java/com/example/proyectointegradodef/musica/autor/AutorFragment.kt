@@ -52,7 +52,7 @@ class AutorFragment : Fragment() {
                         autor.add(tema)
                     }
                 }
-                Log.d("aaaaaaaaaaaaaaaa", autor.toString())
+                binding.loadingPanel.visibility = View.GONE
                 setRecycler(autor as ArrayList<ReadAutor>)
             }
 
