@@ -11,10 +11,10 @@ class MusicaViewHolder(v: View ): RecyclerView.ViewHolder(v){
 
     fun render(musica : ReadMusica){
         binding.tvTitulo.text = musica.nombre
-        binding.tvAlbum.text = musica.autor
+        binding.tvAlbum.text = musica.album_id.toString()
         binding.btnPlay.setOnClickListener {
             AppUse.nombre = musica.nombre
-            AppUse.autor = musica.autor
+            AppUse.autor = musica.autor_id.toString()
             AppUse.cancion = musica.ruta
             AppUse.reproduciendo.value = true
             AppUse.reproduciendo.value = false
