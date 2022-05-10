@@ -19,8 +19,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.camara.CamaraFragment
-import com.example.proyectointegradodef.databases.CrearFragment
-import com.example.proyectointegradodef.databases.ReadFragment
+import com.example.proyectointegradodef.musica.music.CrearFragment
+import com.example.proyectointegradodef.musica.music.ReadFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.musica.MusicaActivity
