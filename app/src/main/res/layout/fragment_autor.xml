@@ -12,6 +12,7 @@
         android:background="#192229">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAutor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
