@@ -2,13 +2,15 @@ package com.example.proyectointegradodef.musica.music
 
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -105,9 +107,17 @@ class ReadFragment : Fragment() {
                             var url = it.toString()
                             mediaPlayer.reset()
                             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                            mediaPlayer.setDataSource(url)
-                            mediaPlayer.prepare()
-                            mediaPlayer.start()
+                            try {
+                                mediaPlayer.setDataSource(url)
+                                mediaPlayer.prepareAsync()
+                            }catch (e: IOException){
+                                Toast.makeText(context, "No se ha encontrado el audio", Toast.LENGTH_SHORT).show()
+                                e.printStackTrace()
+                            }
+                            mediaPlayer.setOnPreparedListener(OnPreparedListener {
+                                mediaPlayer.start()
+                            })
+
                             binding.tvAutorReproductor.text = AppUse.autor
                             binding.tvNombreReproductor.text = AppUse.nombre
                         }
@@ -183,13 +193,13 @@ class ReadFragment : Fragment() {
         var total = ConcatAdapter(MusicaAdapter(lista), MusicaRoomAdapter(allMusic))
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = total
-        binding.recyclerview.scrollToPosition(lista.size-1)
+        binding.recyclerview.scrollToPosition(0)
 
     }
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
-        reference = db.getReference("musica")
+        reference = db.getReference("music")
     }
 
     companion object {
