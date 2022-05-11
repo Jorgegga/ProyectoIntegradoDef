@@ -117,7 +117,6 @@ class AlbumFragment : Fragment() {
         reference2 = db.getReference("autors")
     }
 
-
     companion object {
         @JvmStatic
         fun newInstance() : AlbumFragment{
