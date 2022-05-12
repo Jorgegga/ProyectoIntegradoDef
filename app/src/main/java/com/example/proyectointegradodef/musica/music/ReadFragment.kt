@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.proyectointegradodef.databinding.FragmentReadBinding
-import com.example.proyectointegradodef.models.ReadMusica
+import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
@@ -28,11 +28,16 @@ import java.io.IOException
 class ReadFragment : Fragment() {
     lateinit var binding : FragmentReadBinding
     lateinit var db: FirebaseDatabase
-    lateinit var reference: DatabaseReference
+    lateinit var referenceMusic: DatabaseReference
+    lateinit var referenceAlbum: DatabaseReference
+    lateinit var referenceAutor: DatabaseReference
     lateinit var database : MusicaDatabase
     lateinit var allMusic : List<Musica>
     var storageFire = FirebaseStorage.getInstance()
-    var intro: MutableList<ReadMusica> = ArrayList()
+    var introMusic: MutableList<ReadMusica> = ArrayList()
+    var introAlbum: MutableList<ReadAlbum> = ArrayList()
+    var introAutor: MutableList<ReadAutorId> = ArrayList()
+    var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var reproducir = false
     var mediaPlayer = MediaPlayer()
 
@@ -55,7 +60,9 @@ class ReadFragment : Fragment() {
         initDb()
         allMusic = database.MusicaDao().getAllMusic()
         binding.btnReproducir.isEnabled = false
-        rellenarDatos()
+        rellenarDatosAlbum()
+        rellenarDatosAutor()
+        rellenarDatosMusic()
         reproductor()
         setListener()
 
@@ -76,6 +83,7 @@ class ReadFragment : Fragment() {
                 reproducir()
             }
         })
+
         AppUse.reproduciendoLocal.observe(requireActivity(), Observer {
             if(AppUse.reproduciendoLocal.value == true){
                 binding.btnReproducir.isEnabled = true
@@ -166,20 +174,19 @@ class ReadFragment : Fragment() {
         }
     }
 
-    private fun rellenarDatos(){
-        intro.clear()
-        reference.get()
-        reference.addValueEventListener(object: ValueEventListener{
+    private fun rellenarDatosMusic(){
+        introMusic.clear()
+        referenceMusic.get()
+        referenceMusic.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                intro.clear()
+                introMusic.clear()
                 for(messageSnapshot in snapshot.children){
                     val music = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)
                     if(music != null){
-                        intro.add(music)
+                        introMusic.add(music)
                     }
                 }
-                binding.loadingPanel.visibility = View.GONE
-                setRecycler(intro as ArrayList<ReadMusica>)
+                rellenarDatos()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -189,7 +196,68 @@ class ReadFragment : Fragment() {
         })
     }
 
-    private fun setRecycler(lista: ArrayList<ReadMusica>){
+    private fun rellenarDatosAlbum(){
+        introAlbum.clear()
+        referenceAlbum.get()
+        referenceAlbum.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                introAlbum.clear()
+                for(messageSnapshot in snapshot.children){
+                    val music = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
+                    if(music != null){
+                        introAlbum.add(music)
+                    }
+                }
+                rellenarDatos()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    private fun rellenarDatosAutor(){
+        introAutor.clear()
+        referenceAutor.get()
+        referenceAutor.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                introAutor.clear()
+                for(messageSnapshot in snapshot.children){
+                    val music = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
+                    if(music != null){
+                        introAutor.add(music)
+                    }
+                }
+                rellenarDatos()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    private fun rellenarDatos(){
+        introTotal.clear()
+        for (x in introMusic){
+            var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
+            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
+            var temp : ReadMusicaAlbumAutor
+            if(alb != null && aut != null){
+                temp = ReadMusicaAlbumAutor(x.nombre, alb.titulo, aut.nombre, x.ruta, x.portada)
+            }else{
+                temp = ReadMusicaAlbumAutor("default", alb!!.titulo, "default", x.ruta, x.portada)
+            }
+            introTotal.add(temp)
+        }
+        binding.loadingPanel.visibility = View.GONE
+        setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+    }
+
+    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
         var total = ConcatAdapter(MusicaAdapter(lista), MusicaRoomAdapter(allMusic))
         binding.recyclerview.layoutManager = linearLayoutManager
@@ -200,11 +268,12 @@ class ReadFragment : Fragment() {
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
-        reference = db.getReference("music")
+        referenceMusic = db.getReference("music")
+        referenceAlbum = db.getReference("albums")
+        referenceAutor = db.getReference("autors")
     }
 
     companion object {
-
         @JvmStatic
         fun newInstance(): ReadFragment{
             return ReadFragment()

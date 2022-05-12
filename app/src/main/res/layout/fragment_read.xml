@@ -37,7 +37,6 @@
                 android:id="@+id/btnReproducir"
                 android:layout_width="46dp"
                 android:layout_height="39dp"
-                android:layout_marginStart="27dp"
                 android:src="@android:drawable/ic_media_play"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,12 +50,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="#EFF3F5"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnReproducir"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.522" />
@@ -65,6 +66,7 @@
                 android:id="@+id/tvAutorReproductor"
                 android:layout_width="125dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:ellipsize="end"
@@ -74,6 +76,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnReproducir"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.522" />
         </androidx.constraintlayout.widget.ConstraintLayout>

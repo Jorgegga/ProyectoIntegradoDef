@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadMusica
+import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 
-class MusicaAdapter(private val lista: ArrayList<ReadMusica>): RecyclerView.Adapter<MusicaViewHolder>(){
+class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>): RecyclerView.Adapter<MusicaViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicaViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.musica_layout, parent, false)
