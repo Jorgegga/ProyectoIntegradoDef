@@ -247,11 +247,21 @@ class ReadFragment : Fragment() {
             var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
             var temp : ReadMusicaAlbumAutor
             if(alb != null && aut != null){
-                temp = ReadMusicaAlbumAutor(x.nombre, alb.titulo, aut.nombre, x.ruta, x.portada)
+                temp = ReadMusicaAlbumAutor(x.id, x.nombre, x.album_id, alb.titulo, x.autor_id, aut.nombre, x.ruta, x.portada)
             }else{
-                temp = ReadMusicaAlbumAutor("default", alb!!.titulo, "default", x.ruta, x.portada)
+                temp = ReadMusicaAlbumAutor(x.id, "default", x.album_id, alb!!.titulo, x.autor_id, "default", x.ruta, x.portada)
             }
             introTotal.add(temp)
+        }
+        if(AppUse.id != 0) {
+            var tempMusic = introMusic.find { it.id == AppUse.id }
+            var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
+            if (tempMusic != null) {
+                actualizarReproductorCancion(tempMusic)
+            }
+            if (tempAutor != null) {
+                actualizarReproductorAutor(tempAutor)
+            }
         }
         binding.loadingPanel.visibility = View.GONE
         setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
@@ -263,6 +273,18 @@ class ReadFragment : Fragment() {
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = total
         binding.recyclerview.scrollToPosition(0)
+    }
+
+    private fun actualizarReproductorCancion(x: ReadMusica){
+        if (binding.tvNombreReproductor.text != ""){
+            binding.tvNombreReproductor.text = x.nombre
+        }
+    }
+
+    private fun actualizarReproductorAutor(x: ReadAutorId){
+        if (binding.tvAutorReproductor.text != ""){
+            binding.tvAutorReproductor.text = x.nombre
+        }
 
     }
 

@@ -25,6 +25,8 @@ class MusicaViewHolder(v: View ): RecyclerView.ViewHolder(v){
         GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivMusica)
 
         binding.musicCardView.setOnClickListener {
+            AppUse.id = musica.id
+            AppUse.autor_id = musica.autor_id
             AppUse.nombre = musica.nombre
             AppUse.autor = musica.autor
             AppUse.cancion = musica.ruta
