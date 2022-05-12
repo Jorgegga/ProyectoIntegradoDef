@@ -60,6 +60,7 @@ class ReadFragment : Fragment() {
         initDb()
         allMusic = database.MusicaDao().getAllMusic()
         binding.btnReproducir.isEnabled = false
+        binding.tvNombreReproductor.isSelected = true
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
