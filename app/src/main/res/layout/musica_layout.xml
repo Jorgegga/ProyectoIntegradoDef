@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/ivMusica"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,56 +30,42 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="TextView"
             android:textColor="#EFF3F5"
             android:textSize="16sp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivMusica"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.724" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAlbum" />
 
         <TextView
             android:id="@+id/tvAlbum"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="TextView"
             android:textColor="#6c757d"
             android:textSize="14sp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            app:layout_constraintBottom_toBottomOf="@+id/tvAutor"
             app:layout_constraintStart_toEndOf="@+id/ivMusica"
-            app:layout_constraintTop_toTopOf="@+id/tvAutor"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAutor" />
 
         <TextView
             android:id="@+id/tvAutor"
-            android:layout_width="75dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="100dp"
-            android:text="TextView"
-            android:textColor="#6c757d"
-            android:textSize="14sp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="TextView"
+            android:textColor="#6c757d"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/ivMusica"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvDuracion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Textview"
-            android:textColor="#EFF3F5"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
