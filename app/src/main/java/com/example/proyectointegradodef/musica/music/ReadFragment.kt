@@ -15,17 +15,25 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentReadBinding
 import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
 import com.example.proyectointegradodef.room.MusicaRoomAdapter
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 
-class ReadFragment : Fragment() {
+class ReadFragment : Fragment(), Player.Listener {
     lateinit var binding : FragmentReadBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
@@ -33,6 +41,15 @@ class ReadFragment : Fragment() {
     lateinit var referenceAutor: DatabaseReference
     lateinit var database : MusicaDatabase
     lateinit var allMusic : List<Musica>
+    lateinit var player: ExoPlayer
+    lateinit var dataSourceFactory: DefaultDataSourceFactory
+    lateinit var extractorsFactory: DefaultExtractorsFactory
+
+    lateinit var renderersFactory: DefaultRenderersFactory
+    lateinit var trackSelectionFactory: AdaptiveTrackSelection.Factory
+    lateinit var trackSelectSelector: DefaultTrackSelector
+    lateinit var loadControl : DefaultLoadControl
+
     var storageFire = FirebaseStorage.getInstance()
     var introMusic: MutableList<ReadMusica> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
@@ -40,6 +57,8 @@ class ReadFragment : Fragment() {
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var reproducir = false
     var mediaPlayer = MediaPlayer()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +81,17 @@ class ReadFragment : Fragment() {
         binding.btnReproducir.isEnabled = false
         binding.tvNombreReproductor.isSelected = true
         binding.tvAutorReproductor.isSelected = true
+
+        renderersFactory = DefaultRenderersFactory(requireContext())
+        trackSelectionFactory = AdaptiveTrackSelection.Factory()
+        trackSelectSelector = DefaultTrackSelector(requireContext(), trackSelectionFactory)
+        loadControl = DefaultLoadControl()
+        player = ExoPlayer.Builder(requireContext()).build()
+        player.addListener(this)
+        dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
+        extractorsFactory = DefaultExtractorsFactory()
+
+
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
@@ -72,15 +102,13 @@ class ReadFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        mediaPlayer.reset()
+        player.playWhenReady = false
     }
 
     fun reproductor(){
         AppUse.reproduciendo.observe(requireActivity(), Observer {
             if(AppUse.reproduciendo.value == true) {
                 binding.btnReproducir.isEnabled = true
-                mediaPlayer.stop()
-                mediaPlayer.reset()
                 reproducir = false
                 reproducir()
             }
@@ -89,8 +117,6 @@ class ReadFragment : Fragment() {
         AppUse.reproduciendoLocal.observe(requireActivity(), Observer {
             if(AppUse.reproduciendoLocal.value == true){
                 binding.btnReproducir.isEnabled = true
-                mediaPlayer.stop()
-                mediaPlayer.reset()
                 reproducir = false
                 reproducirRoom()
             }
@@ -108,30 +134,20 @@ class ReadFragment : Fragment() {
             reproducir = true
             binding.btnReproducir.setImageResource(android.R.drawable.ic_media_pause)
             try {
-                if(mediaPlayer.currentPosition > 1) {
-                        mediaPlayer.start()
-                    }else{
-                        var audioUrl = AppUse.cancion
-                        var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
-                        storageRef.downloadUrl.addOnSuccessListener() {
-                            var url = it.toString()
-                            mediaPlayer.reset()
-                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                            try {
-                                mediaPlayer.setDataSource(url)
-                                mediaPlayer.prepareAsync()
-                            }catch (e: IOException){
-                                Toast.makeText(context, "No se ha encontrado el audio", Toast.LENGTH_SHORT).show()
-                                e.printStackTrace()
-                            }
-                            mediaPlayer.setOnPreparedListener(OnPreparedListener {
-                                mediaPlayer.start()
-                            })
 
-                            binding.tvAutorReproductor.text = AppUse.autor
-                            binding.tvNombreReproductor.text = AppUse.nombre
-                        }
-                    }
+                var audioUrl = AppUse.cancion
+                var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
+                storageRef.downloadUrl.addOnSuccessListener() {
+                    var url = it.toString()
+                    var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
+                        .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
+                    player.setMediaSource(mediaSource)
+                    player.playWhenReady
+                    binding.videoView.player = player
+                    binding.tvAutorReproductor.text = AppUse.autor
+                    binding.tvNombreReproductor.text = AppUse.nombre
+                }
+
 
             } catch (e: IOException) {
                 e.printStackTrace()
