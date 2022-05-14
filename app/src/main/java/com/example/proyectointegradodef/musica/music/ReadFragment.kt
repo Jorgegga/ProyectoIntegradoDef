@@ -153,8 +153,10 @@ class ReadFragment : Fragment(), Player.Listener {
                         .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
                     player.setMediaSource(mediaSource)
                     player.prepare()
+
                     player.playWhenReady = true
                     binding.videoView.player = player
+                    binding.videoView.useArtwork = false
                     binding.tvAutorReproductor.text = AppUse.autor
                     binding.tvNombreReproductor.text = AppUse.nombre
                 }
