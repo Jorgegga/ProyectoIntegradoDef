@@ -23,6 +23,7 @@ import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
 import com.example.proyectointegradodef.room.MusicaRoomAdapter
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.Player.STATE_READY
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
@@ -105,6 +106,16 @@ class ReadFragment : Fragment(), Player.Listener {
         player.playWhenReady = false
     }
 
+    override fun onResume() {
+        super.onResume()
+        player.playWhenReady = true
+    }
+
+    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        super.onPlayerStateChanged(playWhenReady, playbackState)
+
+    }
+
     fun reproductor(){
         AppUse.reproduciendo.observe(requireActivity(), Observer {
             if(AppUse.reproduciendo.value == true) {
@@ -134,7 +145,6 @@ class ReadFragment : Fragment(), Player.Listener {
             reproducir = true
             binding.btnReproducir.setImageResource(android.R.drawable.ic_media_pause)
             try {
-
                 var audioUrl = AppUse.cancion
                 var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
                 storageRef.downloadUrl.addOnSuccessListener() {
@@ -142,7 +152,8 @@ class ReadFragment : Fragment(), Player.Listener {
                     var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
                         .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
                     player.setMediaSource(mediaSource)
-                    player.playWhenReady
+                    player.prepare()
+                    player.playWhenReady = true
                     binding.videoView.player = player
                     binding.tvAutorReproductor.text = AppUse.autor
                     binding.tvNombreReproductor.text = AppUse.nombre
