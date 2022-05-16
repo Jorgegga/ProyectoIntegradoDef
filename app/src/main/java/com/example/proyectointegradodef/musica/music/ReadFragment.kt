@@ -103,12 +103,23 @@ class ReadFragment : Fragment(), Player.Listener {
 
     override fun onPause() {
         super.onPause()
-        player.playWhenReady = false
+        if(reproducir){
+            player.playWhenReady = false
+            reproducir = true
+        }
+
     }
 
     override fun onResume() {
         super.onResume()
-        player.playWhenReady = true
+        if(reproducir) {
+            player.playWhenReady = true
+        }
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        super.onIsPlayingChanged(isPlaying)
+        reproducir = isPlaying
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -119,16 +130,12 @@ class ReadFragment : Fragment(), Player.Listener {
     fun reproductor(){
         AppUse.reproduciendo.observe(requireActivity(), Observer {
             if(AppUse.reproduciendo.value == true) {
-                binding.btnReproducir.isEnabled = true
-                reproducir = false
                 reproducir()
             }
         })
 
         AppUse.reproduciendoLocal.observe(requireActivity(), Observer {
             if(AppUse.reproduciendoLocal.value == true){
-                binding.btnReproducir.isEnabled = true
-                reproducir = false
                 reproducirRoom()
             }
         })
@@ -141,7 +148,6 @@ class ReadFragment : Fragment(), Player.Listener {
     }
 
     fun reproducir(){
-        if (!reproducir) {
             reproducir = true
             binding.btnReproducir.setImageResource(android.R.drawable.ic_media_pause)
             try {
@@ -153,7 +159,6 @@ class ReadFragment : Fragment(), Player.Listener {
                         .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
                     player.setMediaSource(mediaSource)
                     player.prepare()
-
                     player.playWhenReady = true
                     binding.videoView.player = player
                     binding.videoView.useArtwork = false
@@ -161,17 +166,10 @@ class ReadFragment : Fragment(), Player.Listener {
                     binding.tvNombreReproductor.text = AppUse.nombre
                 }
 
-
             } catch (e: IOException) {
                 e.printStackTrace()
             }
             Log.d("Escuchando audio...", "Escuchando audio...")
-        } else {
-            mediaPlayer.pause()
-            binding.btnReproducir.setImageResource(android.R.drawable.ic_media_play)
-            reproducir = false
-
-        }
     }
 
     fun reproducirRoom(){
