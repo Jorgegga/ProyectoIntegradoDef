@@ -57,7 +57,6 @@ class ReadFragment : Fragment(), Player.Listener {
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var reproducir = false
-    var mediaPlayer = MediaPlayer()
 
 
 
@@ -91,7 +90,6 @@ class ReadFragment : Fragment(), Player.Listener {
         player.addListener(this)
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         extractorsFactory = DefaultExtractorsFactory()
-
 
         rellenarDatosAlbum()
         rellenarDatosAutor()
