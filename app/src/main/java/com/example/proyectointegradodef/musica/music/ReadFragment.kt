@@ -148,8 +148,6 @@ class ReadFragment : Fragment(), Player.Listener {
     }
 
     fun reproducir(){
-            reproducir = true
-            binding.btnReproducir.setImageResource(android.R.drawable.ic_media_pause)
             try {
                 var audioUrl = AppUse.cancion
                 var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
@@ -173,34 +171,24 @@ class ReadFragment : Fragment(), Player.Listener {
     }
 
     fun reproducirRoom(){
-        if (!reproducir) {
-            reproducir = true
-            binding.btnReproducir.setImageResource(android.R.drawable.ic_media_pause)
             try {
-                if(mediaPlayer.currentPosition > 1) {
-                    mediaPlayer.start()
-                }else{
-                    var uri = Uri.parse(AppUse.cancion)
-                        mediaPlayer.reset()
-                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                        mediaPlayer.setDataSource(requireContext(), uri)
-                        mediaPlayer.prepare()
-                        mediaPlayer.start()
-                        binding.tvAutorReproductor.text = AppUse.autor
-                        binding.tvNombreReproductor.text = AppUse.nombre
-
-                }
-
+                var uri = Uri.parse(AppUse.cancion)
+                var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
+                    .createMediaSource(MediaItem.fromUri(uri))
+                player.setMediaSource(mediaSource)
+                player.prepare()
+                player.playWhenReady = true
+                binding.videoView.player = player
+                binding.videoView.useArtwork = false
+                binding.tvAutorReproductor.text = AppUse.autor
+                binding.tvNombreReproductor.text = AppUse.nombre
+                binding.tvAutorReproductor.text = AppUse.autor
+                binding.tvNombreReproductor.text = AppUse.nombre
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            Log.d("Escuchando audio...", "Escuchando audio...")
-        } else {
-            mediaPlayer.pause()
-            binding.btnReproducir.setImageResource(android.R.drawable.ic_media_play)
-            reproducir = false
+        Log.d("Escuchando audio...", "Escuchando audio...")
 
-        }
     }
 
     private fun rellenarDatosMusic(){

@@ -1,56 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/musicCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:backgroundTint="#212E36">
+    android:backgroundTint="#212E36"
+    android:clickable="true"
+    app:strokeColor="@null">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/btnPlayRoom"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="56dp"
+            android:id="@+id/ivMusica"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tvTituloRoom"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvTitulo"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="TextView"
             android:textColor="#EFF3F5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/ivMusica"
+            app:layout_constraintTop_toBottomOf="@+id/tvAlbum" />
 
         <TextView
-            android:id="@+id/tvAutorRoom"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvAlbum"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="TextView"
-            android:textColor="#EFF3F5"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="#6c757d"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/ivMusica"
+            app:layout_constraintTop_toBottomOf="@+id/tvAutor" />
+
+        <TextView
+            android:id="@+id/tvAutor"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="TextView"
+            android:textColor="#6c757d"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/ivMusica"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAutorRoom"
+            app:layout_constraintStart_toEndOf="@+id/tvTitulo"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/keystoneback" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

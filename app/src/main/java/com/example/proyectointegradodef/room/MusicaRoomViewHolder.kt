@@ -10,9 +10,9 @@ class MusicaRoomViewHolder(v: View): RecyclerView.ViewHolder(v) {
     private val binding = MusicaroomLayoutBinding.bind(v)
 
     fun render(musica : Musica){
-        binding.tvTituloRoom.text = musica.nombre
-        binding.tvAutorRoom.text = musica.autor
-        binding.btnPlayRoom.setOnClickListener {
+        binding.tvTitulo.text = musica.nombre
+        binding.tvAutor.text = musica.autor
+        binding.musicCardView.setOnClickListener {
             AppUse.nombre = musica.nombre
             AppUse.autor = musica.autor
             AppUse.cancion = musica.musica
