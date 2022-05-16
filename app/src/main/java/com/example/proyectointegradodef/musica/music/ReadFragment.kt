@@ -288,11 +288,6 @@ class ReadFragment : Fragment(), Player.Listener {
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = total
         binding.recyclerview.scrollToPosition(0)
-        MusicaAdapter(lista).setOnItemClickListener(object: MusicaAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                
-            }
-        })
     }
 
     private fun actualizarReproductorCancion(x: ReadMusica){
