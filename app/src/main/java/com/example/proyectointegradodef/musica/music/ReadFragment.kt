@@ -58,6 +58,11 @@ class ReadFragment : Fragment(), Player.Listener {
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var reproducir = false
 
+    var nombre = ""
+    var autor = ""
+    var cancion = ""
+    var idSong = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +99,6 @@ class ReadFragment : Fragment(), Player.Listener {
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
-        reproductor()
         setListener()
 
     }
@@ -147,7 +151,7 @@ class ReadFragment : Fragment(), Player.Listener {
 
     fun reproducir(){
             try {
-                var audioUrl = AppUse.cancion
+                var audioUrl = cancion
                 var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
                 storageRef.downloadUrl.addOnSuccessListener() {
                     var url = it.toString()
@@ -158,8 +162,8 @@ class ReadFragment : Fragment(), Player.Listener {
                     player.playWhenReady = true
                     binding.videoView.player = player
                     binding.videoView.useArtwork = false
-                    binding.tvAutorReproductor.text = AppUse.autor
-                    binding.tvNombreReproductor.text = AppUse.nombre
+                    binding.tvAutorReproductor.text = autor
+                    binding.tvNombreReproductor.text = nombre
                 }
 
             } catch (e: IOException) {
@@ -178,10 +182,10 @@ class ReadFragment : Fragment(), Player.Listener {
                 player.playWhenReady = true
                 binding.videoView.player = player
                 binding.videoView.useArtwork = false
-                binding.tvAutorReproductor.text = AppUse.autor
-                binding.tvNombreReproductor.text = AppUse.nombre
-                binding.tvAutorReproductor.text = AppUse.autor
-                binding.tvNombreReproductor.text = AppUse.nombre
+                binding.tvAutorReproductor.text = autor
+                binding.tvNombreReproductor.text = nombre
+                binding.tvAutorReproductor.text = autor
+                binding.tvNombreReproductor.text = nombre
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -284,15 +288,18 @@ class ReadFragment : Fragment(), Player.Listener {
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
-        var total = ConcatAdapter(MusicaAdapter(lista), MusicaRoomAdapter(allMusic))
+        var musica = MusicaAdapter(lista) {
+            nombre = it.nombre
+            autor = it.autor
+            cancion = it.ruta
+            idSong = it.id
+            reproducir()
+        }
+        var total = ConcatAdapter(musica, MusicaRoomAdapter(allMusic))
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = total
         binding.recyclerview.scrollToPosition(0)
-        MusicaAdapter(lista).setOnItemClickListener(object: MusicaAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                
-            }
-        })
+
     }
 
     private fun actualizarReproductorCancion(x: ReadMusica){

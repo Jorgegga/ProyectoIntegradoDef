@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef.musica.music
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,40 +15,42 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>): RecyclerView.Adapter<MusicaAdapter.MusicaViewHolder>(){
+class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>, private val clickListener: (ReadMusicaAlbumAutor) -> Unit): RecyclerView.Adapter<MusicaAdapter.MusicaViewHolder>(){
 
-    private lateinit var mListener: onItemClickListener
+
 
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener){
-        mListener = listener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicaViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val v = inflater.inflate(R.layout.musica_layout, parent, false)
-        return MusicaViewHolder(v, mListener)
+        val inflater = MusicaViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.musica_layout, parent, false)){
+            clickListener(lista[it])
+        }
+
+        return inflater
     }
 
     override fun onBindViewHolder(holder: MusicaViewHolder, position: Int) {
         val musica = lista[position]
         holder.render(musica)
+        holder.itemView.setOnClickListener {
+            clickListener(lista[position])
+        }
+
     }
 
     override fun getItemCount(): Int {
         return lista.size
     }
 
-    class MusicaViewHolder(v: View, listener: onItemClickListener): RecyclerView.ViewHolder(v){
-        private val binding = MusicaLayoutBinding.bind(v)
+    class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v){
+        val binding = MusicaLayoutBinding.bind(v)
         var storageFire = FirebaseStorage.getInstance()
 
         init{
             itemView.setOnClickListener {
-                listener.onItemClick(adapterPosition)
+                clickAtPosition(absoluteAdapterPosition)
             }
         }
 
@@ -58,8 +61,6 @@ class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>): Recycle
             val gsReference2 = storageFire.getReferenceFromUrl(musica.portada + ".png")
             val option = RequestOptions().error(R.drawable.default_album)
             GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivMusica)
-
-
 
         }
 
