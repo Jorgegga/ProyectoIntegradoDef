@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProyectoIntegrado</string>
+    <string name="app_name">Scarlet Perception</string>
     <string name="openNavDrawer">Navigation Drawer Open</string>
     <string name="closeNavDrawer">Navigation Drawer Close</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
