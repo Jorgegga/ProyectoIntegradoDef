@@ -17,12 +17,6 @@ import com.google.firebase.storage.FirebaseStorage
 
 class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>, private val clickListener: (ReadMusicaAlbumAutor) -> Unit): RecyclerView.Adapter<MusicaAdapter.MusicaViewHolder>(){
 
-
-
-    interface onItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicaViewHolder {
         val inflater = MusicaViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.musica_layout, parent, false)){
             clickListener(lista[it])

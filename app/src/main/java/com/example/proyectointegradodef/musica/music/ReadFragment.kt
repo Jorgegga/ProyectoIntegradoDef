@@ -174,7 +174,7 @@ class ReadFragment : Fragment(), Player.Listener {
 
     fun reproducirRoom(){
             try {
-                var uri = Uri.parse(AppUse.cancion)
+                var uri = Uri.parse(cancion)
                 var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
                     .createMediaSource(MediaItem.fromUri(uri))
                 player.setMediaSource(mediaSource)
@@ -182,8 +182,6 @@ class ReadFragment : Fragment(), Player.Listener {
                 player.playWhenReady = true
                 binding.videoView.player = player
                 binding.videoView.useArtwork = false
-                binding.tvAutorReproductor.text = autor
-                binding.tvNombreReproductor.text = nombre
                 binding.tvAutorReproductor.text = autor
                 binding.tvNombreReproductor.text = nombre
             } catch (e: IOException) {
@@ -295,7 +293,14 @@ class ReadFragment : Fragment(), Player.Listener {
             idSong = it.id
             reproducir()
         }
-        var total = ConcatAdapter(musica, MusicaRoomAdapter(allMusic))
+
+        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
+            nombre = it.nombre
+            autor = it.autor
+            cancion = it.musica
+            reproducirRoom()
+        }
+        var total = ConcatAdapter(musica, musicaRoom)
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.adapter = total
         binding.recyclerview.scrollToPosition(0)
