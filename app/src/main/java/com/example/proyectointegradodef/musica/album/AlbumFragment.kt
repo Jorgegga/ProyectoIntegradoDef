@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.album
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -115,12 +116,20 @@ class AlbumFragment : Fragment() {
 
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
         binding.recyclerview.adapter = AlbumAdapter(lista){
-            idClick = it.id
+            val bundle = Bundle()
+            bundle.putInt("id", it.id)
+            bundle.putInt("autorId", it.autorId)
+            bundle.putString("titulo", it.titulo)
+            bundle.putString("autor", it.autor)
+            bundle.putString("portada", it.portada)
+            var intent = Intent(context, AlbumActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        /*idClick = it.id
             autorIdClick = it.autorId
             tituloClick = it.titulo
             autorClick = it.autor
-            portadaClick = it.portada
-            Log.d("aaaaaaaaaaaaaaaaaaaaaaaaa", tituloClick)
+            portadaClick = it.portada*/
         }
         binding.recyclerview.scrollToPosition(0)
 

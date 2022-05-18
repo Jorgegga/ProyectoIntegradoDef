@@ -21,9 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoIntegradoDef">
         <activity
+            android:name=".musica.album.AlbumActivity"
+            android:exported="false" />
+        <activity
             android:name=".musica.MusicaActivity"
             android:exported="false"
-            android:parentActivityName=".InicioActivity"/>
+            android:parentActivityName=".InicioActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

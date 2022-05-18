@@ -22,7 +22,7 @@ class MusicaActivity : AppCompatActivity() {
         setContentView(binding.root)
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setTitle("Scarlet Perception")
+        supportActionBar?.title = "Scarlet Perception"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
