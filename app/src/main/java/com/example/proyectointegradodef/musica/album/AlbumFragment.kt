@@ -1,9 +1,11 @@
 package com.example.proyectointegradodef.musica.album
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
@@ -20,6 +22,12 @@ class AlbumFragment : Fragment() {
     var album: MutableList<ReadAlbum> = ArrayList()
     var autor: MutableList<ReadAutorId> = ArrayList()
     var albumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
+
+    var idClick = 0
+    var autorIdClick = 0
+    var tituloClick = ""
+    var autorClick = ""
+    var portadaClick = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,9 +101,9 @@ class AlbumFragment : Fragment() {
             var aut : ReadAutorId? = autor.find{it.id == x.idautor}
             var temp : ReadAlbumAutor
             if(aut != null) {
-                temp = ReadAlbumAutor(aut.nombre, x.titulo, x.portada)
+                temp = ReadAlbumAutor(x.id, x.idautor, aut.nombre, x.titulo, x.portada)
             }else{
-                temp = ReadAlbumAutor("default", x.titulo, x.portada)
+                temp = ReadAlbumAutor(x.id, x.idautor,"default", x.titulo, x.portada)
             }
             if (temp != null){
                 albumAdapter.add(temp)
@@ -106,7 +114,14 @@ class AlbumFragment : Fragment() {
     }
 
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
-        binding.recyclerview.adapter = AlbumAdapter(lista)
+        binding.recyclerview.adapter = AlbumAdapter(lista){
+            idClick = it.id
+            autorIdClick = it.autorId
+            tituloClick = it.titulo
+            autorClick = it.autor
+            portadaClick = it.portada
+            Log.d("aaaaaaaaaaaaaaaaaaaaaaaaa", tituloClick)
+        }
         binding.recyclerview.scrollToPosition(0)
 
     }

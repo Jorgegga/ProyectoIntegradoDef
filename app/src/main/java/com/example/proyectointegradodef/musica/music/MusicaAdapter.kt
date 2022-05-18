@@ -21,7 +21,6 @@ class MusicaAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>, private 
         val inflater = MusicaViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.musica_layout, parent, false)){
             clickListener(lista[it])
         }
-
         return inflater
     }
 
