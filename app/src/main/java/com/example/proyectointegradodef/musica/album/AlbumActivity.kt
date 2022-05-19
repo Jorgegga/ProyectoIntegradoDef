@@ -84,6 +84,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         val option = RequestOptions().error(R.drawable.default_album)
         GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivAlbum)
         binding.tvTituloAlbum.text = bundle!!.getString("titulo", "Default")
+        binding.tvAutorAlbum.text = bundle!!.getString("autor", "Default")
 
     }
 
