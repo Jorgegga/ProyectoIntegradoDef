@@ -129,20 +129,6 @@ class ReadFragment : Fragment(), Player.Listener {
 
     }
 
-    fun reproductor(){
-        AppUse.reproduciendo.observe(requireActivity(), Observer {
-            if(AppUse.reproduciendo.value == true) {
-                reproducir()
-            }
-        })
-
-        AppUse.reproduciendoLocal.observe(requireActivity(), Observer {
-            if(AppUse.reproduciendoLocal.value == true){
-                reproducirRoom()
-            }
-        })
-    }
-
     fun setListener(){
         binding.btnReproducir.setOnClickListener {
             reproducir()
