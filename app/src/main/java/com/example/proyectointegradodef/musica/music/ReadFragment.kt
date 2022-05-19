@@ -256,8 +256,8 @@ class ReadFragment : Fragment(), Player.Listener {
             }
             introTotal.add(temp)
         }
-        if(AppUse.id != 0) {
-            var tempMusic = introMusic.find { it.id == AppUse.id }
+        if(idSong != 0) {
+            var tempMusic = introMusic.find { it.id == idSong }
             var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
             if (tempMusic != null) {
                 actualizarReproductorCancion(tempMusic)
