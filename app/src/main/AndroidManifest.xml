@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoIntegradoDef">
         <activity
+            android:name=".musica.autor.AutorActivity"
+            android:exported="false" />
+        <activity
             android:name=".musica.album.AlbumActivity"
             android:exported="false" />
         <activity

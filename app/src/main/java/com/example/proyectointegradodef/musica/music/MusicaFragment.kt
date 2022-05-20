@@ -1,8 +1,5 @@
 package com.example.proyectointegradodef.musica.music
 
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -11,30 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentReadBinding
 import com.example.proyectointegradodef.models.*
-import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
 import com.example.proyectointegradodef.room.MusicaRoomAdapter
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.Player.STATE_READY
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 
-class ReadFragment : Fragment(), Player.Listener {
+class MusicaFragment : Fragment(), Player.Listener {
     lateinit var binding : FragmentReadBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
@@ -60,8 +53,10 @@ class ReadFragment : Fragment(), Player.Listener {
 
     var nombre = ""
     var autor = ""
+    var idAutor = 0
     var cancion = ""
     var idSong = 0
+    var recyclerVacio = false
 
 
 
@@ -76,6 +71,7 @@ class ReadFragment : Fragment(), Player.Listener {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentReadBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -96,6 +92,7 @@ class ReadFragment : Fragment(), Player.Listener {
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         extractorsFactory = DefaultExtractorsFactory()
 
+        recogerBundle()
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
@@ -243,8 +240,21 @@ class ReadFragment : Fragment(), Player.Listener {
         })
     }
 
+    fun filtrarDatos(){
+        var musicaAgrupada = introMusic.groupBy { it.autor_id }
+        if(musicaAgrupada[idAutor] != null) {
+            introMusic = musicaAgrupada[idAutor] as ArrayList
+            recyclerVacio = false
+        }else {
+            recyclerVacio = true
+        }
+    }
+
     private fun rellenarDatos(){
         introTotal.clear()
+        if(idAutor != 0){
+            filtrarDatos()
+        }
         for (x in introMusic){
             var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
             var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
@@ -280,15 +290,19 @@ class ReadFragment : Fragment(), Player.Listener {
             reproducir()
         }
 
-        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
-            nombre = it.nombre
-            autor = it.autor
-            cancion = it.musica
-            reproducirRoom()
+        if(idAutor != 0){
+            binding.recyclerview.adapter = musica
+        }else {
+            var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
+                nombre = it.nombre
+                autor = it.autor
+                cancion = it.musica
+                reproducirRoom()
+            }
+            var total = ConcatAdapter(musica, musicaRoom)
+            binding.recyclerview.adapter = total
         }
-        var total = ConcatAdapter(musica, musicaRoom)
         binding.recyclerview.layoutManager = linearLayoutManager
-        binding.recyclerview.adapter = total
         binding.recyclerview.scrollToPosition(0)
 
     }
@@ -313,10 +327,18 @@ class ReadFragment : Fragment(), Player.Listener {
         referenceAutor = db.getReference("autors")
     }
 
+    private fun recogerBundle() {
+        if (arguments != null) {
+            if (arguments?.getInt("id", 0) != 0) {
+                idAutor = arguments?.getInt("id", 0)!!
+            }
+        }
+    }
+
     companion object {
         @JvmStatic
-        fun newInstance(): ReadFragment{
-            return ReadFragment()
+        fun newInstance(): MusicaFragment{
+            return MusicaFragment()
         }
 
     }

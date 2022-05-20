@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.autor
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -71,7 +72,12 @@ class AutorFragment : Fragment() {
     private fun setRecycler(lista: ArrayList<ReadAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerViewAutor.adapter = AutorAdapter(lista){
-
+            val bundle = Bundle()
+            bundle.putInt("id", it.id)
+            bundle.putString("nombre", it.nombre)
+            var intent = Intent(context, AutorActivity::class.java)
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
         binding.recyclerViewAutor.scrollToPosition(0)
         binding.recyclerViewAutor.layoutManager = linearLayoutManager

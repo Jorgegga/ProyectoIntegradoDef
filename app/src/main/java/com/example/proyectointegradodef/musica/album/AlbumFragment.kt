@@ -29,6 +29,8 @@ class AlbumFragment : Fragment() {
     var tituloClick = ""
     var autorClick = ""
     var portadaClick = ""
+    var idAutor = 0
+    var recyclerVacio = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,7 @@ class AlbumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDb()
+        recogerBundle()
         recogerDatosAutor()
         recogerDatosAlbum()
 
@@ -96,8 +99,21 @@ class AlbumFragment : Fragment() {
         })
     }
 
+    fun filtrarDatos(){
+        var albumsAgrupados = album.groupBy { it.idautor }
+        if(albumsAgrupados[idAutor] != null) {
+            album = albumsAgrupados[idAutor] as ArrayList
+            recyclerVacio = false
+        }else {
+            recyclerVacio = true
+        }
+    }
+
     private fun rellenarDatos(){
         albumAdapter.clear()
+        if(idAutor != 0){
+            filtrarDatos()
+        }
         for(x in album){
             var aut : ReadAutorId? = autor.find{it.id == x.idautor}
             var temp : ReadAlbumAutor
@@ -139,6 +155,14 @@ class AlbumFragment : Fragment() {
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         reference = db.getReference("albums")
         reference2 = db.getReference("autors")
+    }
+
+    private fun recogerBundle() {
+        if (arguments != null) {
+            if (arguments?.getInt("id", 0) != 0) {
+                idAutor = arguments?.getInt("id", 0)!!
+            }
+        }
     }
 
     companion object {
