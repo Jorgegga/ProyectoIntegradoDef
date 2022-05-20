@@ -10,9 +10,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class AutorViewHolder(v: View): RecyclerView.ViewHolder(v) {
+class AutorViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AutorLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
+
+    init{
+        itemView.setOnClickListener {
+            clickAtPosition(absoluteAdapterPosition)
+        }
+    }
 
     fun render(autor: ReadAutor){
         binding.tvNombreRecycler.text = autor.nombre

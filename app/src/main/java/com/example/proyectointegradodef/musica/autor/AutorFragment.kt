@@ -70,7 +70,9 @@ class AutorFragment : Fragment() {
 
     private fun setRecycler(lista: ArrayList<ReadAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerViewAutor.adapter = AutorAdapter(lista)
+        binding.recyclerViewAutor.adapter = AutorAdapter(lista){
+
+        }
         binding.recyclerViewAutor.scrollToPosition(0)
         binding.recyclerViewAutor.layoutManager = linearLayoutManager
 

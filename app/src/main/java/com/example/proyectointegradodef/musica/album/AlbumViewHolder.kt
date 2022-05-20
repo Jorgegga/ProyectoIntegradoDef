@@ -15,9 +15,15 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-class AlbumViewHolder(v: View): RecyclerView.ViewHolder(v)  {
+class AlbumViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v)  {
     private val binding = AlbumLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
+
+    init{
+        itemView.setOnClickListener {
+            clickAtPosition(absoluteAdapterPosition)
+        }
+    }
 
     fun render(album: ReadAlbumAutor){
         binding.tvRecyclerAlbum.text = album.titulo

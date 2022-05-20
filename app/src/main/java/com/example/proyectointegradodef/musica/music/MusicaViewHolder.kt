@@ -10,10 +10,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class MusicaViewHolder(v: View ): RecyclerView.ViewHolder(v){
-    private val binding = MusicaLayoutBinding.bind(v)
+class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v){
+    val binding = MusicaLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
 
+    init{
+        itemView.setOnClickListener {
+            clickAtPosition(absoluteAdapterPosition)
+        }
+    }
 
     fun render(musica : ReadMusicaAlbumAutor){
         binding.tvTitulo.text = musica.nombre
@@ -22,18 +27,7 @@ class MusicaViewHolder(v: View ): RecyclerView.ViewHolder(v){
         val gsReference2 = storageFire.getReferenceFromUrl(musica.portada + ".png")
         val option = RequestOptions().error(R.drawable.default_album)
         GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivMusica)
+
     }
-
-
-
-
-        /*AppUse.id = musica.id
-        AppUse.autor_id = musica.autor_id
-        AppUse.nombre = musica.nombre
-        AppUse.autor = musica.autor
-        AppUse.cancion = musica.ruta
-        AppUse.reproduciendo.value = true
-        AppUse.reproduciendo.value = false*/
-
 
 }

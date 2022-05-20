@@ -13,7 +13,7 @@ import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class AlbumAdapter(private val lista: ArrayList<ReadAlbumAutor>, private val clickListener: (ReadAlbumAutor) -> Unit): RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
+class AlbumAdapter(private val lista: ArrayList<ReadAlbumAutor>, private val clickListener: (ReadAlbumAutor) -> Unit): RecyclerView.Adapter<AlbumViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val inflater = AlbumViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.album_layout, parent, false)){
             clickListener(lista[it])
@@ -33,24 +33,4 @@ class AlbumAdapter(private val lista: ArrayList<ReadAlbumAutor>, private val cli
         return lista.size
     }
 
-    class AlbumViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v)  {
-        private val binding = AlbumLayoutBinding.bind(v)
-        var storageFire = FirebaseStorage.getInstance()
-
-        init{
-            itemView.setOnClickListener {
-                clickAtPosition(absoluteAdapterPosition)
-            }
-        }
-
-        fun render(album: ReadAlbumAutor){
-            binding.tvRecyclerAlbum.text = album.titulo
-            binding.tvAutorRecyclerAlbum.text = album.autor
-            val gsReference2 = storageFire.getReferenceFromUrl(album.portada + ".png")
-            val option = RequestOptions().error(R.drawable.default_album)
-            GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivRecyclerAlbum)
-
-        }
-
-    }
 }
