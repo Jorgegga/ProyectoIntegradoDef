@@ -136,13 +136,13 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         var others = menu.findItem(R.id.group3)
         var s = SpannableString(music.title)
         s.setSpan(TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length, 0)
-        music.setTitle(s)
+        music.title = s
         s = SpannableString(user.title)
         s.setSpan(TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length, 0)
-        user.setTitle(s)
+        user.title = s
         s = SpannableString(others.title)
         s.setSpan(TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length, 0)
-        others.setTitle(s)
+        others.title = s
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
