@@ -2,8 +2,10 @@ package com.example.proyectointegradodef.models
 
 class CrearPerfil {
     constructor()
-    constructor(permisos: Int){
+    constructor(id: Int, permisos: Int){
         this.permisos = permisos
+        this.id = id
     }
     var permisos = 0
+    var id = 0
 }

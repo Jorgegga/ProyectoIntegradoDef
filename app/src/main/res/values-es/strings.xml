@@ -32,5 +32,6 @@
     <string name="audioSubido">Se ha subido el audio</string>
     <string name="tiendaMusica">Localización de la tienda de música</string>
     <string name="darPermisos">Debes dar los permisos requiridos</string>
+    <string name="playlist">Tu Playlist</string>
 
 </resources>

@@ -22,6 +22,12 @@
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvListaMusica" />
                     <item
+                        android:id="@+id/btnPlaylist"
+                        android:enabled="true"
+                        android:checkable="false"
+                        android:icon="@drawable/keystoneback"
+                        android:title="@string/playlist" />
+                    <item
                         android:id="@+id/btnSubir"
                         android:enabled="true"
                         android:icon="@drawable/keystoneback"

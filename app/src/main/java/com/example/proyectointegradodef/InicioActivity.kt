@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Display
 import android.view.MenuItem
 import android.widget.ImageView
@@ -23,6 +24,8 @@ import com.example.proyectointegradodef.musica.music.CrearFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
+import com.example.proyectointegradodef.models.CrearFoto
+import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.preferences.Prefs
 import com.example.proyectointegradodef.room.CrearRoomFragment
@@ -30,8 +33,8 @@ import com.example.proyectointegradodef.webview.WebFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
@@ -41,7 +44,6 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     lateinit var transaction : FragmentTransaction
     lateinit var reference: DatabaseReference
     lateinit var db: FirebaseDatabase
-    var storageFire = FirebaseStorage.getInstance()
 
     lateinit var fragmentPortada : Fragment
     lateinit var fragmentWeb : Fragment
@@ -50,7 +52,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     lateinit var fragmentCrearLocal : Fragment
     lateinit var fragmentCamara : Fragment
 
+    var storageFire = FirebaseStorage.getInstance()
     val user = Firebase.auth.currentUser
+    var introUser: MutableList<CrearPerfil> = ArrayList()
+    var crearId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +64,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setToolbar()
         initDb()
         setHeader()
+        annadirUsuario()
         title="Scarlet Perception"
         fragmentPortada = PortadaFragment()
         fragmentWeb = WebFragment()
@@ -108,7 +114,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 )
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
+                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(header.findViewById<ImageView>(R.id.ivPerfil))
             }
@@ -126,6 +132,43 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             cambiarSubtitulos()
         }
 
+    }
+
+    private fun annadirUsuario(){
+        reference.child(user!!.uid).get().addOnSuccessListener {
+            if(it.value == null){
+                buscarId()
+            }
+        }
+    }
+
+    private fun buscarId(){
+        reference.get()
+        reference.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(crearId == 0) {
+                    for (messageSnapshot in snapshot.children) {
+                        var user = messageSnapshot.getValue<CrearPerfil>(CrearPerfil::class.java)
+                        if (user != null) {
+                            introUser.add(user)
+                        }
+                    }
+                    filtrarDatos()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun filtrarDatos(){
+        if(crearId == 0) {
+            var tempUser = introUser.maxByOrNull { it.id }
+            crearId = tempUser!!.id + 1
+            reference.child(user!!.uid).setValue(CrearPerfil(crearId, 0))
+        }
     }
 
     fun cambiarSubtitulos(){

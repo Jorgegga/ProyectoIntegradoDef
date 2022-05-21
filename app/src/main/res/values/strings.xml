@@ -32,5 +32,6 @@
     <string name="audioSubido">The audio has been uploaded</string>
     <string name="tiendaMusica">Localization of the music store</string>
     <string name="darPermisos">You must give the required permissions</string>
+    <string name="playlist">Your Playlist</string>
 
 </resources>

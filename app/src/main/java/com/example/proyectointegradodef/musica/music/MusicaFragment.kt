@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.FragmentReadBinding
+import com.example.proyectointegradodef.databinding.FragmentMusicaBinding
 import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
@@ -28,7 +28,7 @@ import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 
 class MusicaFragment : Fragment(), Player.Listener {
-    lateinit var binding : FragmentReadBinding
+    lateinit var binding : FragmentMusicaBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
@@ -70,7 +70,7 @@ class MusicaFragment : Fragment(), Player.Listener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentReadBinding.inflate(inflater, container, false)
+        binding = FragmentMusicaBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -196,9 +196,9 @@ class MusicaFragment : Fragment(), Player.Listener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introAlbum.clear()
                 for(messageSnapshot in snapshot.children){
-                    val music = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
-                    if(music != null){
-                        introAlbum.add(music)
+                    val album = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
+                    if(album != null){
+                        introAlbum.add(album)
                     }
                 }
                 rellenarDatos()

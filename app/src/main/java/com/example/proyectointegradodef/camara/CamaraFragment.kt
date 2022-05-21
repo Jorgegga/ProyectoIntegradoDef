@@ -186,8 +186,10 @@ class CamaraFragment : Fragment() {
             val uploadTask = imageRef.putFile(mUri)
             uploadTask.addOnFailureListener{
                 Toast.makeText(requireContext(), resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
-            }.addOnSuccessListener { taskSnapshot ->
-                reference.child(user!!.uid).setValue(CrearFoto("gs://proyectointegradodam-eef79.appspot.com/proyecto/perfil/${user!!.uid}"))
+            }.addOnSuccessListener {
+                val values = HashMap<String, Any>()
+                values["ruta"] = "gs://proyectointegradodam-eef79.appspot.com/proyecto/perfil/${user!!.uid}"
+                reference.child(user!!.uid).updateChildren(values)
                 Toast.makeText(requireContext(), resources.getString(R.string.fotoActualizada), Toast.LENGTH_LONG).show()
                 perfil()
                 perfilInicio()
