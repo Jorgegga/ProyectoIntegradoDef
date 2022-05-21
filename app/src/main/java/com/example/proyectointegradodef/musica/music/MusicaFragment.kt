@@ -96,7 +96,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
-        setListener()
 
     }
 
@@ -124,12 +123,6 @@ class MusicaFragment : Fragment(), Player.Listener {
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         super.onPlayerStateChanged(playWhenReady, playbackState)
 
-    }
-
-    fun setListener(){
-        binding.btnReproducir.setOnClickListener {
-            reproducir()
-        }
     }
 
     fun reproducir(){
@@ -282,13 +275,13 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
-        var musica = MusicaAdapter(lista) {
+        var musica = MusicaAdapter(lista,{
             nombre = it.nombre
             autor = it.autor
             cancion = it.ruta
             idSong = it.id
             reproducir()
-        }
+        }, {Toast.makeText(context, "Click largo", Toast.LENGTH_LONG).show()})
 
         if(idAutor != 0){
             binding.recyclerview.adapter = musica

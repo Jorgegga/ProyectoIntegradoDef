@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.music
 
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -10,13 +11,17 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v){
+class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v){
     val binding = MusicaLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
 
     init{
         itemView.setOnClickListener {
             clickAtPosition(absoluteAdapterPosition)
+        }
+        itemView.setOnLongClickListener {
+            longClickAtPosition(absoluteAdapterPosition)
+            true
         }
     }
 

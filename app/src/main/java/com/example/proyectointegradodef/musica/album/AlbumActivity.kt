@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -214,10 +215,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(this)
-        val musicaAdapter = MusicaAdapter(lista){
+        val musicaAdapter = MusicaAdapter(lista,{
             ruta = it.ruta
             reproducir()
-        }
+        }, { Toast.makeText(this, "Click largo en album activity", Toast.LENGTH_LONG).show()})
         binding.recyclerViewAlbum.adapter = musicaAdapter
         binding.recyclerViewAlbum.layoutManager = linearLayoutManager
         binding.recyclerViewAlbum.scrollToPosition(0)
