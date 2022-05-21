@@ -14,6 +14,7 @@ import androidx.room.Room
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentMusicaBinding
 import com.example.proyectointegradodef.models.*
+import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
 import com.example.proyectointegradodef.room.MusicaRoomAdapter
@@ -26,6 +27,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MusicaFragment : Fragment(), Player.Listener {
     lateinit var binding : FragmentMusicaBinding
@@ -33,6 +36,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     lateinit var referenceMusic: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceAutor: DatabaseReference
+    lateinit var referencePlaylist: DatabaseReference
     lateinit var database : MusicaDatabase
     lateinit var allMusic : List<Musica>
     lateinit var player: ExoPlayer
@@ -49,6 +53,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
+    var introPlaylist: MutableList<ReadPlaylist> = ArrayList()
     var reproducir = false
 
     var nombre = ""
@@ -57,6 +62,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var cancion = ""
     var idSong = 0
     var recyclerVacio = false
+    var crearId = 0
 
 
 
@@ -281,7 +287,11 @@ class MusicaFragment : Fragment(), Player.Listener {
             cancion = it.ruta
             idSong = it.id
             reproducir()
-        }, {Toast.makeText(context, "Click largo", Toast.LENGTH_LONG).show()})
+        }, {
+            crearId = 0
+            buscarId(it.id)
+            Toast.makeText(context, it.id.toString(), Toast.LENGTH_LONG).show()
+        })
 
         if(idAutor != 0){
             binding.recyclerview.adapter = musica
@@ -313,11 +323,44 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     }
 
+    private fun buscarId(music: Int){
+        introPlaylist.clear()
+        referencePlaylist.get()
+        referencePlaylist.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                introPlaylist.clear()
+                if(crearId == 0) {
+                    for (messageSnapshot in snapshot.children) {
+                        var playlist = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
+                        if (playlist != null) {
+                            introPlaylist.add(playlist)
+                        }
+                    }
+                    filtrarDatosPlaylist(music)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun filtrarDatosPlaylist(music: Int){
+        if(crearId == 0) {
+            var tempPlaylist = introPlaylist.maxByOrNull { it.id }
+            crearId = tempPlaylist!!.id + 1
+            var randomString = UUID.randomUUID().toString()
+            referencePlaylist.child(randomString).setValue(ReadPlaylist(crearId, music, AppUse.user_id))
+        }
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceMusic = db.getReference("music")
         referenceAlbum = db.getReference("albums")
         referenceAutor = db.getReference("autors")
+        referencePlaylist = db.getReference("playlists")
     }
 
     private fun recogerBundle() {
@@ -327,6 +370,7 @@ class MusicaFragment : Fragment(), Player.Listener {
             }
         }
     }
+
 
     companion object {
         @JvmStatic

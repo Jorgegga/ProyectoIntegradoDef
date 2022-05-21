@@ -27,6 +27,8 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.CrearFoto
 import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
+import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
+import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.preferences.Prefs
 import com.example.proyectointegradodef.room.CrearRoomFragment
 import com.example.proyectointegradodef.webview.WebFragment
@@ -135,9 +137,11 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     private fun annadirUsuario(){
-        reference.child(user!!.uid).get().addOnSuccessListener {
+        reference.child(user!!.uid).child("id").get().addOnSuccessListener {
             if(it.value == null){
                 buscarId()
+            }else{
+                AppUse.user_id = it.value.toString().toInt()
             }
         }
     }
@@ -168,6 +172,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             var tempUser = introUser.maxByOrNull { it.id }
             crearId = tempUser!!.id + 1
             reference.child(user!!.uid).setValue(CrearPerfil(crearId, 0))
+            AppUse.user_id = crearId
         }
     }
 
@@ -211,6 +216,14 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 transaction.replace(R.id.fragmentContainerView, fragmentCrear).commit()
                 transaction.addToBackStack(null)
                 item.isChecked = true
+                binding.drawerLayout.close()
+                return true
+            }
+
+            R.id.btnPlaylist->{
+                val i = Intent(this, PlaylistActivity::class.java)
+                startActivity(i)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 binding.drawerLayout.close()
                 return true
             }

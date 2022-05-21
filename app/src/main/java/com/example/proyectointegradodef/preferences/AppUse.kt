@@ -16,6 +16,7 @@ class AppUse: Application() {
         var id = 0
         var album_id = 0
         var autor_id = 0
+        var user_id = 0
     }
 
     override fun onCreate() {
