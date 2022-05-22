@@ -83,7 +83,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         initDb()
         rellenarDatosAlbum()
         rellenarDatosAutor()
+        rellenarDatosPlaylist()
         rellenarDatosMusic()
+
+    }
+
+    override fun onSupportNavigateUp() : Boolean{
+        finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        return true
     }
 
     override fun onPause() {
@@ -220,38 +228,61 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     fun filtrarDatos(){
         var playlistAgrupada = introPlaylist.groupBy { it.user_id }
+
         if(playlistAgrupada[AppUse.user_id] != null) {
             introPlaylist = playlistAgrupada[AppUse.user_id] as ArrayList
             recyclerVacio = false
-        }else {
-            recyclerVacio = true
-        }
+
         var musicTemp: MutableList<ReadMusica> = ArrayList()
+
         for(x in introPlaylist){
-            var music = introMusic.find { it.id == x.user_id }
+            Log.d("-------------------------------------------", x.user_id.toString())
+            var music = introMusic.find { it.id == x.music_id }
             musicTemp.add(music!!)
         }
         introMusic.clear()
         introMusic = musicTemp
+        }else {
+            recyclerVacio = true
+        }
     }
 
     private fun rellenarDatos(){
         introTotal.clear()
 
-        filtrarDatos()
-
-        for (x in introMusic){
-            var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
-            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
-            var temp : ReadMusicaAlbumAutor
-            if(alb != null && aut != null){
-                temp = ReadMusicaAlbumAutor(x.id, x.nombre, x.album_id, alb.titulo, x.autor_id, aut.nombre, x.ruta, x.portada)
-            }else{
-                temp = ReadMusicaAlbumAutor(x.id, "default", x.album_id, alb!!.titulo, x.autor_id, "default", x.ruta, x.portada)
-            }
-            introTotal.add(temp)
-        }
-        /*if(idSong != 0) {
+        if(introMusic.isNotEmpty()) {
+            filtrarDatos()
+            if(!recyclerVacio) {
+                for (x in introMusic) {
+                    var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+                    var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                    var temp: ReadMusicaAlbumAutor
+                    if (alb != null && aut != null) {
+                        temp = ReadMusicaAlbumAutor(
+                            x.id,
+                            x.nombre,
+                            x.album_id,
+                            alb.titulo,
+                            x.autor_id,
+                            aut.nombre,
+                            x.ruta,
+                            x.portada
+                        )
+                    } else {
+                        temp = ReadMusicaAlbumAutor(
+                            x.id,
+                            "default",
+                            x.album_id,
+                            alb!!.titulo,
+                            x.autor_id,
+                            "default",
+                            x.ruta,
+                            x.portada
+                        )
+                    }
+                    introTotal.add(temp)
+                }
+                /*if(idSong != 0) {
             var tempMusic = introMusic.find { it.id == idSong }
             var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
             if (tempMusic != null) {
@@ -261,8 +292,10 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-        binding.loadingPanel.visibility = View.GONE
-        setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+            }
+            binding.progressBar.visibility = View.GONE
+            setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+        }
     }
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
