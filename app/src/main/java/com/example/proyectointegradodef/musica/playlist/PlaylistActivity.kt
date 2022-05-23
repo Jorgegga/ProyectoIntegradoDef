@@ -236,7 +236,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         var musicTemp: MutableList<ReadMusica> = ArrayList()
 
         for(x in introPlaylist){
-            Log.d("-------------------------------------------", x.user_id.toString())
             var music = introMusic.find { it.id == x.music_id }
             musicTemp.add(music!!)
         }
