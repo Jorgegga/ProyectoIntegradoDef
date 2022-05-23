@@ -64,6 +64,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var idSong = 0
     var recyclerVacio = false
     var crearId = 0
+    var existeCancion = false
 
 
 
@@ -98,7 +99,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         player.addListener(this)
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         extractorsFactory = DefaultExtractorsFactory()
-
         recogerBundle()
         rellenarDatosAlbum()
         rellenarDatosAutor()
@@ -296,12 +296,11 @@ class MusicaFragment : Fragment(), Player.Listener {
                     // Respond to neutral button press
                 }
                 .setNegativeButton("Rechazar") { dialog, which ->
-                    Toast.makeText(requireContext(), "No se ha añadido la canción", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "No se ha añadido la canción a tu playlist", Toast.LENGTH_LONG).show()
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
-                    crearId = 0
-                    buscarId(it.id)
-                    Toast.makeText(context, "Se ha añadido la cancion", Toast.LENGTH_LONG).show()
+                    comprobarExistePlaylist(it.id)
+
                 }
                 .show()
         })
@@ -366,6 +365,38 @@ class MusicaFragment : Fragment(), Player.Listener {
             var randomString = UUID.randomUUID().toString()
             referencePlaylist.child(randomString).setValue(ReadPlaylist(crearId, music, AppUse.user_id))
         }
+    }
+
+    private fun comprobarExistePlaylist(objectId: Int){
+        referencePlaylist.get()
+        var query = referencePlaylist.orderByChild("user_id").equalTo(AppUse.user_id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children){
+                    if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
+                        Toast.makeText(
+                            requireContext(),
+                            "Esa cancion ya esta en tu playlist",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return
+                    }
+                }
+                crearId = 0
+                buscarId(objectId)
+                Toast.makeText(
+                    requireContext(),
+                    "Se ha añadido la cancion a tu playlist",
+                    Toast.LENGTH_LONG
+                ).show()
+                rellenarDatosMusic()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun initDb(){

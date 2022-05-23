@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -306,8 +307,21 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             idSong = it.id
             reproducir()
         }, {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Borrar de la playlist")
+                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de tu playlist?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                    // Respond to neutral button press
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(this, "No se ha borrado la canción de tu playlist", Toast.LENGTH_LONG).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    borrarPlaylist(it.id)
+                    Toast.makeText(this, "Se ha borrado la canción de tu playlist", Toast.LENGTH_LONG).show()
+                }
+                .show()
 
-            Toast.makeText(this, "Click largo", Toast.LENGTH_LONG).show()
         })
 
         if(idAutor == 0){
@@ -324,10 +338,31 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         }
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.scrollToPosition(0)
+        introMusic.clear()
 
     }
 
+    private fun borrarPlaylist(objectId: Int){
+        referencePlaylist.get()
+        var query = referencePlaylist.orderByChild("user_id").equalTo(AppUse.user_id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children){
+                    if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
+                        messageSnapshot.ref.removeValue()
+                        rellenarDatosMusic()
+                        return
+                    }
+                }
 
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
