@@ -78,6 +78,13 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(AppUse.user_id == 0){
+            setHeader()
+            annadirUsuario()
+        }
+    }
 
     fun setToolbar(){
         val toolbar: Toolbar = binding.mainToolbar
@@ -143,7 +150,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }else{
                 AppUse.user_id = it.value.toString().toInt()
             }
+        }.addOnFailureListener {
+            Log.d("-----------------------------------", "Algo ha ocurrido")
         }
+
     }
 
     private fun buscarId(){

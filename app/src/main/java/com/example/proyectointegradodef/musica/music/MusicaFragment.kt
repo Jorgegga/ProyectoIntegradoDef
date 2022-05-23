@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
@@ -288,9 +289,21 @@ class MusicaFragment : Fragment(), Player.Listener {
             idSong = it.id
             reproducir()
         }, {
-            crearId = 0
-            buscarId(it.id)
-            Toast.makeText(context, it.id.toString(), Toast.LENGTH_LONG).show()
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Añadir a la playlist")
+                .setMessage("¿Quieres añadir la cancion " + it.nombre + " a tu playlist?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                    // Respond to neutral button press
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(requireContext(), "No se ha añadido la canción", Toast.LENGTH_LONG).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    crearId = 0
+                    buscarId(it.id)
+                    Toast.makeText(context, "Se ha añadido la cancion", Toast.LENGTH_LONG).show()
+                }
+                .show()
         })
 
         if(idAutor != 0){
@@ -370,6 +383,7 @@ class MusicaFragment : Fragment(), Player.Listener {
             }
         }
     }
+
 
 
     companion object {

@@ -306,7 +306,10 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             cancion = it.ruta
             idSong = it.id
             reproducir()
-        }, { Toast.makeText(this, "Click largo", Toast.LENGTH_LONG).show()})
+        }, {
+
+            Toast.makeText(this, "Click largo", Toast.LENGTH_LONG).show()
+        })
 
         if(idAutor == 0){
             binding.recyclerview.adapter = musica
