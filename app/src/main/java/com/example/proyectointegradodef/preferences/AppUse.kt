@@ -17,6 +17,7 @@ class AppUse: Application() {
         var album_id = 0
         var autor_id = 0
         var user_id = 0
+        var recyclerPosition = 0
     }
 
     override fun onCreate() {

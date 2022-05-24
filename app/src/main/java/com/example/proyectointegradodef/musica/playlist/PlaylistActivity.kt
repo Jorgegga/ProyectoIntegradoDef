@@ -44,7 +44,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     lateinit var renderersFactory: DefaultRenderersFactory
     lateinit var trackSelectionFactory: AdaptiveTrackSelection.Factory
     lateinit var trackSelectSelector: DefaultTrackSelector
-    lateinit var loadControl : DefaultLoadControl
+    lateinit var loadControl: DefaultLoadControl
 
     var storageFire = FirebaseStorage.getInstance()
     var introMusic: MutableList<ReadMusica> = ArrayList()
@@ -89,7 +89,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     }
 
-    override fun onSupportNavigateUp() : Boolean{
+    override fun onSupportNavigateUp(): Boolean {
         finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         return true
@@ -97,7 +97,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     override fun onPause() {
         super.onPause()
-        if(reproducir){
+        if (reproducir) {
             player.playWhenReady = false
             reproducir = true
         }
@@ -106,7 +106,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     override fun onResume() {
         super.onResume()
-        if(reproducir) {
+        if (reproducir) {
             player.playWhenReady = true
         }
     }
@@ -116,47 +116,30 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         reproducir = isPlaying
     }
 
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        super.onPlaybackStateChanged(playbackState)
-        if(playbackState == 3){
-
-        }
-    }
-
-
-
-    fun reproducir(){
+    fun reproducir() {
         try {
-            var audioUrl = cancion
-            var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
-            storageRef.downloadUrl.addOnSuccessListener() {
-                var url = it.toString()
-                var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
-                    .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-                player.setMediaSource(mediaSource)
-                player.prepare()
-                player.playWhenReady = true
-                binding.videoView.player = player
-                binding.videoView.useArtwork = false
-                binding.tvAutorReproductor.text = autor
-                binding.tvNombreReproductor.text = nombre
-            }
-
+            player.seekTo(AppUse.recyclerPosition, 0)
+            player.prepare()
+            player.playWhenReady = true
+            binding.videoView.player = player
+            binding.videoView.useArtwork = false
+            binding.tvAutorReproductor.text = autor
+            binding.tvNombreReproductor.text = nombre
         } catch (e: IOException) {
             e.printStackTrace()
         }
         Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
-    private fun rellenarDatosPlaylist(){
+    private fun rellenarDatosPlaylist() {
         introPlaylist.clear()
         referencePlaylist.get()
-        referencePlaylist.addValueEventListener(object: ValueEventListener {
+        referencePlaylist.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introPlaylist.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val playlist = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
-                    if(playlist != null){
+                    if (playlist != null) {
                         introPlaylist.add(playlist)
                     }
                 }
@@ -170,15 +153,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    private fun rellenarDatosMusic(){
+    private fun rellenarDatosMusic() {
         introMusic.clear()
         referenceMusic.get()
-        referenceMusic.addValueEventListener(object: ValueEventListener {
+        referenceMusic.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introMusic.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val music = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)
-                    if(music != null){
+                    if (music != null) {
                         introMusic.add(music)
                     }
                 }
@@ -192,15 +175,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    private fun rellenarDatosAlbum(){
+    private fun rellenarDatosAlbum() {
         introAlbum.clear()
         referenceAlbum.get()
-        referenceAlbum.addValueEventListener(object: ValueEventListener {
+        referenceAlbum.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introAlbum.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val album = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
-                    if(album != null){
+                    if (album != null) {
                         introAlbum.add(album)
                     }
                 }
@@ -214,15 +197,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    private fun rellenarDatosAutor(){
+    private fun rellenarDatosAutor() {
         introAutor.clear()
         referenceAutor.get()
-        referenceAutor.addValueEventListener(object: ValueEventListener {
+        referenceAutor.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introAutor.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val music = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
-                    if(music != null){
+                    if (music != null) {
                         introAutor.add(music)
                     }
                 }
@@ -236,32 +219,40 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    fun filtrarDatos(){
+    fun filtrarDatos() {
         var playlistAgrupada = introPlaylist.groupBy { it.user_id }
 
-        if(playlistAgrupada[AppUse.user_id] != null) {
+        if (playlistAgrupada[AppUse.user_id] != null) {
             introPlaylist = playlistAgrupada[AppUse.user_id] as ArrayList
             recyclerVacio = false
 
-        var musicTemp: MutableList<ReadMusica> = ArrayList()
-
-        for(x in introPlaylist){
-            var music = introMusic.find { it.id == x.music_id }
-            musicTemp.add(music!!)
-        }
-        introMusic.clear()
-        introMusic = musicTemp
-        }else {
+            var musicTemp: MutableList<ReadMusica> = ArrayList()
+            player.clearMediaItems()
+            for (x in introPlaylist) {
+                var music = introMusic.find { it.id == x.music_id }
+                var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
+                storageRef.downloadUrl.addOnSuccessListener() {
+                    var url = it.toString()
+                    player.addMediaItem(
+                        MediaItem.Builder().setUri(Uri.parse(url)).setMediaId(music!!.id.toString())
+                            .build()
+                    )
+                }
+                musicTemp.add(music!!)
+            }
+            introMusic.clear()
+            introMusic = musicTemp
+        } else {
             recyclerVacio = true
         }
     }
 
-    private fun rellenarDatos(){
+    private fun rellenarDatos() {
         introTotal.clear()
 
-        if(introMusic.isNotEmpty()) {
+        if (introMusic.isNotEmpty()) {
             filtrarDatos()
-            if(!recyclerVacio) {
+            if (!recyclerVacio) {
                 for (x in introMusic) {
                     var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
                     var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
@@ -301,17 +292,18 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-            }else{
-                Toast.makeText(this, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG)
+                    .show()
             }
             binding.progressBar.visibility = View.GONE
             setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
         }
     }
 
-    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
+    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {
         val linearLayoutManager = LinearLayoutManager(this)
-        var musica = MusicaAdapter(lista,{
+        var musica = MusicaAdapter(lista, {
             nombre = it.nombre
             autor = it.autor
             cancion = it.ruta
@@ -322,22 +314,29 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 .setTitle("Borrar de la playlist")
                 .setMessage("¿Quieres borrar la cancion " + it.nombre + " de tu playlist?")
                 .setNeutralButton("Cancelar") { dialog, which ->
-                    // Respond to neutral button press
                 }
                 .setNegativeButton("Rechazar") { dialog, which ->
-                    Toast.makeText(this, "No se ha borrado la canción de tu playlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "No se ha borrado la canción de tu playlist",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     borrarPlaylist(it.id)
-                    Toast.makeText(this, "Se ha borrado la canción de tu playlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "Se ha borrado la canción de tu playlist",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 .show()
 
         })
 
-        if(idAutor == 0){
+        if (idAutor == 0) {
             binding.recyclerview.adapter = musica
-        }else {
+        } else {
             /*var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
                 nombre = it.nombre
                 autor = it.autor
@@ -353,13 +352,13 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     }
 
-    private fun borrarPlaylist(objectId: Int){
+    private fun borrarPlaylist(objectId: Int) {
         referencePlaylist.get()
         var query = referencePlaylist.orderByChild("user_id").equalTo(AppUse.user_id.toDouble())
-        query.addListenerForSingleValueEvent(object: ValueEventListener{
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(messageSnapshot in snapshot.children){
-                    if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
+                for (messageSnapshot in snapshot.children) {
+                    if (messageSnapshot.child("music_id").value.toString() == objectId.toString()) {
                         messageSnapshot.ref.removeValue()
                         rellenarDatosMusic()
                         return
@@ -375,7 +374,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    private fun initDb(){
+    private fun initDb() {
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceMusic = db.getReference("music")
         referenceAlbum = db.getReference("albums")

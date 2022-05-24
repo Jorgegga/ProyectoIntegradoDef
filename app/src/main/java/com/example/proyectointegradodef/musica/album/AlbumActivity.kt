@@ -174,8 +174,19 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     private fun rellenarDatos(){
         introTotal.clear()
         if(!recyclerVacio){
+            player.clearMediaItems()
         for (x in music) {
             //var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
+
+            var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
+            storageRef.downloadUrl.addOnSuccessListener() {
+                var url = it.toString()
+                player.addMediaItem(
+                    MediaItem.Builder().setUri(Uri.parse(url)).setMediaId(x!!.id.toString())
+                        .build()
+                )
+            }
+
             var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
             var temp: ReadMusicaAlbumAutor
             if (aut != null) {
@@ -247,21 +258,13 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     private fun reproducir() {
         try {
-            var audioUrl = ruta
-            var storageRef = storageFire.getReferenceFromUrl("$audioUrl.mp3")
-            storageRef.downloadUrl.addOnSuccessListener() {
-                var url = it.toString()
-                var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
-                    .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-                player.setMediaSource(mediaSource)
-                player.prepare()
-                player.playWhenReady = true
-                binding.videoView.player = player
-                binding.videoView.useArtwork = false
-                //binding.tvAutorReproductor.text = autor
-                //binding.tvNombreReproductor.text = nombre
-            }
-
+            player.seekTo(AppUse.recyclerPosition, 0)
+            player.prepare()
+            player.playWhenReady = true
+            binding.videoView.player = player
+            binding.videoView.useArtwork = false
+            //binding.tvAutorReproductor.text = autor
+            //binding.tvNombreReproductor.text = nombre
         } catch (e: IOException) {
             e.printStackTrace()
         }

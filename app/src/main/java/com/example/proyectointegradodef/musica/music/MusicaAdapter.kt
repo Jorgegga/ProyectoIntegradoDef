@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
+import com.example.proyectointegradodef.preferences.AppUse
 
 class MusicaAdapter(
     private val lista: ArrayList<ReadMusicaAlbumAutor>,
@@ -23,6 +24,7 @@ class MusicaAdapter(
         val musica = lista[position]
         holder.render(musica)
         holder.itemView.setOnClickListener {
+            AppUse.recyclerPosition = position
             clickListener(lista[position])
         }
         holder.itemView.setOnLongClickListener {
