@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
@@ -223,7 +224,21 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
             ruta = it.ruta
             reproducir()
         }, {
-            comprobarExistePlaylist(it.id)
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Añadir a tu playlist")
+                .setMessage("¿Quieres añadir la cancion " + it.nombre + " de tu playlist?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                    // Respond to neutral button press
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(this, "No se ha añadido la canción a tu playlist", Toast.LENGTH_LONG).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    comprobarExistePlaylist(it.id)
+
+                }
+                .show()
+
         })
         binding.recyclerViewAlbum.adapter = musicaAdapter
         binding.recyclerViewAlbum.layoutManager = linearLayoutManager

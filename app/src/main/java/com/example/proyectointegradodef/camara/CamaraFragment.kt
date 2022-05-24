@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -24,7 +26,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentCamaraBinding
 import com.example.proyectointegradodef.glide.GlideApp
-import com.example.proyectointegradodef.models.CrearFoto
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -32,7 +33,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import id.zelory.compressor.Compressor
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
 class CamaraFragment : Fragment() {
@@ -41,6 +45,7 @@ class CamaraFragment : Fragment() {
     lateinit var reference: DatabaseReference
     lateinit var storage: FirebaseStorage
     lateinit var mUri: Uri
+    lateinit var mediaStorageDir : File
     var storageFire = FirebaseStorage.getInstance()
     val PERMISO_CODE = 150
 
@@ -85,7 +90,7 @@ class CamaraFragment : Fragment() {
                 binding.ivCamara.setImageDrawable(getDrawable(requireContext(), R.drawable.keystoneback))
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
+                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivCamara)
             }
@@ -151,7 +156,7 @@ class CamaraFragment : Fragment() {
         var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
 
-        val mediaStorageDir = File(
+        mediaStorageDir = File(
             Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES
             ), "IMG_FOLDER"
@@ -169,10 +174,11 @@ class CamaraFragment : Fragment() {
 
 
         mUri = Uri.fromFile(
-            File(
+                        File(
                 mediaStorageDir.path + File.separator +
                         "profile_img.jpg"
             )
+
         )
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUri)
         startActivityForResult(i, 0)
@@ -181,6 +187,11 @@ class CamaraFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK){
+            mUri = Uri.fromFile(
+                Compressor(context).compressToFile(File(
+                    mediaStorageDir.path + File.separator +
+                            "profile_img.jpg"
+                )))
             val storageRef = storage.reference
             val imageRef = storageRef.child("proyecto/perfil/${user?.uid}.png")
             val uploadTask = imageRef.putFile(mUri)
@@ -194,6 +205,45 @@ class CamaraFragment : Fragment() {
                 perfil()
                 perfilInicio()
             }
+        }
+    }
+
+    fun saveBitmapToFile(file: File): File? {
+        return try {
+
+            // BitmapFactory options to downsize the image
+            val o = BitmapFactory.Options()
+            o.inJustDecodeBounds = true
+            o.inSampleSize = 6
+            // factor of downsizing the image
+            var inputStream = FileInputStream(file)
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o)
+            inputStream.close()
+
+            // The new size we want to scale to
+            val REQUIRED_SIZE = 75
+
+            // Find the correct scale value. It should be the power of 2.
+            var scale = 1
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                o.outHeight / scale / 2 >= REQUIRED_SIZE
+            ) {
+                scale *= 2
+            }
+            val o2 = BitmapFactory.Options()
+            o2.inSampleSize = scale
+            inputStream = FileInputStream(file)
+            val selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2)
+            inputStream.close()
+
+            // here i override the original image file
+            file.createNewFile()
+            val outputStream = FileOutputStream(file)
+            selectedBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            file
+        } catch (e: java.lang.Exception) {
+            null
         }
     }
 

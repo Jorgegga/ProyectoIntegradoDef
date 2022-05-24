@@ -116,6 +116,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         reproducir = isPlaying
     }
 
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged(playbackState)
+        if(playbackState == 3){
+
+        }
+    }
+
+
+
     fun reproducir(){
         try {
             var audioUrl = cancion
