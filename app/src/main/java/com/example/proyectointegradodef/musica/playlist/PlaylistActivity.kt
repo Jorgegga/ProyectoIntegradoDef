@@ -292,6 +292,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
+            }else{
+                Toast.makeText(this, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG).show()
             }
             binding.progressBar.visibility = View.GONE
             setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)

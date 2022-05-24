@@ -13,10 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityAlbumBinding
 import com.example.proyectointegradodef.glide.GlideApp
-import com.example.proyectointegradodef.models.ReadAlbum
-import com.example.proyectointegradodef.models.ReadAutorId
-import com.example.proyectointegradodef.models.ReadMusica
-import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
+import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.musica.music.MusicaAdapter
 import com.example.proyectointegradodef.preferences.AppUse
 import com.google.android.exoplayer2.*
@@ -28,6 +25,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AlbumActivity : AppCompatActivity(), Player.Listener {
     lateinit var binding: ActivityAlbumBinding
@@ -35,6 +34,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceAutor: DatabaseReference
     lateinit var referenceMusic: DatabaseReference
+    lateinit var referencePlaylist: DatabaseReference
 
     lateinit var player: ExoPlayer
     lateinit var renderersFactory: DefaultRenderersFactory
@@ -50,8 +50,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     var recyclerVacio = true
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
+    var introPlaylist: MutableList<ReadPlaylist> = ArrayList()
     var ruta = ""
     var reproducir = false
+    var crearId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +78,28 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         recogerDatosMusica()
         recogerDatosAutor()
 
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        if(reproducir){
+            player.playWhenReady = false
+            reproducir = true
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(reproducir) {
+            player.playWhenReady = true
+        }
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        super.onIsPlayingChanged(isPlaying)
+        reproducir = isPlaying
     }
 
     fun introducirDatos(){
@@ -112,26 +136,6 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    override fun onPause() {
-        super.onPause()
-        if(reproducir){
-            player.playWhenReady = false
-            reproducir = true
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if(reproducir) {
-            player.playWhenReady = true
-        }
-    }
-
-    override fun onIsPlayingChanged(isPlaying: Boolean) {
-        super.onIsPlayingChanged(isPlaying)
-        reproducir = isPlaying
-    }
 
     private fun recogerDatosAutor(){
         introAutor.clear()
@@ -218,7 +222,9 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         val musicaAdapter = MusicaAdapter(lista,{
             ruta = it.ruta
             reproducir()
-        }, { Toast.makeText(this, "Click largo en album activity", Toast.LENGTH_LONG).show()})
+        }, {
+            comprobarExistePlaylist(it.id)
+        })
         binding.recyclerViewAlbum.adapter = musicaAdapter
         binding.recyclerViewAlbum.layoutManager = linearLayoutManager
         binding.recyclerViewAlbum.scrollToPosition(0)
@@ -247,11 +253,76 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
+    private fun buscarId(music: Int){
+        introPlaylist.clear()
+        referencePlaylist.get()
+        referencePlaylist.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                introPlaylist.clear()
+                if(crearId == 0) {
+                    for (messageSnapshot in snapshot.children) {
+                        var playlist = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
+                        if (playlist != null) {
+                            introPlaylist.add(playlist)
+                        }
+                    }
+                    filtrarDatosPlaylist(music)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun filtrarDatosPlaylist(music: Int){
+        if(crearId == 0) {
+            var tempPlaylist = introPlaylist.maxByOrNull { it.id }
+            crearId = tempPlaylist!!.id + 1
+            var randomString = UUID.randomUUID().toString()
+            referencePlaylist.child(randomString).setValue(ReadPlaylist(crearId, music, AppUse.user_id))
+        }
+    }
+
+    private fun comprobarExistePlaylist(objectId: Int){
+        referencePlaylist.get()
+        var query = referencePlaylist.orderByChild("user_id").equalTo(AppUse.user_id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children){
+                    if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
+                        Toast.makeText(
+                            applicationContext,
+                            "Esa cancion ya esta en tu playlist",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return
+                    }
+                }
+                crearId = 0
+                buscarId(objectId)
+                Toast.makeText(
+                    applicationContext,
+                    "Se ha añadido la cancion a tu playlist",
+                    Toast.LENGTH_LONG
+                ).show()
+                recogerDatosMusica()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAlbum = db.getReference("albums")
         referenceAutor = db.getReference("autors")
         referenceMusic = db.getReference("music")
+        referencePlaylist = db.getReference("playlists")
     }
 
     override fun onSupportNavigateUp() : Boolean{
