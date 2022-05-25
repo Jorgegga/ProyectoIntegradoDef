@@ -182,8 +182,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
             storageRef.downloadUrl.addOnSuccessListener() {
                 var url = it.toString()
                 player.addMediaItem(
-                    MediaItem.Builder().setUri(Uri.parse(url)).setMediaId(x!!.id.toString())
-                        .build()
+                    MediaItem.Builder().setUri(Uri.parse(url)).build()
                 )
             }
 

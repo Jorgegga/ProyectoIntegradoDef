@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityPlaylistBinding
 import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.musica.music.MusicaAdapter
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
+import com.example.proyectointegradodef.room.MusicaDatabase
 import com.example.proyectointegradodef.room.MusicaRoomAdapter
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -32,6 +34,8 @@ import java.io.IOException
 class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     lateinit var binding: ActivityPlaylistBinding
+    lateinit var database : MusicaDatabase
+    lateinit var allMusic : List<Musica>
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
@@ -71,7 +75,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Scarlet Perception"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        database = Room.databaseBuilder(this, MusicaDatabase::class.java, "musica_database").allowMainThreadQueries().build()
         renderersFactory = DefaultRenderersFactory(this)
         trackSelectionFactory = AdaptiveTrackSelection.Factory()
         trackSelectSelector = DefaultTrackSelector(this, trackSelectionFactory)
@@ -82,6 +86,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         extractorsFactory = DefaultExtractorsFactory()
 
         initDb()
+        allMusic = database.MusicaDao().getAllMusic()
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosPlaylist()
@@ -219,25 +224,33 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
+    fun roomPlaylist(){
+        for (x in allMusic){
+            player.addMediaItem(
+                MediaItem.Builder().setUri(Uri.parse(x!!.musica)).build()
+            )
+        }
+    }
+
     fun filtrarDatos() {
         var playlistAgrupada = introPlaylist.groupBy { it.user_id }
-
+        player.clearMediaItems()
+        roomPlaylist()
         if (playlistAgrupada[AppUse.user_id] != null) {
             introPlaylist = playlistAgrupada[AppUse.user_id] as ArrayList
             recyclerVacio = false
 
             var musicTemp: MutableList<ReadMusica> = ArrayList()
-            player.clearMediaItems()
             for (x in introPlaylist) {
                 var music = introMusic.find { it.id == x.music_id }
                 var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
                 storageRef.downloadUrl.addOnSuccessListener() {
                     var url = it.toString()
                     player.addMediaItem(
-                        MediaItem.Builder().setUri(Uri.parse(url)).setMediaId(music!!.id.toString())
-                            .build()
+                        MediaItem.Builder().setUri(Uri.parse(url)).build()
                     )
                 }
+
                 musicTemp.add(music!!)
             }
             introMusic.clear()
@@ -245,6 +258,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         } else {
             recyclerVacio = true
         }
+
+
     }
 
     private fun rellenarDatos() {
@@ -292,7 +307,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-            } else {
+            } else if(allMusic.isEmpty()) {
                 Toast.makeText(this, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG)
                     .show()
             }
@@ -302,12 +317,14 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {
+
         val linearLayoutManager = LinearLayoutManager(this)
         var musica = MusicaAdapter(lista, {
             nombre = it.nombre
             autor = it.autor
             cancion = it.ruta
             idSong = it.id
+            AppUse.recyclerPosition = allMusic.size + AppUse.recyclerPosition
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
@@ -334,18 +351,15 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
         })
 
-        if (idAutor == 0) {
-            binding.recyclerview.adapter = musica
-        } else {
-            /*var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
-                nombre = it.nombre
-                autor = it.autor
-                cancion = it.musica
-                reproducirRoom()
-            }
-            var total = ConcatAdapter(musica, musicaRoom)
-            binding.recyclerview.adapter = total*/
+
+        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
+            nombre = it.nombre
+            autor = it.autor
+            cancion = it.musica
+            reproducir()
         }
+        var total = ConcatAdapter(musicaRoom, musica)
+        binding.recyclerview.adapter = total
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.scrollToPosition(0)
         introMusic.clear()

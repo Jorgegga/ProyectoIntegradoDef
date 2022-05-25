@@ -253,8 +253,7 @@ class MusicaFragment : Fragment(), Player.Listener {
             storageRef.downloadUrl.addOnSuccessListener() {
                 var url = it.toString()
                 player.addMediaItem(
-                    MediaItem.Builder().setUri(Uri.parse(url)).setMediaId(x!!.id.toString())
-                        .build()
+                    MediaItem.Builder().setUri(Uri.parse(url)).build()
                 )
             }
             var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
