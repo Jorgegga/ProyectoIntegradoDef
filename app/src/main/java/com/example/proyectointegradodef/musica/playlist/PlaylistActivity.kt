@@ -34,8 +34,8 @@ import java.io.IOException
 class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     lateinit var binding: ActivityPlaylistBinding
-    lateinit var database : MusicaDatabase
-    lateinit var allMusic : List<Musica>
+    lateinit var database: MusicaDatabase
+    lateinit var allMusic: List<Musica>
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
@@ -75,7 +75,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Scarlet Perception"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        database = Room.databaseBuilder(this, MusicaDatabase::class.java, "musica_database").allowMainThreadQueries().build()
+        database = Room.databaseBuilder(this, MusicaDatabase::class.java, "musica_database")
+            .allowMainThreadQueries().build()
         renderersFactory = DefaultRenderersFactory(this)
         trackSelectionFactory = AdaptiveTrackSelection.Factory()
         trackSelectSelector = DefaultTrackSelector(this, trackSelectionFactory)
@@ -224,8 +225,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    fun roomPlaylist(){
-        for (x in allMusic){
+    fun roomPlaylist() {
+        for (x in allMusic) {
             player.addMediaItem(
                 MediaItem.Builder().setUri(Uri.parse(x!!.musica)).build()
             )
@@ -239,7 +240,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         if (playlistAgrupada[AppUse.user_id] != null) {
             introPlaylist = playlistAgrupada[AppUse.user_id] as ArrayList
             recyclerVacio = false
-
             var musicTemp: MutableList<ReadMusica> = ArrayList()
             for (x in introPlaylist) {
                 var music = introMusic.find { it.id == x.music_id }
@@ -250,7 +250,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                         MediaItem.Builder().setUri(Uri.parse(url)).build()
                     )
                 }
-
                 musicTemp.add(music!!)
             }
             introMusic.clear()
@@ -307,7 +306,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-            } else if(allMusic.isEmpty()) {
+            } else if (allMusic.isEmpty()) {
                 Toast.makeText(this, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG)
                     .show()
             }
@@ -317,7 +316,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {
-
         val linearLayoutManager = LinearLayoutManager(this)
         var musica = MusicaAdapter(lista, {
             nombre = it.nombre
@@ -352,7 +350,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
 
 
-        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
+        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>) {
             nombre = it.nombre
             autor = it.autor
             cancion = it.musica
@@ -389,7 +387,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun initDb() {
-        db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
+        db =
+            FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceMusic = db.getReference("music")
         referenceAlbum = db.getReference("albums")
         referenceAutor = db.getReference("autors")

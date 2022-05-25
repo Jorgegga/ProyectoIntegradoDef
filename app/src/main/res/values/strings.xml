@@ -23,7 +23,8 @@
     <string name="tvReset">Reset</string>
     <string name="tvCrear">Add</string>
     <string name="tvCrearLocal">Add locally</string>
-    <string name="tvCambio">Change</string>
+    <string name="tvCambioCamara">Change profile picture from camera</string>
+    <string name="tvCambioArchivo">Change profile picture from File System</string>
     <string name="rechazarPermisos">You have refused the permissions</string>
     <string name="noHasProporcionadoPermisos">You have not given the required permissions</string>
     <string name="noSeHaPodidoSubirElArchivo">The file couldnt be uploaded</string>

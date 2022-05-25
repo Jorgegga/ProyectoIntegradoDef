@@ -1,4 +1,4 @@
-package com.example.proyectointegradodef.camara
+package com.example.proyectointegradodef.perfil
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.FragmentCamaraBinding
+import com.example.proyectointegradodef.databinding.FragmentPerfilBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
@@ -39,15 +39,17 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 
-class CamaraFragment : Fragment() {
-    lateinit var binding : FragmentCamaraBinding
+class PerfilFragment : Fragment() {
+    lateinit var binding : FragmentPerfilBinding
     lateinit var db: FirebaseDatabase
     lateinit var reference: DatabaseReference
     lateinit var storage: FirebaseStorage
     lateinit var mUri: Uri
     lateinit var mediaStorageDir : File
     var storageFire = FirebaseStorage.getInstance()
-    val PERMISO_CODE = 150
+    val PERMISO_CODE_CAMARA = 150
+    val PERMISO_CODE_FICHERO = 200
+    val PICK_IMAGE_REQUEST = 100
 
     val user = Firebase.auth.currentUser
 
@@ -62,7 +64,7 @@ class CamaraFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCamaraBinding.inflate(inflater, container, false)
+        binding = FragmentPerfilBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -75,10 +77,18 @@ class CamaraFragment : Fragment() {
 
     fun listeners(){
         binding.btnCamara.setOnClickListener {
-            if(isPermisosConcedidos()){
+            if(isPermisosConcedidosCamara()){
                 tomarFoto()
             }else{
                 permisosCamara()
+            }
+        }
+
+        binding.btnCamara.setOnClickListener {
+            if(isPermisosConcedidosFichero()){
+                cogerFichero()
+            }else{
+                permisosFichero()
             }
         }
     }
@@ -112,16 +122,20 @@ class CamaraFragment : Fragment() {
                 )
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
+                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(header.findViewById<ImageView>(R.id.ivPerfil))
             }
         }
     }
 
-    private fun isPermisosConcedidos(): Boolean {
+    private fun isPermisosConcedidosCamara(): Boolean {
         return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun isPermisosConcedidosFichero(): Boolean{
+        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
     override fun onRequestPermissionsResult(
@@ -130,9 +144,17 @@ class CamaraFragment : Fragment() {
         grantResults: IntArray
     ) {
         when(requestCode){
-            PERMISO_CODE->{
+            PERMISO_CODE_CAMARA->{
                 if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)){
                     tomarFoto()
+                }else{
+                    Toast.makeText(context, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            PERMISO_CODE_FICHERO->{
+                if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    cogerFichero()
                 }else{
                     Toast.makeText(context, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
                 }
@@ -144,10 +166,26 @@ class CamaraFragment : Fragment() {
         var checkPermisos = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
         var checkPermisos2 = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
         if(checkPermisos != PackageManager.PERMISSION_GRANTED || checkPermisos2 !=PackageManager.PERMISSION_GRANTED){
-            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE), PERMISO_CODE)
+            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE), PERMISO_CODE_CAMARA)
         }else{
             Toast.makeText(requireContext(), resources.getString(R.string.noHasProporcionadoPermisos), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun permisosFichero(){
+        var checkPermisos = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+        if(checkPermisos != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISO_CODE_FICHERO)
+        }else{
+            Toast.makeText(requireContext(), resources.getString(R.string.noHasProporcionadoPermisos), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun cogerFichero(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
     fun tomarFoto(){
@@ -186,7 +224,7 @@ class CamaraFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == RESULT_OK){
+        if(requestCode == 0 && resultCode == RESULT_OK){
             mUri = Uri.fromFile(
                 Compressor(context).compressToFile(File(
                     mediaStorageDir.path + File.separator +
@@ -205,7 +243,12 @@ class CamaraFragment : Fragment() {
                 perfil()
                 perfilInicio()
             }
+        }else if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK){
+            var filePath = data!!.data
+            //var uri = Uri.fromFile(
+
         }
+
     }
 
     fun saveBitmapToFile(file: File): File? {
@@ -256,8 +299,8 @@ class CamaraFragment : Fragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(): CamaraFragment{
-            return CamaraFragment()
+        fun newInstance(): PerfilFragment{
+            return PerfilFragment()
         }
 
     }

@@ -32,14 +32,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MusicaFragment : Fragment(), Player.Listener {
-    lateinit var binding : FragmentMusicaBinding
+    lateinit var binding: FragmentMusicaBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceMusic: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceAutor: DatabaseReference
     lateinit var referencePlaylist: DatabaseReference
-    lateinit var database : MusicaDatabase
-    lateinit var allMusic : List<Musica>
     lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
     lateinit var extractorsFactory: DefaultExtractorsFactory
@@ -47,7 +45,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     lateinit var renderersFactory: DefaultRenderersFactory
     lateinit var trackSelectionFactory: AdaptiveTrackSelection.Factory
     lateinit var trackSelectSelector: DefaultTrackSelector
-    lateinit var loadControl : DefaultLoadControl
+    lateinit var loadControl: DefaultLoadControl
 
     var storageFire = FirebaseStorage.getInstance()
     var introMusic: MutableList<ReadMusica> = ArrayList()
@@ -67,10 +65,9 @@ class MusicaFragment : Fragment(), Player.Listener {
     var existeCancion = false
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        database = Room.databaseBuilder(requireContext(), MusicaDatabase::class.java, "musica_database").allowMainThreadQueries().build()
+
     }
 
     override fun onCreateView(
@@ -86,7 +83,6 @@ class MusicaFragment : Fragment(), Player.Listener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDb()
-        allMusic = database.MusicaDao().getAllMusic()
         binding.btnReproducir.isEnabled = false
         binding.tvNombreReproductor.isSelected = true
         binding.tvAutorReproductor.isSelected = true
@@ -108,7 +104,7 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     override fun onPause() {
         super.onPause()
-        if(reproducir){
+        if (reproducir) {
             player.playWhenReady = false
             reproducir = true
         }
@@ -117,7 +113,7 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     override fun onResume() {
         super.onResume()
-        if(reproducir) {
+        if (reproducir) {
             player.playWhenReady = true
         }
     }
@@ -132,49 +128,30 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     }
 
-    fun reproducir(){
-            try {
-                player.seekTo(AppUse.recyclerPosition, 0)
-                player.prepare()
-                player.playWhenReady = true
-                binding.videoView.player = player
-                binding.videoView.useArtwork = false
-                binding.tvAutorReproductor.text = autor
-                binding.tvNombreReproductor.text = nombre
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            Log.d("Escuchando audio...", "Escuchando audio...")
-    }
-
-    fun reproducirRoom(){
-            try {
-                var uri = Uri.parse(cancion)
-                var mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
-                    .createMediaSource(MediaItem.fromUri(uri))
-                player.setMediaSource(mediaSource)
-                player.prepare()
-                player.playWhenReady = true
-                binding.videoView.player = player
-                binding.videoView.useArtwork = false
-                binding.tvAutorReproductor.text = autor
-                binding.tvNombreReproductor.text = nombre
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+    fun reproducir() {
+        try {
+            player.seekTo(AppUse.recyclerPosition, 0)
+            player.prepare()
+            player.playWhenReady = true
+            binding.videoView.player = player
+            binding.videoView.useArtwork = false
+            binding.tvAutorReproductor.text = autor
+            binding.tvNombreReproductor.text = nombre
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
         Log.d("Escuchando audio...", "Escuchando audio...")
-
     }
 
-    private fun rellenarDatosMusic(){
+    private fun rellenarDatosMusic() {
         introMusic.clear()
         referenceMusic.get()
-        referenceMusic.addValueEventListener(object: ValueEventListener{
+        referenceMusic.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introMusic.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val music = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)
-                    if(music != null){
+                    if (music != null) {
                         introMusic.add(music)
                     }
                 }
@@ -188,15 +165,15 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
-    private fun rellenarDatosAlbum(){
+    private fun rellenarDatosAlbum() {
         introAlbum.clear()
         referenceAlbum.get()
-        referenceAlbum.addValueEventListener(object: ValueEventListener{
+        referenceAlbum.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introAlbum.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val album = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
-                    if(album != null){
+                    if (album != null) {
                         introAlbum.add(album)
                     }
                 }
@@ -210,15 +187,15 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
-    private fun rellenarDatosAutor(){
+    private fun rellenarDatosAutor() {
         introAutor.clear()
         referenceAutor.get()
-        referenceAutor.addValueEventListener(object: ValueEventListener{
+        referenceAutor.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introAutor.clear()
-                for(messageSnapshot in snapshot.children){
+                for (messageSnapshot in snapshot.children) {
                     val music = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
-                    if(music != null){
+                    if (music != null) {
                         introAutor.add(music)
                     }
                 }
@@ -232,23 +209,23 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
-    fun filtrarDatos(){
+    fun filtrarDatos() {
         var musicaAgrupada = introMusic.groupBy { it.autor_id }
-        if(musicaAgrupada[idAutor] != null) {
+        if (musicaAgrupada[idAutor] != null) {
             introMusic = musicaAgrupada[idAutor] as ArrayList
             recyclerVacio = false
-        }else {
+        } else {
             recyclerVacio = true
         }
     }
 
-    private fun rellenarDatos(){
+    private fun rellenarDatos() {
         introTotal.clear()
-        if(idAutor != 0){
+        if (idAutor != 0) {
             filtrarDatos()
         }
         player.clearMediaItems()
-        for (x in introMusic){
+        for (x in introMusic) {
             var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
             storageRef.downloadUrl.addOnSuccessListener() {
                 var url = it.toString()
@@ -256,17 +233,35 @@ class MusicaFragment : Fragment(), Player.Listener {
                     MediaItem.Builder().setUri(Uri.parse(url)).build()
                 )
             }
-            var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
-            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
-            var temp : ReadMusicaAlbumAutor
-            if(alb != null && aut != null){
-                temp = ReadMusicaAlbumAutor(x.id, x.nombre, x.album_id, alb.titulo, x.autor_id, aut.nombre, x.ruta, x.portada)
-            }else{
-                temp = ReadMusicaAlbumAutor(x.id, "default", x.album_id, alb!!.titulo, x.autor_id, "default", x.ruta, x.portada)
+            var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+            var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+            var temp: ReadMusicaAlbumAutor
+            if (alb != null && aut != null) {
+                temp = ReadMusicaAlbumAutor(
+                    x.id,
+                    x.nombre,
+                    x.album_id,
+                    alb.titulo,
+                    x.autor_id,
+                    aut.nombre,
+                    x.ruta,
+                    x.portada
+                )
+            } else {
+                temp = ReadMusicaAlbumAutor(
+                    x.id,
+                    "default",
+                    x.album_id,
+                    alb!!.titulo,
+                    x.autor_id,
+                    "default",
+                    x.ruta,
+                    x.portada
+                )
             }
             introTotal.add(temp)
         }
-        if(idSong != 0) {
+        if (idSong != 0) {
             var tempMusic = introMusic.find { it.id == idSong }
             var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
             if (tempMusic != null) {
@@ -280,9 +275,9 @@ class MusicaFragment : Fragment(), Player.Listener {
         setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
     }
 
-    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
+    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {
         val linearLayoutManager = LinearLayoutManager(context)
-        var musica = MusicaAdapter(lista,{
+        var musica = MusicaAdapter(lista, {
             nombre = it.nombre
             autor = it.autor
             cancion = it.ruta
@@ -296,7 +291,11 @@ class MusicaFragment : Fragment(), Player.Listener {
                     // Respond to neutral button press
                 }
                 .setNegativeButton("Rechazar") { dialog, which ->
-                    Toast.makeText(requireContext(), "No se ha añadido la canción a tu playlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "No se ha añadido la canción a tu playlist",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     comprobarExistePlaylist(it.id)
@@ -304,46 +303,35 @@ class MusicaFragment : Fragment(), Player.Listener {
                 }
                 .show()
         })
-
-        if(idAutor != 0){
-            binding.recyclerview.adapter = musica
-        }else {
-            var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>){
-                nombre = it.nombre
-                autor = it.autor
-                cancion = it.musica
-                reproducirRoom()
-            }
-            var total = ConcatAdapter(musica, musicaRoom)
-            binding.recyclerview.adapter = total
-        }
+        binding.recyclerview.adapter = musica
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.scrollToPosition(0)
 
     }
 
-    private fun actualizarReproductorCancion(x: ReadMusica){
-        if (binding.tvNombreReproductor.text != ""){
+    private fun actualizarReproductorCancion(x: ReadMusica) {
+        if (binding.tvNombreReproductor.text != "") {
             binding.tvNombreReproductor.text = x.nombre
         }
     }
 
-    private fun actualizarReproductorAutor(x: ReadAutorId){
-        if (binding.tvAutorReproductor.text != ""){
+    private fun actualizarReproductorAutor(x: ReadAutorId) {
+        if (binding.tvAutorReproductor.text != "") {
             binding.tvAutorReproductor.text = x.nombre
         }
 
     }
 
-    private fun buscarId(music: Int){
+    private fun buscarId(music: Int) {
         introPlaylist.clear()
         referencePlaylist.get()
-        referencePlaylist.addValueEventListener(object: ValueEventListener{
+        referencePlaylist.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 introPlaylist.clear()
-                if(crearId == 0) {
+                if (crearId == 0) {
                     for (messageSnapshot in snapshot.children) {
-                        var playlist = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
+                        var playlist =
+                            messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
                         if (playlist != null) {
                             introPlaylist.add(playlist)
                         }
@@ -358,22 +346,23 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
-    private fun filtrarDatosPlaylist(music: Int){
-        if(crearId == 0) {
+    private fun filtrarDatosPlaylist(music: Int) {
+        if (crearId == 0) {
             var tempPlaylist = introPlaylist.maxByOrNull { it.id }
             crearId = tempPlaylist!!.id + 1
             var randomString = UUID.randomUUID().toString()
-            referencePlaylist.child(randomString).setValue(ReadPlaylist(crearId, music, AppUse.user_id))
+            referencePlaylist.child(randomString)
+                .setValue(ReadPlaylist(crearId, music, AppUse.user_id))
         }
     }
 
-    private fun comprobarExistePlaylist(objectId: Int){
+    private fun comprobarExistePlaylist(objectId: Int) {
         referencePlaylist.get()
         var query = referencePlaylist.orderByChild("user_id").equalTo(AppUse.user_id.toDouble())
-        query.addListenerForSingleValueEvent(object: ValueEventListener{
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(messageSnapshot in snapshot.children){
-                    if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
+                for (messageSnapshot in snapshot.children) {
+                    if (messageSnapshot.child("music_id").value.toString() == objectId.toString()) {
                         Toast.makeText(
                             requireContext(),
                             "Esa cancion ya esta en tu playlist",
@@ -399,8 +388,9 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
-    private fun initDb(){
-        db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
+    private fun initDb() {
+        db =
+            FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceMusic = db.getReference("music")
         referenceAlbum = db.getReference("albums")
         referenceAutor = db.getReference("autors")
@@ -416,10 +406,9 @@ class MusicaFragment : Fragment(), Player.Listener {
     }
 
 
-
     companion object {
         @JvmStatic
-        fun newInstance(): MusicaFragment{
+        fun newInstance(): MusicaFragment {
             return MusicaFragment()
         }
 

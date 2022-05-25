@@ -19,12 +19,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.example.proyectointegradodef.camara.CamaraFragment
+import com.example.proyectointegradodef.perfil.PerfilFragment
 import com.example.proyectointegradodef.musica.music.CrearFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
-import com.example.proyectointegradodef.models.CrearFoto
 import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
@@ -36,7 +35,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
@@ -73,7 +71,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         fragmentCrear = CrearFragment()
         fragmentRead = MusicaFragment()
         fragmentCrearLocal = CrearRoomFragment()
-        fragmentCamara = CamaraFragment()
+        fragmentCamara = PerfilFragment()
         supportFragmentManager.beginTransaction().add(R.id.fragmentContainerView, fragmentPortada).commit()
 
     }

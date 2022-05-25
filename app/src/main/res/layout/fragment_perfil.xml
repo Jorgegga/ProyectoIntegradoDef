@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".camara.CamaraFragment">
+    tools:context=".perfil.PerfilFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,13 +26,26 @@
             android:id="@+id/btnCamara"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="203dp"
+            android:layout_marginTop="80dp"
             android:backgroundTint="@color/black"
-            android:text="@string/tvCambio"
+            android:text="@string/tvCambioCamara"
             android:textColor="#C8CDD0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivCamara" />
+
+        <Button
+            android:id="@+id/btnArchivo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/tvCambioArchivo"
+            android:textColor="#C8CDD0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCamara" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
