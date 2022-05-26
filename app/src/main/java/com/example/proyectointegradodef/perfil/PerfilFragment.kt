@@ -12,6 +12,7 @@ import android.os.Environment
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -84,7 +86,7 @@ class PerfilFragment : Fragment() {
             }
         }
 
-        binding.btnCamara.setOnClickListener {
+        binding.btnArchivo.setOnClickListener {
             if(isPermisosConcedidosFichero()){
                 cogerFichero()
             }else{
@@ -230,6 +232,7 @@ class PerfilFragment : Fragment() {
                     mediaStorageDir.path + File.separator +
                             "profile_img.jpg"
                 )))
+            Log.d("---------------------------------------------------", mUri.toString())
             val storageRef = storage.reference
             val imageRef = storageRef.child("proyecto/perfil/${user?.uid}.png")
             val uploadTask = imageRef.putFile(mUri)
@@ -244,9 +247,22 @@ class PerfilFragment : Fragment() {
                 perfilInicio()
             }
         }else if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK){
+            val storageRef = storage.reference
             var filePath = data!!.data
-            //var uri = Uri.fromFile(
-
+            Log.d("-----------------------------------------------------", filePath!!.isAbsolute.toString())
+            val imageRef = storageRef.child("proyecto/perfil/${user?.uid}.png")
+            var imagenComprimida = Compressor(context).compressToFile(File(filePath!!.path))
+            val uploadTask = imageRef.putFile(imagenComprimida.toUri())
+            uploadTask.addOnFailureListener {
+                Toast.makeText(requireContext(), resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
+            }.addOnSuccessListener {
+                val values = HashMap<String, Any>()
+                values["ruta"] = "gs://proyectointegradodam-eef79.appspot.com/proyecto/perfil/${user!!.uid}"
+                reference.child(user!!.uid).updateChildren(values)
+                Toast.makeText(requireContext(), resources.getString(R.string.fotoActualizada), Toast.LENGTH_LONG).show()
+                perfil()
+                perfilInicio()
+            }
         }
 
     }
