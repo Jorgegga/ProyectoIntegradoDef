@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -37,8 +36,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import id.zelory.compressor.Compressor
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 class PerfilFragment : Fragment() {
@@ -102,7 +101,7 @@ class PerfilFragment : Fragment() {
                 binding.ivCamara.setImageDrawable(getDrawable(requireContext(), R.drawable.keystoneback))
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
+                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivCamara)
             }
@@ -124,7 +123,7 @@ class PerfilFragment : Fragment() {
                 )
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
+                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(header.findViewById<ImageView>(R.id.ivPerfil))
             }
@@ -184,10 +183,9 @@ class PerfilFragment : Fragment() {
     }
 
     fun cogerFichero(){
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+        val i = Intent(Intent.ACTION_PICK)
+        i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        startActivityForResult(i, PICK_IMAGE_REQUEST)
     }
 
     fun tomarFoto(){
@@ -214,11 +212,10 @@ class PerfilFragment : Fragment() {
 
 
         mUri = Uri.fromFile(
-                        File(
+            File(
                 mediaStorageDir.path + File.separator +
                         "profile_img.jpg"
             )
-
         )
         i.putExtra(MediaStore.EXTRA_OUTPUT, mUri)
         startActivityForResult(i, 0)
@@ -232,7 +229,6 @@ class PerfilFragment : Fragment() {
                     mediaStorageDir.path + File.separator +
                             "profile_img.jpg"
                 )))
-            Log.d("---------------------------------------------------", mUri.toString())
             val storageRef = storage.reference
             val imageRef = storageRef.child("proyecto/perfil/${user?.uid}.png")
             val uploadTask = imageRef.putFile(mUri)
@@ -249,10 +245,12 @@ class PerfilFragment : Fragment() {
         }else if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK){
             val storageRef = storage.reference
             var filePath = data!!.data
-            Log.d("-----------------------------------------------------", filePath!!.isAbsolute.toString())
             val imageRef = storageRef.child("proyecto/perfil/${user?.uid}.png")
-            var imagenComprimida = Compressor(context).compressToFile(File(filePath!!.path))
-            val uploadTask = imageRef.putFile(imagenComprimida.toUri())
+            /*mUri = Uri.fromFile(
+                Compressor(context).compressToFile(File(
+                    filePath.path
+                )))*/
+            val uploadTask = imageRef.putFile(filePath!!)
             uploadTask.addOnFailureListener {
                 Toast.makeText(requireContext(), resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
             }.addOnSuccessListener {
@@ -263,47 +261,7 @@ class PerfilFragment : Fragment() {
                 perfil()
                 perfilInicio()
             }
-        }
-
     }
-
-    fun saveBitmapToFile(file: File): File? {
-        return try {
-
-            // BitmapFactory options to downsize the image
-            val o = BitmapFactory.Options()
-            o.inJustDecodeBounds = true
-            o.inSampleSize = 6
-            // factor of downsizing the image
-            var inputStream = FileInputStream(file)
-            //Bitmap selectedBitmap = null;
-            BitmapFactory.decodeStream(inputStream, null, o)
-            inputStream.close()
-
-            // The new size we want to scale to
-            val REQUIRED_SIZE = 75
-
-            // Find the correct scale value. It should be the power of 2.
-            var scale = 1
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                o.outHeight / scale / 2 >= REQUIRED_SIZE
-            ) {
-                scale *= 2
-            }
-            val o2 = BitmapFactory.Options()
-            o2.inSampleSize = scale
-            inputStream = FileInputStream(file)
-            val selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2)
-            inputStream.close()
-
-            // here i override the original image file
-            file.createNewFile()
-            val outputStream = FileOutputStream(file)
-            selectedBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            file
-        } catch (e: java.lang.Exception) {
-            null
-        }
     }
 
     private fun initDb(){

@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.example.proyectointegradodef.perfil.PerfilFragment
 import com.example.proyectointegradodef.musica.music.CrearFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
@@ -27,6 +26,7 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
+import com.example.proyectointegradodef.perfil.PerfilFragment
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.preferences.Prefs
 import com.example.proyectointegradodef.room.CrearRoomFragment
