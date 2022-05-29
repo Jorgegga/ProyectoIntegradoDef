@@ -65,6 +65,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         supportActionBar?.title = "Scarlet Perception"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
         renderersFactory = DefaultRenderersFactory(this)
         trackSelectionFactory = AdaptiveTrackSelection.Factory()
         trackSelectSelector = DefaultTrackSelector(this, trackSelectionFactory)
