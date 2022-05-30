@@ -101,7 +101,7 @@ class PerfilFragment : Fragment() {
                 binding.ivCamara.setImageDrawable(getDrawable(requireContext(), R.drawable.keystoneback))
             } else {
                 referencia2 = it.value as String
-                val gsReference2 = storageFire.getReferenceFromUrl(referencia2 + ".png")
+                val gsReference2 = storageFire.getReferenceFromUrl("$referencia2.png")
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivCamara)
             }
@@ -261,7 +261,7 @@ class PerfilFragment : Fragment() {
                 perfil()
                 perfilInicio()
             }
-    }
+        }
     }
 
     private fun initDb(){

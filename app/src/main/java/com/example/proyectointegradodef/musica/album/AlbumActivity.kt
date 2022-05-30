@@ -64,6 +64,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Scarlet Perception"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar?.setHomeButtonEnabled(true);
 
 
         renderersFactory = DefaultRenderersFactory(this)
