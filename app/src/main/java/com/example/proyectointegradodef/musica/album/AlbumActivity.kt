@@ -1,15 +1,19 @@
 package com.example.proyectointegradodef.musica.album
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.proyectointegradodef.InicioActivity
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityAlbumBinding
 import com.example.proyectointegradodef.glide.GlideApp
@@ -66,7 +70,6 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         //supportActionBar?.setHomeButtonEnabled(true);
 
-
         renderersFactory = DefaultRenderersFactory(this)
         trackSelectionFactory = AdaptiveTrackSelection.Factory()
         trackSelectSelector = DefaultTrackSelector(this, trackSelectionFactory)
@@ -83,6 +86,21 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.homeButton->{
+                val i = Intent(this, InicioActivity::class.java)
+                startActivity(i)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onPause() {
         super.onPause()

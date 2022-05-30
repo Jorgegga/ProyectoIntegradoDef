@@ -1,11 +1,16 @@
 package com.example.proyectointegradodef.musica
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
+import com.example.proyectointegradodef.InicioActivity
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityMusicaBinding
+import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -33,6 +38,23 @@ class MusicaActivity : AppCompatActivity() {
                 tab.text = tabTitle[position]
 
         }.attach()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_musica, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.playlistButton->{
+                val i = Intent(this, PlaylistActivity::class.java)
+                startActivity(i)
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
     
     override fun onSupportNavigateUp() : Boolean{

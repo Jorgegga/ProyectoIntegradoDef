@@ -1,9 +1,12 @@
 package com.example.proyectointegradodef.musica.playlist
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -13,6 +16,7 @@ import androidx.room.Room
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityPlaylistBinding
 import com.example.proyectointegradodef.models.*
+import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.musica.music.MusicaAdapter
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
@@ -93,6 +97,23 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         rellenarDatosPlaylist()
         rellenarDatosMusic()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_playlist, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.musicaButton->{
+                val i = Intent(this, MusicaActivity::class.java)
+                startActivity(i)
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
