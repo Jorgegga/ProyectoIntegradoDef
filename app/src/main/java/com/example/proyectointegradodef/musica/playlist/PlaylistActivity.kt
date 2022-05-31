@@ -371,12 +371,31 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
 
 
-        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>) {
+        var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>, {
             nombre = it.nombre
             autor = it.autor
             cancion = it.musica
             reproducir()
-        }
+        }, {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Borrar de la playlist")
+                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de tu playlist?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(
+                        this,
+                        "No se ha borrado la canción de tu playlist",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    borrarRoom(Musica(it.uid, it.nombre, it.autor, it.musica))
+                    Toast.makeText(this,"Se ha borrado la canción ${it.nombre} de tu playlist", Toast.LENGTH_LONG).show()
+                }
+                .show()
+
+        })
         var total = ConcatAdapter(musicaRoom, musica)
         binding.recyclerview.adapter = total
         binding.recyclerview.layoutManager = linearLayoutManager
@@ -405,6 +424,12 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             }
 
         })
+    }
+
+    private fun borrarRoom(cancion: Musica){
+        database.MusicaDao().deleteMusic(Musica(cancion.uid, cancion.nombre, cancion.autor, cancion.musica))
+        allMusic = database.MusicaDao().getAllMusic()
+        setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
     }
 
     private fun initDb() {

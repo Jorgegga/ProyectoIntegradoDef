@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef.room
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.proyectointegradodef.room.Musica
@@ -13,4 +14,7 @@ interface MusicaDao {
 
     @Insert
     fun insertMusic(music: Musica)
+
+    @Delete
+    fun deleteMusic(music: Musica)
 }

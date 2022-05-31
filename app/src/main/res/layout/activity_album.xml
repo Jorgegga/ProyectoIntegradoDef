@@ -112,9 +112,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/Theme.AppCompat.Light.NoActionBar"
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:titleTextColor="#C8CDD0" >
+        app:titleTextColor="#C8CDD0" />
 
-
-    </androidx.appcompat.widget.Toolbar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

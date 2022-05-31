@@ -9,12 +9,20 @@ import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.MusicaroomLayoutBinding
 import com.example.proyectointegradodef.preferences.AppUse
 
-class MusicaRoomAdapter(private val allMusic: ArrayList<Musica>, private val clickListener: (Musica) -> Unit) : RecyclerView.Adapter<MusicaRoomViewHolder>(){
+class MusicaRoomAdapter(
+    private val allMusic: ArrayList<Musica>,
+    private val clickListener: (Musica) -> Unit,
+    private val longClickListener: (Musica) -> Unit
+) : RecyclerView.Adapter<MusicaRoomViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicaRoomViewHolder {
-        val inflater = MusicaRoomViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.musicaroom_layout, parent, false)){
-            clickListener(allMusic[it])
-        }
+        val inflater = MusicaRoomViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.musicaroom_layout, parent, false),
+            {
+                clickListener(allMusic[it])
+            }, {
+                longClickListener(allMusic[it])
+            })
         return inflater
     }
 
@@ -25,13 +33,15 @@ class MusicaRoomAdapter(private val allMusic: ArrayList<Musica>, private val cli
             AppUse.recyclerPosition = position
             clickListener(allMusic[position])
         }
+        holder.itemView.setOnLongClickListener {
+            longClickListener(allMusic[position])
+            true
+        }
     }
 
     override fun getItemCount(): Int {
         return allMusic.size
     }
-
-
 
 
 }

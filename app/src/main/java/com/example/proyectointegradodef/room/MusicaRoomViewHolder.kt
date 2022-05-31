@@ -7,12 +7,16 @@ import com.example.proyectointegradodef.databinding.MusicaroomLayoutBinding
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 
-class MusicaRoomViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
+class MusicaRoomViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = MusicaroomLayoutBinding.bind(v)
 
     init{
         itemView.setOnClickListener {
             clickAtPosition(absoluteAdapterPosition)
+        }
+        itemView.setOnLongClickListener {
+            longClickAtPosition(absoluteAdapterPosition)
+            true
         }
     }
 
