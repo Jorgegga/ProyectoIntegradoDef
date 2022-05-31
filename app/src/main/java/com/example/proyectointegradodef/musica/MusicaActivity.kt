@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
-import com.example.proyectointegradodef.InicioActivity
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityMusicaBinding
 import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
@@ -17,9 +16,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MusicaActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMusicaBinding
-    var tabTitle = arrayOf("Albums", "Autores", "Música")
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
+
+    var tabTitle = arrayOf("Albums", "Autores", "Música")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,7 @@ class MusicaActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
-        viewPager.adapter = MusicAdapter(supportFragmentManager, lifecycle)
+        viewPager.adapter = MusicaAdapter(supportFragmentManager, lifecycle)
 
         TabLayoutMediator(tabLayout, viewPager){
             tab, position ->

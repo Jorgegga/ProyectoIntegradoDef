@@ -9,7 +9,7 @@ import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.musica.album.AlbumFragment
 import com.example.proyectointegradodef.musica.autor.AutorFragment
 
-class MusicAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle){
+class MusicaAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle){
     override fun getItemCount(): Int {
         return 3
     }

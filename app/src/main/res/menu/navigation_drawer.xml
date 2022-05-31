@@ -28,7 +28,7 @@
                         android:icon="@drawable/keystoneback"
                         android:title="@string/playlist" />
                     <item
-                        android:id="@+id/btnSubir"
+                        android:id="@+id/btnCrud"
                         android:enabled="true"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvSubirMusica" />

@@ -25,6 +25,7 @@ import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
+import com.example.proyectointegradodef.musica.crud.CrudActivity
 import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
 import com.example.proyectointegradodef.perfil.PerfilFragment
 import com.example.proyectointegradodef.preferences.AppUse
@@ -220,10 +221,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
 
-            R.id.btnSubir ->{
-                transaction.replace(R.id.fragmentContainerView, fragmentCrear).commit()
-                transaction.addToBackStack(null)
-                item.isChecked = true
+            R.id.btnCrud ->{
+                val i = Intent(this, CrudActivity::class.java)
+                startActivity(i)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 binding.drawerLayout.close()
                 return true
             }

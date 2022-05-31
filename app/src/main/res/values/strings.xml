@@ -6,7 +6,7 @@
     <string name="tvInicio">Start page</string>
     <string name="tvMusica">Music</string>
     <string name="tvListaMusica">Music list</string>
-    <string name="tvSubirMusica">Upload music</string>
+    <string name="tvSubirMusica">Admin zone</string>
     <string name="tvSubirMusicaLocal">Upload local music</string>
     <string name="tvUsuario">User</string>
     <string name="tvCambiarFoto">Change profile picture</string>

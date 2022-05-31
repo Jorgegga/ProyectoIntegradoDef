@@ -6,7 +6,7 @@
     <string name= "tvInicio">Inicio</string>
     <string name= "tvMusica">Música</string>
     <string name= "tvListaMusica">Lista de música</string>
-    <string name="tvSubirMusica">Subir música</string>
+    <string name="tvSubirMusica">Zona admin</string>
     <string name="tvSubirMusicaLocal">Subir música local</string>
     <string name="tvUsuario">Usuario</string>
     <string name="tvCambiarFoto">Cambiar foto de perfil</string>

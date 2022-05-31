@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoIntegradoDef">
         <activity
+            android:name=".musica.crud.CrudActivity"
+            android:exported="false" />
+        <activity
             android:name=".musica.playlist.PlaylistActivity"
             android:exported="false" />
         <activity
