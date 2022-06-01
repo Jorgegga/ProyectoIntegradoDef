@@ -8,5 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ToolBar">#0f2738</color>
-    <color name="text_barras">#C8CDD0</color>
+    <color name="fondo_oscuro">#192229</color>
+    <color name="fondo_cards">#212E36</color>
+    <color name="texto_principal">#EFF3F5</color>
+    <color name="texto_secundario">#C8CDD0</color>
+    <color name="text_terciario">#6c757d</color>
 </resources>

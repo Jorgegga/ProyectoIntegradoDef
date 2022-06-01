@@ -30,6 +30,7 @@
                     <item
                         android:id="@+id/btnCrud"
                         android:enabled="true"
+                        android:checkable="false"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvSubirMusica" />
                     <item

@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.proyectointegradodef.PortadaFragment
 import com.example.proyectointegradodef.musica.album.AlbumFragment
 import com.example.proyectointegradodef.musica.autor.AutorFragment
+import com.example.proyectointegradodef.musica.crud.autor.AdminAutorFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 
 class CrudAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -16,7 +17,7 @@ class CrudAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): Fragm
 
     override fun createFragment(position: Int): Fragment {
         when (position){
-            0 -> return AlbumFragment()
+            0 -> return AdminAutorFragment()
             1 -> return AutorFragment()
             2 -> return MusicaFragment()
             3 -> return AlbumFragment()
