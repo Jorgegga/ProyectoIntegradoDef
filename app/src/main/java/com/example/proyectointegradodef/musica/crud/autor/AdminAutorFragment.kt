@@ -37,6 +37,19 @@ class AdminAutorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initDb()
         recogerDatosAutor()
+        listeners()
+
+    }
+
+    private fun listeners(){
+        binding.btnCrearAutor.setOnClickListener {
+            var i = Intent(requireContext(), CrearAutorActivity::class.java)
+            startActivity(i)
+        }
+    }
+
+    private fun findView(){
+        //var mRevealLayout = activity.findViewById<RevealLayout>()
     }
 
     private fun recogerDatosAutor(){
