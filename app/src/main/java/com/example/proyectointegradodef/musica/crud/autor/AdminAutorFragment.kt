@@ -42,7 +42,7 @@ class AdminAutorFragment : Fragment() {
     }
 
     private fun listeners(){
-        binding.btnCrearAutor.setOnClickListener {
+        binding.btnAnnadirAutor.setOnClickListener {
             var i = Intent(requireContext(), CrearAutorActivity::class.java)
             startActivity(i)
         }

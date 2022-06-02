@@ -37,6 +37,8 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="22dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:srcCompat="@drawable/keystoneback" />
