@@ -6,18 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminAutorBinding
 import com.example.proyectointegradodef.models.ReadAutor
-import com.example.proyectointegradodef.musica.autor.AutorActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
 class AdminAutorFragment : Fragment() {
 
     lateinit var binding: FragmentAdminAutorBinding
     lateinit var db: FirebaseDatabase
     lateinit var reference: DatabaseReference
+    lateinit var storage: FirebaseStorage
     var autor: MutableList<ReadAutor> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +44,7 @@ class AdminAutorFragment : Fragment() {
         initDb()
         recogerDatosAutor()
         listeners()
-
+        storage = Firebase.storage
     }
 
     private fun listeners(){
@@ -79,7 +84,7 @@ class AdminAutorFragment : Fragment() {
 
     private fun setRecycler(lista: ArrayList<ReadAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerViewCrudAutor.adapter = AdminAutorAdapter(lista){
+        binding.recyclerViewCrudAutor.adapter = AdminAutorAdapter(lista,{
             val bundle = Bundle()
             bundle.putInt("id", it.id)
             bundle.putString("nombre", it.nombre)
@@ -89,11 +94,58 @@ class AdminAutorFragment : Fragment() {
             intent.putExtras(bundle)
             startActivity(intent)
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
-        }
+        },{
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Borrar autor")
+                .setMessage("¿Quieres borrar el autor " + it.nombre + " de la base de datos?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                    // Respond to neutral button press
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(
+                        requireContext(),
+                        "No se ha borrado el autor",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    borrarAutor(it.id, it.foto)
+
+                }
+                .show()
+        })
         binding.recyclerViewCrudAutor.scrollToPosition(0)
         binding.recyclerViewCrudAutor.layoutManager = linearLayoutManager
 
     }
+
+    private fun borrarAutor(id: Int, foto: String){
+        reference.get()
+        var query = reference.orderByChild("id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                    for (messageSnapshot in snapshot.children) {
+                        if (messageSnapshot.child("id").value.toString() == id.toString()) {
+                            val storageRef = storage.reference
+                            if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default") {
+                                val imageRef =
+                                    storageRef.child("proyecto/album/${messageSnapshot.key}.png")
+                                imageRef.delete()
+                            }
+                            messageSnapshot.ref.removeValue()
+                            setRecycler(autor as ArrayList<ReadAutor>)
+                            return
+                        }
+                    }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")

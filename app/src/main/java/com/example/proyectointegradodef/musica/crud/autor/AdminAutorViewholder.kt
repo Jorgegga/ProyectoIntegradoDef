@@ -11,13 +11,17 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.storage.FirebaseStorage
 
-class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
+class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AdminAutorLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
 
     init{
         itemView.setOnClickListener {
             clickAtPosition(absoluteAdapterPosition)
+        }
+        itemView.setOnLongClickListener {
+            longClickAtPosition(absoluteAdapterPosition)
+            true
         }
     }
 

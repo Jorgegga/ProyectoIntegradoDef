@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadAutor
 
-class AdminAutorAdapter(private val lista: ArrayList<ReadAutor>, private val clickListener: (ReadAutor) -> Unit): RecyclerView.Adapter<AdminAutorViewholder>() {
+class AdminAutorAdapter(private val lista: ArrayList<ReadAutor>, private val clickListener: (ReadAutor) -> Unit, private val onLongClickListener: (ReadAutor) -> Unit): RecyclerView.Adapter<AdminAutorViewholder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminAutorViewholder {
-        val inflater = AdminAutorViewholder(LayoutInflater.from(parent.context).inflate(R.layout.admin_autor_layout, parent, false)){
+        val inflater = AdminAutorViewholder(LayoutInflater.from(parent.context).inflate(R.layout.admin_autor_layout, parent, false),{
             clickListener(lista[it])
-        }
+        },{
+            onLongClickListener(lista[it])
+        })
         return inflater
     }
 
@@ -19,6 +21,10 @@ class AdminAutorAdapter(private val lista: ArrayList<ReadAutor>, private val cli
         holder.render(autor)
         holder.itemView.setOnClickListener {
             clickListener(lista[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            onLongClickListener(lista[position])
+            true
         }
     }
 
