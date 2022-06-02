@@ -7,13 +7,17 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.ActivityCrearAutorBinding
+import com.example.proyectointegradodef.databinding.ActivityUpdateAutorBinding
+import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -21,9 +25,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
-class CrearAutorActivity : AppCompatActivity() {
+class UpdateAutorActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityCrearAutorBinding
+    lateinit var binding: ActivityUpdateAutorBinding
     lateinit var db: FirebaseDatabase
     lateinit var reference: DatabaseReference
     lateinit var storage: FirebaseStorage
@@ -34,10 +38,12 @@ class CrearAutorActivity : AppCompatActivity() {
     val PERMISO_CODE_FICHERO = 200
     val PICK_IMAGE_REQUEST = 100
     var crearId = 0
+    var key = ""
+    var foto = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCrearAutorBinding.inflate(layoutInflater)
+        binding = ActivityUpdateAutorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -46,11 +52,12 @@ class CrearAutorActivity : AppCompatActivity() {
         storage = Firebase.storage
         initDb()
         listeners()
+        recuperarDatos()
     }
 
     private fun listeners() {
         binding.btnResetAutor.setOnClickListener {
-            limpiar()
+            recuperarDatos()
         }
         binding.ibAutor.setOnClickListener {
             if(isPermisosConcedidosFichero()){
@@ -61,48 +68,30 @@ class CrearAutorActivity : AppCompatActivity() {
         }
         binding.btnCrearAutor.setOnClickListener {
             if(comprobarCampos()){
-                buscarId()
+                buscarKey()
             }
         }
     }
 
-    private fun annadirAutor() {
+    private fun actualizarAutor() {
         val storageRef = storage.reference
-        var randomString = UUID.randomUUID().toString()
-        val imageRef = storageRef.child("proyecto/album/${randomString}.png")
+        val imageRef = storageRef.child("proyecto/album/${key}.png")
         val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
-            var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
-            reference.child(randomString).setValue(ReadAutor(crearId, nombre, ruta, descripcion))
+            reference.child(key).setValue(ReadAutor(crearId, nombre, foto, descripcion))
             Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG).show()
-            limpiar()
         }else {
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
             }.addOnCompleteListener {
                 var ruta =
-                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$randomString"
-                reference.child(randomString)
+                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
+                reference.child(key)
                     .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
                 Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG)
                     .show()
-                limpiar()
             }
         }
-
-    }
-
-    private fun limpiar() {
-        binding.etNombreAutor.text.clear()
-        binding.etDescripcionAutor.text.clear()
-        binding.ibAutor.setImageDrawable(
-            AppCompatResources.getDrawable(
-            this,
-            R.drawable.default_autor
-        ))
-        imagen = "".toUri()
-        nombre = ""
-        descripcion = ""
     }
 
     private fun comprobarCampos(): Boolean{
@@ -165,19 +154,17 @@ class CrearAutorActivity : AppCompatActivity() {
         startActivityForResult(i, PICK_IMAGE_REQUEST)
     }
 
-    private fun buscarId() {
+    private fun buscarKey() {
         reference.get()
-        var query = reference.orderByChild("id").limitToLast(1)
+        var query = reference.orderByChild("id").equalTo(crearId.toDouble())
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (crearId == 0) {
                     for (messageSnapshot in snapshot.children) {
-                        crearId = messageSnapshot.getValue<ReadAutor>(ReadAutor::class.java)!!.id + 1
-                        annadirAutor()
+                        key = messageSnapshot.key.toString()
+                        actualizarAutor()
                         return
                     }
 
-                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -186,6 +173,25 @@ class CrearAutorActivity : AppCompatActivity() {
         })
     }
 
+    fun recuperarDatos(){
+        val bundle = intent.extras
+        crearId = bundle!!.getInt("id", 0)
+        foto = bundle!!.getString("foto", "Default")
+        if(foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"){
+            binding.ibAutor.setImageDrawable(AppCompatResources.getDrawable(
+                this,
+                R.drawable.default_autor))
+        }else{
+            val gsReference2 = storage.getReferenceFromUrl("$foto.png")
+            val option = RequestOptions().error(R.drawable.default_album)
+            GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ibAutor)
+        }
+        nombre = bundle!!.getString("nombre", "Default")
+        descripcion = bundle!!.getString("descripcion", "Default")
+        binding.etNombreAutor.setText(nombre)
+        binding.etDescripcionAutor.setText(descripcion)
+        imagen = "".toUri()
+    }
 
     override fun onSupportNavigateUp() : Boolean{
         finish()
@@ -197,5 +203,4 @@ class CrearAutorActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         reference = db.getReference("autors")
     }
-
 }

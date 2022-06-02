@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminAutorBinding
 import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.musica.autor.AutorActivity
@@ -45,6 +46,7 @@ class AdminAutorFragment : Fragment() {
         binding.btnAnnadirAutor.setOnClickListener {
             var i = Intent(requireContext(), CrearAutorActivity::class.java)
             startActivity(i)
+            requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         }
     }
 
@@ -81,9 +83,12 @@ class AdminAutorFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", it.id)
             bundle.putString("nombre", it.nombre)
-            var intent = Intent(context, AutorActivity::class.java)
+            bundle.putString("foto", it.foto)
+            bundle.putString("descripcion", it.descripcion)
+            var intent = Intent(context, UpdateAutorActivity::class.java)
             intent.putExtras(bundle)
             startActivity(intent)
+            requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         }
         binding.recyclerViewCrudAutor.scrollToPosition(0)
         binding.recyclerViewCrudAutor.layoutManager = linearLayoutManager

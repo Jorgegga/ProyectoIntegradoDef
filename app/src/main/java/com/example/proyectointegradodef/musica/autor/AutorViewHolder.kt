@@ -24,7 +24,7 @@ class AutorViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.Vie
         binding.tvNombreRecycler.text = autor.nombre
         binding.tvDescripcionRecycler.text = autor.descripcion
         val gsReference2 = storageFire.getReferenceFromUrl(autor.foto + ".png")
-        val option = RequestOptions().error(R.drawable.default_album)
+        val option = RequestOptions().error(R.drawable.default_autor)
         GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivFotoRecycler)
 
     }

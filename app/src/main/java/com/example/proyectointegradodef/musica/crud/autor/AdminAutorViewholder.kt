@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef.musica.crud.autor
 
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -23,8 +24,18 @@ class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit): RecyclerVie
     fun render(autor: ReadAutor){
         binding.tvNombreAutor.text = autor.nombre
         binding.tvDescripcionAutor.text = autor.descripcion
-        val gsReference2 = storageFire.getReferenceFromUrl(autor.foto + ".png")
-        val option = RequestOptions().error(R.drawable.default_album)
-        GlideApp.with(itemView.context).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ivAutorCrud)
+        if(autor.foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"){
+            binding.ivAutorCrud.setImageDrawable(
+                AppCompatResources.getDrawable(
+                itemView.context,
+                R.drawable.default_autor
+            ))
+        }else {
+            val gsReference2 = storageFire.getReferenceFromUrl(autor.foto + ".png")
+            val option = RequestOptions().error(R.drawable.default_album)
+            GlideApp.with(itemView.context).load(gsReference2)
+                .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option)
+                .into(binding.ivAutorCrud)
+        }
     }
 }
