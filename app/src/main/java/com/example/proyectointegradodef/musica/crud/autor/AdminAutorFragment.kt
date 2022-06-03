@@ -146,7 +146,6 @@ class AdminAutorFragment : Fragment() {
         })
     }
 
-
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         reference = db.getReference("autors")
