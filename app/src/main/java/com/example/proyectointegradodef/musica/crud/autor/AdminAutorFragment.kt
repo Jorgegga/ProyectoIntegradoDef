@@ -127,9 +127,9 @@ class AdminAutorFragment : Fragment() {
                     for (messageSnapshot in snapshot.children) {
                         if (messageSnapshot.child("id").value.toString() == id.toString()) {
                             val storageRef = storage.reference
-                            if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default") {
+                            if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/default") {
                                 val imageRef =
-                                    storageRef.child("proyecto/album/${messageSnapshot.key}.png")
+                                    storageRef.child("proyecto/autor/${messageSnapshot.key}.png")
                                 imageRef.delete()
                             }
                             messageSnapshot.ref.removeValue()

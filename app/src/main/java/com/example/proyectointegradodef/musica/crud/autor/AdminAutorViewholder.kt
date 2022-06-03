@@ -28,7 +28,7 @@ class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
     fun render(autor: ReadAutor){
         binding.tvNombreAutor.text = autor.nombre
         binding.tvDescripcionAutor.text = autor.descripcion
-        if(autor.foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"){
+        if(autor.foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/default"){
             binding.ivAutorCrud.setImageDrawable(
                 AppCompatResources.getDrawable(
                 itemView.context,

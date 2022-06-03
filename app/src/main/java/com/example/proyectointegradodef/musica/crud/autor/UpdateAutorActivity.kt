@@ -75,7 +75,7 @@ class UpdateAutorActivity : AppCompatActivity() {
 
     private fun actualizarAutor() {
         val storageRef = storage.reference
-        val imageRef = storageRef.child("proyecto/album/${key}.png")
+        val imageRef = storageRef.child("proyecto/autor/${key}.png")
         val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadAutor(crearId, nombre, foto, descripcion))
@@ -85,7 +85,7 @@ class UpdateAutorActivity : AppCompatActivity() {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
             }.addOnCompleteListener {
                 var ruta =
-                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
+                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/$key"
                 reference.child(key)
                     .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
                 Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG)
@@ -177,7 +177,7 @@ class UpdateAutorActivity : AppCompatActivity() {
         val bundle = intent.extras
         crearId = bundle!!.getInt("id", 0)
         foto = bundle!!.getString("foto", "Default")
-        if(foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"){
+        if(foto == "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/default"){
             binding.ibAutor.setImageDrawable(AppCompatResources.getDrawable(
                 this,
                 R.drawable.default_autor))

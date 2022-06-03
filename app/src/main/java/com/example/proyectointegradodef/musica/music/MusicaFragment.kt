@@ -323,20 +323,15 @@ class MusicaFragment : Fragment(), Player.Listener {
     }
 
     private fun buscarId(music: Int) {
-        introPlaylist.clear()
         referencePlaylist.get()
-        referencePlaylist.addValueEventListener(object : ValueEventListener {
+        var query = referencePlaylist.orderByChild("id").limitToLast(1)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                introPlaylist.clear()
                 if (crearId == 0) {
                     for (messageSnapshot in snapshot.children) {
-                        var playlist =
-                            messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
-                        if (playlist != null) {
-                            introPlaylist.add(playlist)
-                        }
+                        crearId = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)!!.id + 1
+                        filtrarDatosPlaylist(music)
                     }
-                    filtrarDatosPlaylist(music)
                 }
             }
 
@@ -347,9 +342,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     }
 
     private fun filtrarDatosPlaylist(music: Int) {
-        if (crearId == 0) {
-            var tempPlaylist = introPlaylist.maxByOrNull { it.id }
-            crearId = tempPlaylist!!.id + 1
+        if (crearId != 0) {
             var randomString = UUID.randomUUID().toString()
             referencePlaylist.child(randomString)
                 .setValue(ReadPlaylist(crearId, music, AppUse.user_id))
