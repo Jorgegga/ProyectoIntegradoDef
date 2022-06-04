@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/tvNombreAutor"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="16dp"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tvDescripcionAutor"
-            android:layout_width="240dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"

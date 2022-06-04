@@ -55,10 +55,6 @@ class AdminAutorFragment : Fragment() {
         }
     }
 
-    private fun findView(){
-        //var mRevealLayout = activity.findViewById<RevealLayout>()
-    }
-
     private fun recogerDatosAutor(){
         autor.clear()
         reference.get()
@@ -133,6 +129,7 @@ class AdminAutorFragment : Fragment() {
                                 imageRef.delete()
                             }
                             messageSnapshot.ref.removeValue()
+                            Toast.makeText(requireContext(), "Se ha borrado el autor correctamente", Toast.LENGTH_LONG).show()
                             setRecycler(autor as ArrayList<ReadAutor>)
                             return
                         }

@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoIntegradoDef">
         <activity
+            android:name=".musica.crud.genero.UpdateGeneroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".musica.crud.genero.CrearGeneroActivity"
+            android:exported="false" />
+        <activity
             android:name=".musica.crud.autor.UpdateAutorActivity"
             android:exported="false" />
         <activity
