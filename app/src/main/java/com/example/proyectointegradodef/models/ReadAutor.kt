@@ -8,8 +8,12 @@ class ReadAutor {
         this.foto = foto
         this.descripcion = descripcion
     }
+
+
     var id = 0
     var nombre = ""
     var foto = ""
     var descripcion = ""
+
+
 }

@@ -103,6 +103,7 @@ class CrearAutorActivity : AppCompatActivity() {
         imagen = "".toUri()
         nombre = ""
         descripcion = ""
+        crearId = 0
     }
 
     private fun comprobarCampos(): Boolean{

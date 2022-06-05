@@ -75,6 +75,7 @@ class CrearGeneroActivity : AppCompatActivity() {
             ))
         imagen = "".toUri()
         nombre = ""
+        crearId = 0
     }
 
     private fun isPermisosConcedidosFichero(): Boolean{

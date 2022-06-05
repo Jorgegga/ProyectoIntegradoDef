@@ -1,34 +1,43 @@
-package com.example.proyectointegradodef.musica.album
+package com.example.proyectointegradodef.musica.crud.album
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.proyectointegradodef.R
+import com.example.proyectointegradodef.databinding.FragmentAdminAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAlbumAutor
+import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.models.ReadAutorId
+import com.example.proyectointegradodef.musica.album.AlbumActivity
+import com.example.proyectointegradodef.musica.album.AlbumAdapter
+import com.example.proyectointegradodef.musica.crud.autor.CrearAutorActivity
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
+class AdminAlbumFragment : Fragment() {
 
-class AlbumFragment : Fragment() {
-    lateinit var binding: FragmentAlbumBinding
+    lateinit var binding: FragmentAdminAlbumBinding
     lateinit var db: FirebaseDatabase
-    lateinit var reference: DatabaseReference
-    lateinit var reference2: DatabaseReference
-    var album: MutableList<ReadAlbum> = ArrayList()
-    var autor: MutableList<ReadAutorId> = ArrayList()
-    var albumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
+    lateinit var referenceAutor: DatabaseReference
+    lateinit var referenceAlbum: DatabaseReference
+    lateinit var storage: FirebaseStorage
+    var introAutor: MutableList<ReadAutorId> = ArrayList()
+    var introAlbum: MutableList<ReadAlbum> = ArrayList()
+    var introAlbumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
 
     var idAutor = 0
     var recyclerVacio = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -36,29 +45,37 @@ class AlbumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentAlbumBinding.inflate(inflater, container, false)
+        binding = FragmentAdminAlbumBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDb()
-        recogerBundle()
         recogerDatosAutor()
         recogerDatosAlbum()
+        listeners()
+        storage = Firebase.storage
+    }
 
+    private fun listeners(){
+        binding.btnAnnadirAlbum.setOnClickListener {
+            var i = Intent(requireContext(), CrearAlbumActivity::class.java)
+            startActivity(i)
+            requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
+        }
     }
 
     private fun recogerDatosAlbum(){
-        album.clear()
-        reference.get()
-        reference.addValueEventListener(object: ValueEventListener {
+        introAlbum.clear()
+        referenceAlbum.get()
+        referenceAlbum.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                album.clear()
+                introAlbum.clear()
                 for(messageSnapshot in snapshot.children){
                     val tema = messageSnapshot.getValue<ReadAlbum>(ReadAlbum::class.java)
                     if(tema != null){
-                        album.add(tema)
+                        introAlbum.add(tema)
                     }
                 }
                 rellenarDatos()
@@ -73,15 +90,15 @@ class AlbumFragment : Fragment() {
     }
 
     private fun recogerDatosAutor(){
-        autor.clear()
-        reference2.get()
-        reference2.addValueEventListener(object: ValueEventListener {
+        introAutor.clear()
+        referenceAutor.get()
+        referenceAutor.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                autor.clear()
+                introAutor.clear()
                 for(messageSnapshot in snapshot.children){
                     val tema = messageSnapshot.getValue<ReadAutorId>(ReadAutorId::class.java)
                     if(tema != null){
-                        autor.add(tema)
+                        introAutor.add(tema)
                     }
                 }
                 rellenarDatos()
@@ -95,9 +112,9 @@ class AlbumFragment : Fragment() {
     }
 
     fun filtrarDatos(){
-        var albumsAgrupados = album.groupBy { it.idautor }
+        var albumsAgrupados = introAlbum.groupBy { it.idautor }
         if(albumsAgrupados[idAutor] != null) {
-            album = albumsAgrupados[idAutor] as ArrayList
+            introAlbum = albumsAgrupados[idAutor] as ArrayList
             recyclerVacio = false
         }else {
             recyclerVacio = true
@@ -105,12 +122,12 @@ class AlbumFragment : Fragment() {
     }
 
     private fun rellenarDatos(){
-        albumAdapter.clear()
+        introAlbumAdapter.clear()
         if(idAutor != 0){
             filtrarDatos()
         }
-        for(x in album){
-            var aut : ReadAutorId? = autor.find{it.id == x.idautor}
+        for(x in introAlbum){
+            var aut : ReadAutorId? = introAutor.find{it.id == x.idautor}
             var temp : ReadAlbumAutor
             if(aut != null) {
                 temp = ReadAlbumAutor(x.id, x.idautor, aut.nombre, x.titulo, x.portada, x.descripcion)
@@ -118,15 +135,16 @@ class AlbumFragment : Fragment() {
                 temp = ReadAlbumAutor(x.id, x.idautor,"default", x.titulo, x.portada, x.descripcion)
             }
             if (temp != null){
-                albumAdapter.add(temp)
+                introAlbumAdapter.add(temp)
             }
         }
-        binding.loadingPanel.visibility = View.GONE
-        setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
+        //binding.loadingPanel.visibility = View.GONE
+        setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
     }
 
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
-        binding.recyclerview.adapter = AlbumAdapter(lista){
+        val linearLayoutManager = LinearLayoutManager(context)
+        binding.recyclerViewCrudAlbum.adapter = AdminAlbumAdapter(lista,{
             val bundle = Bundle()
             bundle.putInt("id", it.id)
             bundle.putInt("autorId", it.autorId)
@@ -136,30 +154,23 @@ class AlbumFragment : Fragment() {
             var intent = Intent(context, AlbumActivity::class.java)
             intent.putExtras(bundle)
             startActivity(intent)
-        }
-        binding.recyclerview.scrollToPosition(0)
+        },{
 
+        })
+        binding.recyclerViewCrudAlbum.scrollToPosition(0)
+        binding.recyclerViewCrudAlbum.layoutManager = linearLayoutManager
     }
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
-        reference = db.getReference("albums")
-        reference2 = db.getReference("autors")
-    }
-
-    //Al ser reutilizado este fragment en el onclick de autor, para que enseñe cosas
-    private fun recogerBundle() {
-        if (arguments != null) {
-            if (arguments?.getInt("id", 0) != 0) {
-                idAutor = arguments?.getInt("id", 0)!!
-            }
-        }
+        referenceAutor = db.getReference("autors")
+        referenceAlbum = db.getReference("albums")
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() : AlbumFragment{
-            return AlbumFragment()
+        fun newInstance() : AdminAlbumFragment{
+            return AdminAlbumFragment()
         }
     }
 }
