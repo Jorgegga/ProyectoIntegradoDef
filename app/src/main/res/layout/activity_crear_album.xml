@@ -55,7 +55,7 @@
                     android:id="@+id/ibAlbumPortada"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:adjustViewBounds="true"
                     android:background="@color/fondo_cards"
                     android:scaleType="fitXY"
@@ -69,7 +69,7 @@
                     android:id="@+id/etNombreAlbum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="28dp"
                     android:ems="15"
                     android:hint="Nombre"
                     android:inputType="textPersonName"
@@ -79,13 +79,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ibAlbumPortada" />
+                    app:layout_constraintTop_toBottomOf="@+id/spGeneroAlbum" />
 
                 <EditText
                     android:id="@+id/etDescripcionAlbum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginTop="32dp"
                     android:ems="15"
                     android:gravity="start|top"
                     android:hint="Descripción"
@@ -94,10 +94,10 @@
                     android:maxLines="4"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
-                    app:layout_constraintBottom_toTopOf="@+id/spAutorAlbum"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.489"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etNombreAlbum" />
 
                 <Button
                     android:id="@+id/btnCrearAlbum"
@@ -129,17 +129,17 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="30dp"
                     android:hint="Autor"
-                    app:layout_constraintBottom_toTopOf="@+id/spGeneroAlbum"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ibAlbumPortada">
 
                     <AutoCompleteTextView
-                        android:id="@+id/dropdown"
+                        android:id="@+id/ddAutorAlbum"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
+                        android:layout_height="wrap_content" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,16 +148,17 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
                     android:hint="Genero"
-                    android:layout_marginBottom="37dp"
-                    app:layout_constraintBottom_toTopOf="@+id/btnCrearAlbum"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spAutorAlbum">
 
                     <AutoCompleteTextView
+                        android:id="@+id/ddGeneroAlbum"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
+                        android:layout_height="wrap_content" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

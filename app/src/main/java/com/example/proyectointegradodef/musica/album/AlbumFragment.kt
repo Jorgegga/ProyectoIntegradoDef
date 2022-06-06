@@ -2,11 +2,9 @@ package com.example.proyectointegradodef.musica.album
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
@@ -95,7 +93,7 @@ class AlbumFragment : Fragment() {
     }
 
     fun filtrarDatos(){
-        var albumsAgrupados = album.groupBy { it.idautor }
+        var albumsAgrupados = album.groupBy { it.autor_id }
         if(albumsAgrupados[idAutor] != null) {
             album = albumsAgrupados[idAutor] as ArrayList
             recyclerVacio = false
@@ -110,12 +108,12 @@ class AlbumFragment : Fragment() {
             filtrarDatos()
         }
         for(x in album){
-            var aut : ReadAutorId? = autor.find{it.id == x.idautor}
+            var aut : ReadAutorId? = autor.find{it.id == x.autor_id}
             var temp : ReadAlbumAutor
             if(aut != null) {
-                temp = ReadAlbumAutor(x.id, x.idautor, aut.nombre, x.titulo, x.portada, x.descripcion)
+                temp = ReadAlbumAutor(x.id, x.autor_id, aut.nombre, x.titulo, x.portada, x.descripcion, x.genero_id)
             }else{
-                temp = ReadAlbumAutor(x.id, x.idautor,"default", x.titulo, x.portada, x.descripcion)
+                temp = ReadAlbumAutor(x.id, x.autor_id,"default", x.titulo, x.portada, x.descripcion, x.genero_id)
             }
             if (temp != null){
                 albumAdapter.add(temp)
@@ -129,7 +127,7 @@ class AlbumFragment : Fragment() {
         binding.recyclerview.adapter = AlbumAdapter(lista){
             val bundle = Bundle()
             bundle.putInt("id", it.id)
-            bundle.putInt("autorId", it.autorId)
+            bundle.putInt("autorId", it.autor_id)
             bundle.putString("titulo", it.titulo)
             bundle.putString("autor", it.autor)
             bundle.putString("portada", it.portada)

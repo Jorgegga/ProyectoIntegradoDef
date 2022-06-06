@@ -6,16 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminAlbumBinding
-import com.example.proyectointegradodef.models.ReadAlbum
-import com.example.proyectointegradodef.models.ReadAlbumAutor
-import com.example.proyectointegradodef.models.ReadAutor
-import com.example.proyectointegradodef.models.ReadAutorId
+import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.musica.album.AlbumActivity
-import com.example.proyectointegradodef.musica.album.AlbumAdapter
-import com.example.proyectointegradodef.musica.crud.autor.CrearAutorActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -112,7 +109,7 @@ class AdminAlbumFragment : Fragment() {
     }
 
     fun filtrarDatos(){
-        var albumsAgrupados = introAlbum.groupBy { it.idautor }
+        var albumsAgrupados = introAlbum.groupBy { it.autor_id }
         if(albumsAgrupados[idAutor] != null) {
             introAlbum = albumsAgrupados[idAutor] as ArrayList
             recyclerVacio = false
@@ -127,12 +124,12 @@ class AdminAlbumFragment : Fragment() {
             filtrarDatos()
         }
         for(x in introAlbum){
-            var aut : ReadAutorId? = introAutor.find{it.id == x.idautor}
+            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
             var temp : ReadAlbumAutor
             if(aut != null) {
-                temp = ReadAlbumAutor(x.id, x.idautor, aut.nombre, x.titulo, x.portada, x.descripcion)
+                temp = ReadAlbumAutor(x.id, x.autor_id, aut.nombre, x.titulo, x.portada, x.descripcion, x.genero_id)
             }else{
-                temp = ReadAlbumAutor(x.id, x.idautor,"default", x.titulo, x.portada, x.descripcion)
+                temp = ReadAlbumAutor(x.id, x.autor_id,"default", x.titulo, x.portada, x.descripcion, x.genero_id)
             }
             if (temp != null){
                 introAlbumAdapter.add(temp)
@@ -147,7 +144,7 @@ class AdminAlbumFragment : Fragment() {
         binding.recyclerViewCrudAlbum.adapter = AdminAlbumAdapter(lista,{
             val bundle = Bundle()
             bundle.putInt("id", it.id)
-            bundle.putInt("autorId", it.autorId)
+            bundle.putInt("autorId", it.autor_id)
             bundle.putString("titulo", it.titulo)
             bundle.putString("autor", it.autor)
             bundle.putString("portada", it.portada)
@@ -155,10 +152,55 @@ class AdminAlbumFragment : Fragment() {
             intent.putExtras(bundle)
             startActivity(intent)
         },{
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Borrar album")
+                .setMessage("¿Quieres borrar el album " + it.titulo + " de la base de datos?")
+                .setNeutralButton("Cancelar") { dialog, which ->
+                    // Respond to neutral button press
+                }
+                .setNegativeButton("Rechazar") { dialog, which ->
+                    Toast.makeText(
+                        requireContext(),
+                        "No se ha borrado el album",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                .setPositiveButton("Aceptar") { dialog, which ->
+                    borrarAlbum(it.id, it.portada)
 
+                }
+                .show()
         })
         binding.recyclerViewCrudAlbum.scrollToPosition(0)
         binding.recyclerViewCrudAlbum.layoutManager = linearLayoutManager
+    }
+
+    private fun borrarAlbum(id: Int, foto: String){
+        referenceAlbum.get()
+        var query = referenceAlbum.orderByChild("id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (messageSnapshot in snapshot.children) {
+                    if (messageSnapshot.child("id").value.toString() == id.toString()) {
+                        val storageRef = storage.reference
+                        if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default") {
+                            val imageRef =
+                                storageRef.child("proyecto/album/${messageSnapshot.key}.png")
+                            imageRef.delete()
+                        }
+                        messageSnapshot.ref.removeValue()
+                        Toast.makeText(requireContext(), "Se ha borrado el album correctamente", Toast.LENGTH_LONG).show()
+                        setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
+                        return
+                    }
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     private fun initDb(){

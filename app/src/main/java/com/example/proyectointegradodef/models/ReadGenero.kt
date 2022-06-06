@@ -10,4 +10,8 @@ class ReadGenero {
     var id = 0
     var nombre = ""
     var portada = ""
+
+    override fun toString(): String {
+        return nombre
+    }
 }

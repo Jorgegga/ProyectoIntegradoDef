@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -21,6 +20,7 @@ import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.models.ReadGenero
 import com.example.proyectointegradodef.musica.filtros.ListAutorAdapter
+import com.example.proyectointegradodef.musica.filtros.ListGeneroAdapter
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -37,6 +37,7 @@ class CrearAlbumActivity : AppCompatActivity() {
     lateinit var referenceGenero: DatabaseReference
     lateinit var storage: FirebaseStorage
     lateinit var adapterAutor: ListAutorAdapter
+    lateinit var adapterGenero: ListGeneroAdapter
     var introAutor: MutableList<ReadAutor> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introGenero: MutableList<ReadGenero> = ArrayList()
@@ -45,7 +46,8 @@ class CrearAlbumActivity : AppCompatActivity() {
     var imagen: Uri = "".toUri()
     var nombre = ""
     var descripcion = ""
-    var autor = ""
+    var autor = 0
+    var genero = 0
     val PERMISO_CODE_FICHERO = 200
     val PICK_IMAGE_REQUEST = 100
     var crearId = 0
@@ -78,35 +80,38 @@ class CrearAlbumActivity : AppCompatActivity() {
             }
         }
         binding.btnCrearAlbum.setOnClickListener {
-            //if(comprobarCampos()){
-            //    buscarId()
-            //}
+            if(comprobarCampos()){
+                buscarId()
+            }
 
-            autor = binding.spAutorAlbum.editText!!.text.toString()
-            Log.d("----------------------", autor)
         }
 
-        binding.dropdown.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
-            Toast.makeText(
-                this,
-                adapterAutor.getItem(position)!!.id.toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        })
-
+        binding.ddAutorAlbum.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            autor = adapterAutor.getItem(position)!!.id
+        }
+        binding.ddGeneroAlbum.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            genero = adapterGenero.getItem(position)!!.id
+        }
 
     }
 
-    private fun setSpinners(){
+    private fun setSpinnerAutor(){
         introAutor = ArrayList(introAutor.sortedWith(compareBy { it.nombre }))
-        introId = introAutor.map { it.nombre }
         adapterAutor = ListAutorAdapter(this, R.layout.list_item, introAutor as ArrayList<ReadAutor>)
         (binding.spAutorAlbum.editText as? AutoCompleteTextView)?.setAdapter(adapterAutor)
+    }
+
+    private fun setSpinnerGenero(){
+        introGenero = ArrayList(introGenero.sortedWith(compareBy { it.nombre }))
+        adapterGenero = ListGeneroAdapter(this, R.layout.list_item, introGenero as ArrayList<ReadGenero>)
+        (binding.spGeneroAlbum.editText as? AutoCompleteTextView)?.setAdapter(adapterGenero)
     }
 
     private fun limpiar() {
         binding.etNombreAlbum.text.clear()
         binding.etDescripcionAlbum.text.clear()
+        binding.spAutorAlbum.editText!!.text.clear()
+        binding.spGeneroAlbum.editText!!.text.clear()
         binding.ibAlbumPortada.setImageDrawable(
             AppCompatResources.getDrawable(
                 this,
@@ -116,6 +121,8 @@ class CrearAlbumActivity : AppCompatActivity() {
         nombre = ""
         descripcion = ""
         crearId = 0
+        autor = 0
+        genero = 0
     }
 
     private fun comprobarCampos(): Boolean{
@@ -130,6 +137,13 @@ class CrearAlbumActivity : AppCompatActivity() {
         }else{
             descripcion = binding.etDescripcionAlbum.text.toString()
         }
+        if(autor == 0){
+            autor = 1
+        }
+        if(genero == 0){
+            genero = 1
+        }
+
         return true
     }
 
@@ -190,6 +204,7 @@ class CrearAlbumActivity : AppCompatActivity() {
                         introGenero.add(genero)
                     }
                 }
+                setSpinnerGenero()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -211,7 +226,7 @@ class CrearAlbumActivity : AppCompatActivity() {
                         introAutor.add(tema)
                     }
                 }
-                setSpinners()
+                setSpinnerAutor()
                 //binding.loadingPanel.visibility = View.GONE
             }
 
@@ -250,7 +265,7 @@ class CrearAlbumActivity : AppCompatActivity() {
         val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
-            referenceAlbum.child(randomString).setValue(ReadAutor(crearId, nombre, ruta, descripcion))
+            referenceAlbum.child(randomString).setValue(ReadAlbum(crearId, autor, nombre, ruta, descripcion, genero))
             Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG).show()
             limpiar()
         }else {
@@ -260,7 +275,7 @@ class CrearAlbumActivity : AppCompatActivity() {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$randomString"
                 referenceAlbum.child(randomString)
-                    .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
+                    .setValue(ReadAlbum(crearId, autor, nombre, ruta, descripcion, genero))
                 Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG)
                     .show()
                 limpiar()
@@ -268,6 +283,8 @@ class CrearAlbumActivity : AppCompatActivity() {
         }
 
     }
+
+
 
     override fun onSupportNavigateUp() : Boolean{
         finish()
