@@ -15,5 +15,9 @@ class ReadAutor {
     var foto = ""
     var descripcion = ""
 
+    override fun toString(): String {
+        return nombre
+    }
+
 
 }

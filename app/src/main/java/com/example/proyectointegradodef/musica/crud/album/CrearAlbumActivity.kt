@@ -4,13 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.ArrayAdapter
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -19,7 +19,6 @@ import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityCrearAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAutor
-import com.example.proyectointegradodef.models.ReadAutorId
 import com.example.proyectointegradodef.models.ReadGenero
 import com.example.proyectointegradodef.musica.filtros.ListAutorAdapter
 import com.google.firebase.database.*
@@ -27,7 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class CrearAlbumActivity : AppCompatActivity() {
 
@@ -37,6 +36,7 @@ class CrearAlbumActivity : AppCompatActivity() {
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceGenero: DatabaseReference
     lateinit var storage: FirebaseStorage
+    lateinit var adapterAutor: ListAutorAdapter
     var introAutor: MutableList<ReadAutor> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introGenero: MutableList<ReadGenero> = ArrayList()
@@ -81,15 +81,26 @@ class CrearAlbumActivity : AppCompatActivity() {
             //if(comprobarCampos()){
             //    buscarId()
             //}
+
             autor = binding.spAutorAlbum.editText!!.text.toString()
             Log.d("----------------------", autor)
         }
+
+        binding.dropdown.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
+            Toast.makeText(
+                this,
+                adapterAutor.getItem(position)!!.id.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+
+
     }
 
     private fun setSpinners(){
         introAutor = ArrayList(introAutor.sortedWith(compareBy { it.nombre }))
         introId = introAutor.map { it.nombre }
-        val adapterAutor = ArrayAdapter(this, R.layout.list_item, introId)
+        adapterAutor = ListAutorAdapter(this, R.layout.list_item, introAutor as ArrayList<ReadAutor>)
         (binding.spAutorAlbum.editText as? AutoCompleteTextView)?.setAdapter(adapterAutor)
     }
 
