@@ -269,6 +269,12 @@ class CrearAlbumActivity : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp() : Boolean{
+        finish()
+        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
+        return true
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAutor = db.getReference("autors")
