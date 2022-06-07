@@ -33,7 +33,7 @@ class AdminAlbumViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
             binding.ivAlbumCrud.setImageDrawable(
                 AppCompatResources.getDrawable(
                     itemView.context,
-                    R.drawable.default_autor
+                    R.drawable.default_album
                 ))
         }else {
             val gsReference2 = storageFire.getReferenceFromUrl(album.portada + ".png")

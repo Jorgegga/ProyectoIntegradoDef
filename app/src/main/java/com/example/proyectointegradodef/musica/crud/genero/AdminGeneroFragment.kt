@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.crud.genero
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -49,6 +50,18 @@ class AdminGeneroFragment : Fragment() {
         storage = Firebase.storage
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1000 -> {
+                if(resultCode == Activity.RESULT_OK){
+                    setRecycler(introGenero as ArrayList<ReadGenero>)
+                }
+            }
+        }
+
+    }
+
     private fun listeners(){
         binding.btnAnnadirGenero.setOnClickListener {
             var i = Intent(requireContext(), CrearGeneroActivity::class.java)
@@ -79,6 +92,7 @@ class AdminGeneroFragment : Fragment() {
         })
     }
 
+
     private fun setRecycler(lista: ArrayList<ReadGenero>){
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerViewCrudGenero.adapter = AdminGeneroAdapter(lista, {
@@ -88,7 +102,7 @@ class AdminGeneroFragment : Fragment() {
             bundle.putString("portada", it.portada)
             var intent = Intent(context, UpdateGeneroActivity::class.java)
             intent.putExtras(bundle)
-            startActivity(intent)
+            startActivityForResult(intent, 1000)
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         },{
             MaterialAlertDialogBuilder(requireContext())

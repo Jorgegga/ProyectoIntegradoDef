@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.crud.autor
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminAutorBinding
 import com.example.proyectointegradodef.models.ReadAutor
+import com.example.proyectointegradodef.models.ReadGenero
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -45,6 +47,18 @@ class AdminAutorFragment : Fragment() {
         recogerDatosAutor()
         listeners()
         storage = Firebase.storage
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1000 -> {
+                if(resultCode == Activity.RESULT_OK){
+                    setRecycler(autor as ArrayList<ReadAutor>)
+                }
+            }
+        }
+
     }
 
     private fun listeners(){
@@ -88,7 +102,7 @@ class AdminAutorFragment : Fragment() {
             bundle.putString("descripcion", it.descripcion)
             var intent = Intent(context, UpdateAutorActivity::class.java)
             intent.putExtras(bundle)
-            startActivity(intent)
+            startActivityForResult(intent, 1000)
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         },{
             MaterialAlertDialogBuilder(requireContext())
@@ -142,6 +156,8 @@ class AdminAutorFragment : Fragment() {
             }
         })
     }
+
+
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")

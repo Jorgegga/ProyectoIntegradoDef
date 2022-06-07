@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef.musica.crud.autor
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -198,6 +199,7 @@ class UpdateAutorActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() : Boolean{
+        setResult(Activity.RESULT_OK)
         finish()
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
         return true

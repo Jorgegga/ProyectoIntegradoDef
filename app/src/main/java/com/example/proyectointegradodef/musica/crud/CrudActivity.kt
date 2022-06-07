@@ -38,6 +38,19 @@ class CrudActivity : AppCompatActivity() {
         }.attach()
     }
 
+    /*override fun onResume() {
+        super.onResume()
+        tabLayout = binding.tabLayout
+        viewPager = binding.viewPager
+        viewPager.adapter = CrudAdapter(supportFragmentManager, lifecycle)
+
+        TabLayoutMediator(tabLayout, viewPager){
+                tab, position ->
+            tab.text = tabTitle[position]
+
+        }.attach()
+    }*/
+
     override fun onSupportNavigateUp() : Boolean{
         finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)

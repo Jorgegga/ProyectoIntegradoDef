@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -157,14 +158,14 @@ class CrearGeneroActivity : AppCompatActivity() {
     private fun annadirGenero() {
         val storageRef = storage.reference
         var randomString = UUID.randomUUID().toString()
-        val imageRef = storageRef.child("proyecto/genero/${randomString}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/default"
             reference.child(randomString).setValue(ReadGenero(crearId, nombre, ruta))
             Toast.makeText(this, "Se ha subido el genero correctamente", Toast.LENGTH_LONG).show()
             limpiar()
         }else {
+            val imageRef = storageRef.child("proyecto/genero/${randomString}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
             }.addOnCompleteListener {
@@ -179,6 +180,7 @@ class CrearGeneroActivity : AppCompatActivity() {
         }
 
     }
+
 
     override fun onSupportNavigateUp() : Boolean{
         finish()

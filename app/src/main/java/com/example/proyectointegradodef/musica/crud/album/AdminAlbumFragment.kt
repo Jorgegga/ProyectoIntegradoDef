@@ -1,7 +1,9 @@
 package com.example.proyectointegradodef.musica.crud.album
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ class AdminAlbumFragment : Fragment() {
     lateinit var db: FirebaseDatabase
     lateinit var referenceAutor: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
+    lateinit var referenceGenero: DatabaseReference
     lateinit var storage: FirebaseStorage
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
@@ -53,6 +56,18 @@ class AdminAlbumFragment : Fragment() {
         recogerDatosAlbum()
         listeners()
         storage = Firebase.storage
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1000 -> {
+                if(resultCode == Activity.RESULT_OK){
+                    setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
+                }
+            }
+        }
+
     }
 
     private fun listeners(){
@@ -139,18 +154,12 @@ class AdminAlbumFragment : Fragment() {
         setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
     }
 
+
+
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerViewCrudAlbum.adapter = AdminAlbumAdapter(lista,{
-            val bundle = Bundle()
-            bundle.putInt("id", it.id)
-            bundle.putInt("autorId", it.autor_id)
-            bundle.putString("titulo", it.titulo)
-            bundle.putString("autor", it.autor)
-            bundle.putString("portada", it.portada)
-            var intent = Intent(context, AlbumActivity::class.java)
-            intent.putExtras(bundle)
-            startActivity(intent)
+            recogerNombreGenero(it)
         },{
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Borrar album")
@@ -173,6 +182,40 @@ class AdminAlbumFragment : Fragment() {
         })
         binding.recyclerViewCrudAlbum.scrollToPosition(0)
         binding.recyclerViewCrudAlbum.layoutManager = linearLayoutManager
+    }
+
+    private fun recogerNombreGenero(album: ReadAlbumAutor){
+        var genero = ""
+        referenceGenero.get()
+        var query = referenceGenero.orderByChild("id").equalTo(album.genero_id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children){
+                    genero = messageSnapshot.child("nombre").value.toString()
+                }
+                updateActivity(album, genero)
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    private fun updateActivity(album: ReadAlbumAutor, genero: String){
+        val bundle = Bundle()
+        bundle.putString("genero", genero)
+        bundle.putInt("id", album.id)
+        bundle.putInt("autor_id", album.autor_id)
+        bundle.putString("autor", album.autor)
+        bundle.putString("titulo", album.titulo)
+        bundle.putString("portada", album.portada)
+        bundle.putString("descripcion", album.descripcion)
+        bundle.putInt("genero_id", album.genero_id)
+        var intent = Intent(context, UpdateAlbumActivity::class.java)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, 1000)
+        requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
     }
 
     private fun borrarAlbum(id: Int, foto: String){
@@ -207,6 +250,7 @@ class AdminAlbumFragment : Fragment() {
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAutor = db.getReference("autors")
         referenceAlbum = db.getReference("albums")
+        referenceGenero = db.getReference("generos")
     }
 
     companion object {
