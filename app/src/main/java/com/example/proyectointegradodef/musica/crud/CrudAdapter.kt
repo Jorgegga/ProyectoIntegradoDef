@@ -10,6 +10,7 @@ import com.example.proyectointegradodef.musica.autor.AutorFragment
 import com.example.proyectointegradodef.musica.crud.album.AdminAlbumFragment
 import com.example.proyectointegradodef.musica.crud.autor.AdminAutorFragment
 import com.example.proyectointegradodef.musica.crud.genero.AdminGeneroFragment
+import com.example.proyectointegradodef.musica.crud.music.AdminMusicFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 
 class CrudAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -22,7 +23,7 @@ class CrudAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): Fragm
             0 -> return AdminAutorFragment()
             1 -> return AdminGeneroFragment()
             2 -> return AdminAlbumFragment()
-            3 -> return AlbumFragment()
+            3 -> return AdminMusicFragment()
             else -> return PortadaFragment()
         }
     }

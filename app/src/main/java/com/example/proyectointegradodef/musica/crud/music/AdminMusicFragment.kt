@@ -1,9 +1,8 @@
-package com.example.proyectointegradodef.musica.crud.album
+package com.example.proyectointegradodef.musica.crud.music
 
-import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,33 +10,36 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.FragmentAdminAlbumBinding
+import com.example.proyectointegradodef.databinding.FragmentAdminMusicBinding
 import com.example.proyectointegradodef.models.*
-import com.example.proyectointegradodef.musica.album.AlbumActivity
+import com.example.proyectointegradodef.musica.crud.album.AdminAlbumAdapter
+import com.example.proyectointegradodef.musica.crud.album.CrearAlbumActivity
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
-class AdminAlbumFragment : Fragment() {
+class AdminMusicFragment : Fragment() {
 
-    lateinit var binding: FragmentAdminAlbumBinding
+    lateinit var binding: FragmentAdminMusicBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceAutor: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceGenero: DatabaseReference
+    lateinit var referenceMusic: DatabaseReference
     lateinit var storage: FirebaseStorage
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
-    var introAlbumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
+    var introMusic: MutableList<ReadMusica> = ArrayList()
+    var introMusicAdapter: MutableList<ReadMusicaAlbumAutor> = ArrayList()
 
-    var idAutor = 0
+    var idMusic = 0
     var recyclerVacio = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -45,7 +47,7 @@ class AdminAlbumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentAdminAlbumBinding.inflate(inflater, container, false)
+        binding = FragmentAdminMusicBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -54,28 +56,39 @@ class AdminAlbumFragment : Fragment() {
         initDb()
         recogerDatosAutor()
         recogerDatosAlbum()
+        recogerDatosMusic()
         listeners()
         storage = Firebase.storage
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
-            1000 -> {
-                if(resultCode == Activity.RESULT_OK){
-                    setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
-                }
-            }
-        }
-
-    }
-
     private fun listeners(){
-        binding.btnAnnadirAlbum.setOnClickListener {
+        binding.btnAnnadirMusic.setOnClickListener {
             var i = Intent(requireContext(), CrearAlbumActivity::class.java)
             startActivity(i)
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         }
+    }
+
+    private fun recogerDatosMusic() {
+        introMusic.clear()
+        referenceMusic.get()
+        referenceMusic.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                introMusic.clear()
+                for (messageSnapshot in snapshot.children) {
+                    val music = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)
+                    if (music != null) {
+                        introMusic.add(music)
+                    }
+                }
+                rellenarDatos()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun recogerDatosAlbum(){
@@ -123,30 +136,50 @@ class AdminAlbumFragment : Fragment() {
         })
     }
 
-    private fun rellenarDatos(){
-        introAlbumAdapter.clear()
-        for(x in introAlbum){
-            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
-            var temp : ReadAlbumAutor
-            if(aut != null) {
-                temp = ReadAlbumAutor(x.id, x.autor_id, aut.nombre, x.titulo, x.portada, x.descripcion, x.genero_id)
-            }else{
-                temp = ReadAlbumAutor(x.id, x.autor_id,"default", x.titulo, x.portada, x.descripcion, x.genero_id)
+    private fun rellenarDatos() {
+        introMusicAdapter.clear()
+        //player.clearMediaItems()
+        for (x in introMusic) {
+            var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+            var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+            var temp: ReadMusicaAlbumAutor
+            if (alb != null && aut != null) {
+                temp = ReadMusicaAlbumAutor(
+                    x.id,
+                    x.nombre,
+                    x.album_id,
+                    alb.titulo,
+                    x.autor_id,
+                    aut.nombre,
+                    x.ruta,
+                    x.portada,
+                    x.descripcion
+                )
+            } else {
+                temp = ReadMusicaAlbumAutor(
+                    x.id,
+                    "default",
+                    x.album_id,
+                    alb!!.titulo,
+                    x.autor_id,
+                    "default",
+                    x.ruta,
+                    x.portada,
+                    x.descripcion
+                )
             }
-            if (temp != null){
-                introAlbumAdapter.add(temp)
-            }
+            introMusicAdapter.add(temp)
         }
         //binding.loadingPanel.visibility = View.GONE
-        setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
+        setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
     }
 
-    private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
+    private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerViewCrudAlbum.adapter = AdminAlbumAdapter(lista,{
-            recogerNombreGenero(it)
+        binding.recyclerViewCrudMusic.adapter = AdminMusicAdapter(lista,{
+            //recogerNombreGenero(it)
         },{
-            MaterialAlertDialogBuilder(requireContext())
+            /*MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Borrar album")
                 .setMessage("¿Quieres borrar el album " + it.titulo + " de la base de datos?")
                 .setNeutralButton("Cancelar") { dialog, which ->
@@ -163,10 +196,10 @@ class AdminAlbumFragment : Fragment() {
                     borrarAlbum(it.id, it.portada)
 
                 }
-                .show()
+                .show()*/
         })
-        binding.recyclerViewCrudAlbum.scrollToPosition(0)
-        binding.recyclerViewCrudAlbum.layoutManager = linearLayoutManager
+        binding.recyclerViewCrudMusic.scrollToPosition(0)
+        binding.recyclerViewCrudMusic.layoutManager = linearLayoutManager
     }
 
     private fun recogerNombreGenero(album: ReadAlbumAutor){
@@ -178,56 +211,12 @@ class AdminAlbumFragment : Fragment() {
                 for(messageSnapshot in snapshot.children){
                     genero = messageSnapshot.child("nombre").value.toString()
                 }
-                updateActivity(album, genero)
+                //updateActivity(album, genero)
             }
             override fun onCancelled(error: DatabaseError) {
 
             }
 
-        })
-    }
-
-    private fun updateActivity(album: ReadAlbumAutor, genero: String){
-        val bundle = Bundle()
-        bundle.putString("genero", genero)
-        bundle.putInt("id", album.id)
-        bundle.putInt("autor_id", album.autor_id)
-        bundle.putString("autor", album.autor)
-        bundle.putString("titulo", album.titulo)
-        bundle.putString("portada", album.portada)
-        bundle.putString("descripcion", album.descripcion)
-        bundle.putInt("genero_id", album.genero_id)
-        var intent = Intent(context, UpdateAlbumActivity::class.java)
-        intent.putExtras(bundle)
-        startActivityForResult(intent, 1000)
-        requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
-    }
-
-    private fun borrarAlbum(id: Int, foto: String){
-        referenceAlbum.get()
-        var query = referenceAlbum.orderByChild("id").equalTo(id.toDouble())
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (messageSnapshot in snapshot.children) {
-                    if (messageSnapshot.child("id").value.toString() == id.toString()) {
-                        val storageRef = storage.reference
-                        if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default") {
-                            val imageRef =
-                                storageRef.child("proyecto/album/${messageSnapshot.key}.png")
-                            imageRef.delete()
-                        }
-                        messageSnapshot.ref.removeValue()
-                        Toast.makeText(requireContext(), "Se ha borrado el album correctamente", Toast.LENGTH_LONG).show()
-                        setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
-                        return
-                    }
-                }
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
         })
     }
 
@@ -236,12 +225,14 @@ class AdminAlbumFragment : Fragment() {
         referenceAutor = db.getReference("autors")
         referenceAlbum = db.getReference("albums")
         referenceGenero = db.getReference("generos")
+        referenceMusic = db.getReference("music")
     }
 
     companion object {
+        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() : AdminAlbumFragment{
-            return AdminAlbumFragment()
+        fun newInstance(): AdminMusicFragment{
+            return AdminMusicFragment()
         }
     }
 }

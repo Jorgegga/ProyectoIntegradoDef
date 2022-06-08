@@ -2,7 +2,7 @@ package com.example.proyectointegradodef.models
 
 class ReadMusicaAlbumAutor {
     constructor()
-    constructor(id: Int, nombre: String, album_id: Int, album: String, autor_id:Int, autor:String, ruta: String, portada: String){
+    constructor(id: Int, nombre: String, album_id: Int, album: String, autor_id:Int, autor:String, ruta: String, portada: String, descripcion: String){
         this.id = id
         this.nombre = nombre
         this.album_id = album_id
@@ -11,6 +11,7 @@ class ReadMusicaAlbumAutor {
         this.autor = autor
         this.ruta = ruta
         this.portada = portada
+        this.descripcion = descripcion
     }
     var id = 0
     var nombre = ""
@@ -20,4 +21,5 @@ class ReadMusicaAlbumAutor {
     var autor = ""
     var ruta = ""
     var portada = ""
+    var descripcion = ""
 }

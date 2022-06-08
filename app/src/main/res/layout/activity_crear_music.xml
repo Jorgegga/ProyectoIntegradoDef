@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ToolBar"
+    android:fitsSystemWindows="true"
+    tools:context=".musica.crud.music.CrearMusicActivity">
+
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="?attr/actionBarSize"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:popupTheme="@style/Theme.AppCompat.Light.NoActionBar"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark"
+      app:titleTextColor="#C8CDD0">
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:background="@color/fondo_oscuro"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@null">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@color/fondo_cards">
+
+        <ImageButton
+            android:id="@+id/ibMusicPortada"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:background="@color/fondo_cards"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/default_album" />
+
+        <EditText
+            android:id="@+id/etNombreMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:ems="15"
+            android:hint="Nombre"
+            android:inputType="textPersonName"
+            android:maxLength="50"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spGeneroMusic" />
+
+        <EditText
+            android:id="@+id/etDescripcionMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:ems="15"
+            android:gravity="start|top"
+            android:hint="Descripción"
+            android:inputType="textMultiLine"
+            android:maxLength="120"
+            android:maxLines="4"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etNombreMusic" />
+
+        <Button
+            android:id="@+id/btnCrearMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/ToolBar"
+            android:text="Crear"
+            android:textColor="@color/texto_principal"
+            app:layout_constraintBottom_toBottomOf="@+id/btnResetMusic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnResetMusic" />
+
+        <Button
+            android:id="@+id/btnResetMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/ToolBar"
+            android:text="Reset"
+            android:textColor="@color/texto_principal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnCrearMusic"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/spAutorMusic"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="150dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:hint="Autor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ibMusicPortada">
+
+          <AutoCompleteTextView
+              android:id="@+id/ddAutorMusic"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/spGeneroMusic"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:hint="Genero"
+            app:layout_constraintTop_toBottomOf="@+id/spAutorMusic"
+            tools:layout_editor_absoluteX="15dp">
+
+          <AutoCompleteTextView
+              android:id="@+id/ddGeneroMusic"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/spAlbumMusic"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="150dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="31dp"
+            android:hint="Album"
+            app:layout_constraintBottom_toBottomOf="@+id/spAutorMusic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/spAutorMusic">
+
+          <AutoCompleteTextView
+              android:id="@+id/ddAlbumMusic"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/etNumeroCancion"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="31dp"
+            android:ems="10"
+            android:hint="Nº Cancion"
+            android:inputType="number"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            app:layout_constraintBottom_toBottomOf="@+id/spGeneroMusic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/spGeneroMusic" />
+
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>

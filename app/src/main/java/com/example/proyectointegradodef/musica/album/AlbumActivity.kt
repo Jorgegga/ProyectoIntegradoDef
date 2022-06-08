@@ -217,7 +217,8 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                     x.autor_id,
                     aut.nombre,
                     x.ruta,
-                    x.portada
+                    x.portada,
+                    x.descripcion
                 )
             } else {
                 temp = ReadMusicaAlbumAutor(
@@ -228,7 +229,8 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                     x.autor_id,
                     "default",
                     x.ruta,
-                    x.portada
+                    x.portada,
+                    x.descripcion
                 )
             }
             introTotal.add(temp)
