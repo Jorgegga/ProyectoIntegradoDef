@@ -241,7 +241,9 @@ class MusicaFragment : Fragment(), Player.Listener {
                         aut.nombre,
                         x.ruta,
                         x.portada,
-                        x.descripcion
+                        x.descripcion,
+                        x.genero_id,
+                        x.numCancion
                     )
                 } else {
                     temp = ReadMusicaAlbumAutor(
@@ -253,7 +255,9 @@ class MusicaFragment : Fragment(), Player.Listener {
                         "default",
                         x.ruta,
                         x.portada,
-                        x.descripcion
+                        x.descripcion,
+                        x.genero_id,
+                        x.numCancion
                     )
                 }
                 introTotal.add(temp)

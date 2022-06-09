@@ -1,5 +1,6 @@
 package com.example.proyectointegradodef.musica.crud.music
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.example.proyectointegradodef.databinding.FragmentAdminMusicBinding
 import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.musica.crud.album.AdminAlbumAdapter
 import com.example.proyectointegradodef.musica.crud.album.CrearAlbumActivity
+import com.example.proyectointegradodef.musica.crud.album.UpdateAlbumActivity
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
@@ -153,7 +155,9 @@ class AdminMusicFragment : Fragment() {
                     aut.nombre,
                     x.ruta,
                     x.portada,
-                    x.descripcion
+                    x.descripcion,
+                    x.genero_id,
+                    x.numCancion
                 )
             } else {
                 temp = ReadMusicaAlbumAutor(
@@ -165,7 +169,9 @@ class AdminMusicFragment : Fragment() {
                     "default",
                     x.ruta,
                     x.portada,
-                    x.descripcion
+                    x.descripcion,
+                    x.genero_id,
+                    x.numCancion
                 )
             }
             introMusicAdapter.add(temp)
@@ -177,7 +183,7 @@ class AdminMusicFragment : Fragment() {
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerViewCrudMusic.adapter = AdminMusicAdapter(lista,{
-            //recogerNombreGenero(it)
+            recogerNombreGenero(it)
         },{
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Borrar cancion")
@@ -202,22 +208,42 @@ class AdminMusicFragment : Fragment() {
         binding.recyclerViewCrudMusic.layoutManager = linearLayoutManager
     }
 
-    private fun recogerNombreGenero(album: ReadAlbumAutor){
+    private fun recogerNombreGenero(music: ReadMusicaAlbumAutor){
         var genero = ""
         referenceGenero.get()
-        var query = referenceGenero.orderByChild("id").equalTo(album.genero_id.toDouble())
+        var query = referenceGenero.orderByChild("id").equalTo(music.genero_id.toDouble())
         query.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(messageSnapshot in snapshot.children){
                     genero = messageSnapshot.child("nombre").value.toString()
                 }
-                //updateActivity(album, genero)
+                updateActivity(music, genero)
             }
             override fun onCancelled(error: DatabaseError) {
 
             }
 
         })
+    }
+
+    private fun updateActivity(music: ReadMusicaAlbumAutor, genero: String){
+        val bundle = Bundle()
+        bundle.putInt("id", music.id)
+        bundle.putString("genero", genero)
+        bundle.putString("nombre", music.nombre)
+        bundle.putInt("album_id", music.album_id)
+        bundle.putString("album", music.album)
+        bundle.putInt("autor_id", music.autor_id)
+        bundle.putString("autor", music.autor)
+        bundle.putString("ruta", music.ruta)
+        bundle.putString("portada", music.portada)
+        bundle.putString("descripcion", music.descripcion)
+        bundle.putInt("genero_id", music.genero_id)
+        bundle.putInt("numCancion", music.numCancion)
+        var intent = Intent(context, UpdateMusicActivity::class.java)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, 1000)
+        requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
     }
 
     private fun borrarMusic(id: Int, foto: String, ruta: String){
@@ -253,6 +279,18 @@ class AdminMusicFragment : Fragment() {
 
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1000 -> {
+                if(resultCode == Activity.RESULT_OK){
+                    setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
+                }
+            }
+        }
+
     }
 
     private fun initDb(){

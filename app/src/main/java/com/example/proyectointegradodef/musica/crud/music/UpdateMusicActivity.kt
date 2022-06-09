@@ -1,6 +1,7 @@
 package com.example.proyectointegradodef.musica.crud.music
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -14,24 +15,27 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.proyectointegradodef.R
-import com.example.proyectointegradodef.databinding.ActivityCrearMusicBinding
+import com.example.proyectointegradodef.databinding.ActivityUpdateMusicBinding
+import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.models.ReadGenero
 import com.example.proyectointegradodef.models.ReadMusica
+import com.example.proyectointegradodef.musica.filtros.ListAlbumAdapter
 import com.example.proyectointegradodef.musica.filtros.ListAutorAdapter
 import com.example.proyectointegradodef.musica.filtros.ListGeneroAdapter
-import com.example.proyectointegradodef.musica.filtros.ListAlbumAdapter
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
-class CrearMusicActivity : AppCompatActivity() {
+class UpdateMusicActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityCrearMusicBinding
+    lateinit var binding: ActivityUpdateMusicBinding
     lateinit var db: FirebaseDatabase
     lateinit var referenceAutor: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
@@ -49,9 +53,15 @@ class CrearMusicActivity : AppCompatActivity() {
     var audio: Uri = "".toUri()
     var nombre = ""
     var descripcion = ""
-    var autor = 0
-    var genero = 0
-    var album = 0
+    var autor_id_temp = 0
+    var autor_id = 0
+    var autor = ""
+    var genero_id_temp = 0
+    var genero_id = 0
+    var genero = ""
+    var album_id_temp = 0
+    var album_id = 0
+    var album = ""
     var numCancion = 0
     val PERMISO_CODE_FICHERO = 200
     val PICK_IMAGE_REQUEST = 100
@@ -59,10 +69,12 @@ class CrearMusicActivity : AppCompatActivity() {
     var crearId = 0
     var rutaImagen = ""
     var rutaAudio = ""
+    var updateHecho = false
+    var key = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCrearMusicBinding.inflate(layoutInflater)
+        binding = ActivityUpdateMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -73,12 +85,13 @@ class CrearMusicActivity : AppCompatActivity() {
         recogerDatosAlbum()
         recogerDatosAutor()
         recogerDatosGenero()
+        recuperarDatos()
         listeners()
     }
 
     private fun listeners() {
         binding.btnResetMusic.setOnClickListener {
-            limpiar()
+            recuperarDatos()
         }
         binding.ibMusicPortada.setOnClickListener {
             if(isPermisosConcedidosFichero()){
@@ -87,7 +100,7 @@ class CrearMusicActivity : AppCompatActivity() {
                 permisosFichero()
             }
         }
-        binding.btnCrearMusic.setOnClickListener {
+        binding.btnUpdateMusic.setOnClickListener {
             if(comprobarCampos()){
                 buscarId()
             }
@@ -99,44 +112,61 @@ class CrearMusicActivity : AppCompatActivity() {
 
         binding.ddAutorMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                autor = adapterAutor.getItem(position)!!.id
+                autor_id = adapterAutor.getItem(position)!!.id
             }
 
         binding.ddGeneroMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                genero = adapterGenero.getItem(position)!!.id
+                genero_id = adapterGenero.getItem(position)!!.id
             }
 
         binding.ddAlbumMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                album = adapterAlbum.getItem(position)!!.id
+                album_id = adapterAlbum.getItem(position)!!.id
                 buscarAlbum()
             }
 
     }
 
-    private fun limpiar() {
-        binding.etNombreMusic.text.clear()
-        binding.etDescripcionMusic.text.clear()
-        binding.spGeneroMusic.editText!!.text.clear()
-        binding.spAutorMusic.editText!!.text.clear()
-        binding.spAlbumMusic.editText!!.text.clear()
-        binding.ibMusicPortada.setImageDrawable(
-            AppCompatResources.getDrawable(
+    fun recuperarDatos(){
+        val bundle = intent.extras
+        if(!updateHecho) {
+            crearId = bundle!!.getInt("id", 0)
+            autor_id = bundle.getInt("autor_id", 0)
+            autor = bundle.getString("autor", "Default")
+            nombre = bundle.getString("titulo", "Default")
+            rutaImagen = bundle.getString("portada", "Default")
+            descripcion = bundle.getString("descripcion", "No hay descripción disponible")
+            genero_id = bundle.getInt("genero_id", 0)
+            genero = bundle.getString("genero", "Default")
+            album_id = bundle.getInt("album_id", 0)
+            album = bundle.getString("album", "Default")
+            numCancion = bundle.getInt("numCancion", 0)
+            autor_id_temp = autor_id
+            genero_id_temp = genero_id
+            album_id_temp = album_id
+        }
+        if(rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" || rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
+            binding.ibMusicPortada.setImageDrawable(
+                AppCompatResources.getDrawable(
                 this,
-                R.drawable.default_album
-            ))
-        binding.etNumeroCancion.text.clear()
+                R.drawable.default_album))
+        }else{
+            val gsReference2 = storage.getReferenceFromUrl("$rutaImagen.png")
+            val option = RequestOptions().error(R.drawable.default_album)
+            GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(binding.ibMusicPortada)
+        }
+        binding.etNombreMusic.setText(nombre)
+        binding.etDescripcionMusic.setText(descripcion)
+        binding.spAutorMusic.editText!!.setText(autor)
+        binding.spGeneroMusic.editText!!.setText(genero)
+        binding.spAlbumMusic.editText!!.setText(album)
+        binding.etNumeroCancion.setText(""+numCancion)
+        autor_id = autor_id_temp
+        genero_id = genero_id_temp
+        album_id = album_id_temp
         imagen = "".toUri()
-        nombre = ""
-        descripcion = ""
-        crearId = 0
-        autor = 0
-        genero = 0
-        album = 0
-        numCancion = 0
         audio = "".toUri()
-        rutaImagen = ""
         binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_negativo))
     }
 
@@ -281,27 +311,6 @@ class CrearMusicActivity : AppCompatActivity() {
         startActivityForResult(i, PICK_AUDIO_REQUEST)
     }
 
-    private fun buscarId() {
-        referenceMusic.get()
-        var query = referenceMusic.orderByChild("id").limitToLast(1)
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (crearId == 0) {
-                    for (messageSnapshot in snapshot.children) {
-                        crearId = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)!!.id + 1
-                        annadirMusic()
-                        return
-                    }
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-    }
-
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreMusic.text.isEmpty()){
             Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
@@ -314,49 +323,63 @@ class CrearMusicActivity : AppCompatActivity() {
         }else{
             descripcion = binding.etDescripcionMusic.text.toString()
         }
-        if(autor == 0){
-            autor = 1
+        if(autor_id == 0){
+            autor_id = 1
         }
-        if(genero == 0){
-            genero = 1
+        if(genero_id == 0){
+            genero_id = 1
         }
-        if(album == 0){
-            album = 1
-        }
-        if(binding.etNumeroCancion.text.isNotEmpty()){
-            numCancion = binding.etNumeroCancion.text.toString().toInt()
+        if(album_id == 0){
+            album_id = 1
         }
         return true
     }
 
     private fun buscarAlbum(){
         var albumAgrupado = introAlbum.groupBy { it.id }
-        var albumTemp = albumAgrupado[album]!![0]
+        var albumTemp = albumAgrupado[album_id]!![0]
         if(binding.spAutorMusic.editText!!.text.isEmpty()){
             var autorAgrupado = introAutor.groupBy { it.id }
             var autorTemp = autorAgrupado[albumTemp.autor_id]!![0]
             binding.spAutorMusic.editText!!.setText(autorTemp.nombre)
-            autor = albumTemp.autor_id
+            autor_id = albumTemp.autor_id
         }
         if(binding.spGeneroMusic.editText!!.text.isEmpty()){
             var generoAgrupado = introGenero.groupBy { it.id }
             var generoTemp = generoAgrupado[albumTemp.genero_id]!![0]
             binding.spGeneroMusic.editText!!.setText(generoTemp.nombre)
-            genero = albumTemp.genero_id
+            genero_id = albumTemp.genero_id
         }
         if(imagen == "".toUri()){
             rutaImagen = albumTemp.portada
         }
     }
 
-    private fun annadirMusic() {
+    private fun buscarId() {
+        referenceMusic.get()
+        var query = referenceMusic.orderByChild("id").equalTo(crearId.toDouble())
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (messageSnapshot in snapshot.children) {
+                    key = messageSnapshot.key.toString()
+                    actualizarMusic()
+                    return
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun actualizarMusic() {
         val storageRef = storage.reference
-        var randomString = UUID.randomUUID().toString()
         if(audio.toString() == ""){
             rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"
         }else{
-            rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/$randomString"
-            val musicRef = storageRef.child("proyecto/musica/$randomString.mp3")
+            rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/$key"
+            val musicRef = storageRef.child("proyecto/musica/$key.mp3")
             val uploadTask = musicRef.putFile(audio)
             uploadTask.addOnFailureListener{
                 Toast.makeText(this, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
@@ -366,32 +389,35 @@ class CrearMusicActivity : AppCompatActivity() {
             }
         }
         if(imagen.toString() == "" && rutaImagen == ""){
-            var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
-            referenceMusic.child(randomString).setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio))
+            referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
             Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
-            limpiar()
+            updateHecho = true
+            recuperarDatos()
         }else if(rutaImagen != "") {
-            referenceMusic.child(randomString)
-                .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, rutaImagen, rutaAudio))
+            referenceMusic.child(key)
+                .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
             Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                 .show()
-            limpiar()
+            updateHecho = true
+            recuperarDatos()
         }else if(imagen.toString() != ""){
-            val imageRef = storageRef.child("proyecto/musica/portada/${randomString}.png")
+            val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 return@addOnFailureListener
             }.addOnCompleteListener {
                 var ruta =
-                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/$randomString"
-                referenceMusic.child(randomString)
-                    .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio))
+                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
+                referenceMusic.child(key)
+                    .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
                 Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                     .show()
-                limpiar()
+                updateHecho = true
+                recuperarDatos()
             }
         }
+
 
     }
 
@@ -404,6 +430,7 @@ class CrearMusicActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() : Boolean{
+        setResult(Activity.RESULT_OK)
         finish()
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
         return true

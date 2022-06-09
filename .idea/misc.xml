@@ -48,7 +48,7 @@
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_album.xml" value="0.3395061728395062" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_autor.xml" value="0.36666666666666664" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_genero.xml" value="0.36666666666666664" />
-        <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_music.xml" value="0.33" />
+        <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_music.xml" value="0.10939357907253269" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_crud.xml" value="0.36666666666666664" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_inicio.xml" value="0.36666666666666664" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_main.xml" value="0.1" />
@@ -56,6 +56,7 @@
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_playlist.xml" value="0.36666666666666664" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_autor.xml" value="0.33" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_genero.xml" value="0.25" />
+        <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_music.xml" value="0.25" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/admin_album_layout.xml" value="0.5" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/admin_autor_layout.xml" value="0.36666666666666664" />
         <entry key="..\:/cosas/insti/2DAM/programacion_multimedia_y_dispositivos_moviles/proyectos/ProyectoIntegradoDef/app/src/main/res/layout/admin_genero_layout.xml" value="0.36666666666666664" />

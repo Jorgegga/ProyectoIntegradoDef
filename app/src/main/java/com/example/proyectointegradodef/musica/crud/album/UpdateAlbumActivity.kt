@@ -44,9 +44,7 @@ class UpdateAlbumActivity : AppCompatActivity() {
     lateinit var adapterAutor: ListAutorAdapter
     lateinit var adapterGenero: ListGeneroAdapter
     var introAutor: MutableList<ReadAutor> = ArrayList()
-    var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introGenero: MutableList<ReadGenero> = ArrayList()
-    var introId : List<String> = ArrayList()
 
     var imagen: Uri = "".toUri()
     var foto = ""
