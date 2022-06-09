@@ -39,9 +39,7 @@ class CrearAlbumActivity : AppCompatActivity() {
     lateinit var adapterAutor: ListAutorAdapter
     lateinit var adapterGenero: ListGeneroAdapter
     var introAutor: MutableList<ReadAutor> = ArrayList()
-    var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introGenero: MutableList<ReadGenero> = ArrayList()
-    var introId : List<String> = ArrayList()
 
     var imagen: Uri = "".toUri()
     var nombre = ""
@@ -55,7 +53,6 @@ class CrearAlbumActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCrearAlbumBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         setContentView(binding.root)
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

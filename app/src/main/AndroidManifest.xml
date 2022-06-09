@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoIntegradoDef" >
         <activity
-            android:name=".CrearMusicActivity"
+            android:name=".musica.crud.music.CrearMusicActivity"
             android:exported="false" />
         <activity
             android:name=".musica.crud.album.UpdateAlbumActivity"

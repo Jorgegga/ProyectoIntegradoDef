@@ -63,7 +63,7 @@ class AdminMusicFragment : Fragment() {
 
     private fun listeners(){
         binding.btnAnnadirMusic.setOnClickListener {
-            var i = Intent(requireContext(), CrearAlbumActivity::class.java)
+            var i = Intent(requireContext(), CrearMusicActivity::class.java)
             startActivity(i)
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         }
@@ -138,7 +138,7 @@ class AdminMusicFragment : Fragment() {
 
     private fun rellenarDatos() {
         introMusicAdapter.clear()
-        //player.clearMediaItems()
+
         for (x in introMusic) {
             var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
             var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }

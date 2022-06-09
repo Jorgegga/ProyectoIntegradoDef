@@ -16,4 +16,8 @@ class ReadAlbum {
     var portada = ""
     var descripcion = ""
     var genero_id = 0
+
+    override fun toString(): String {
+        return titulo
+    }
 }
