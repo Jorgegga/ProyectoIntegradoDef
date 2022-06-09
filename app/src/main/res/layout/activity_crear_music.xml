@@ -73,9 +73,9 @@
 
           <EditText
               android:id="@+id/etNombreMusic"
-              android:layout_width="wrap_content"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginTop="28dp"
+              android:layout_marginTop="20dp"
               android:ems="15"
               android:hint="Nombre"
               android:inputType="textPersonName"
@@ -85,13 +85,13 @@
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintHorizontal_bias="0.5"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/spGeneroMusic" />
+              app:layout_constraintTop_toBottomOf="@+id/etNumeroCancion" />
 
           <EditText
               android:id="@+id/etDescripcionMusic"
-              android:layout_width="wrap_content"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginTop="32dp"
+              android:layout_marginTop="20dp"
               android:ems="15"
               android:gravity="start|top"
               android:hint="Descripción"
@@ -109,37 +109,43 @@
               android:id="@+id/btnCrearMusic"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_marginTop="40dp"
+              android:layout_marginBottom="50dp"
               android:backgroundTint="@color/ToolBar"
               android:text="Crear"
               android:textColor="@color/texto_principal"
-              app:layout_constraintBottom_toBottomOf="@+id/btnResetMusic"
+              app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintHorizontal_bias="0.5"
-              app:layout_constraintStart_toEndOf="@+id/btnResetMusic" />
+              app:layout_constraintStart_toEndOf="@+id/btnResetMusic"
+              app:layout_constraintTop_toBottomOf="@+id/btnCancion" />
 
           <Button
               android:id="@+id/btnResetMusic"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="24dp"
+              android:layout_marginTop="40dp"
+              android:layout_marginBottom="50dp"
               android:backgroundTint="@color/ToolBar"
               android:text="Reset"
               android:textColor="@color/texto_principal"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toStartOf="@+id/btnCrearMusic"
               app:layout_constraintHorizontal_bias="0.5"
-              app:layout_constraintStart_toStartOf="parent" />
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/btnCancion" />
 
           <com.google.android.material.textfield.TextInputLayout
               android:id="@+id/spAutorMusic"
               style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-              android:layout_width="150dp"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginEnd="15dp"
+              android:layout_marginTop="20dp"
               android:hint="Autor"
-              app:layout_constraintBottom_toBottomOf="@+id/spAlbumMusic"
               app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/spAlbumMusic">
+              app:layout_constraintHorizontal_bias="0.5"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/spAlbumMusic">
 
             <AutoCompleteTextView
                 android:id="@+id/ddAutorMusic"
@@ -151,13 +157,14 @@
           <com.google.android.material.textfield.TextInputLayout
               android:id="@+id/spGeneroMusic"
               style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-              android:layout_width="160dp"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginStart="15dp"
-              android:layout_marginTop="35dp"
+              android:layout_marginTop="20dp"
               android:hint="Genero"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintHorizontal_bias="0.5"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/spAlbumMusic">
+              app:layout_constraintTop_toBottomOf="@+id/spAutorMusic">
 
             <AutoCompleteTextView
                 android:id="@+id/ddGeneroMusic"
@@ -169,11 +176,12 @@
           <com.google.android.material.textfield.TextInputLayout
               android:id="@+id/spAlbumMusic"
               style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-              android:layout_width="160dp"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginStart="15dp"
-              android:layout_marginTop="26dp"
+              android:layout_marginTop="48dp"
               android:hint="Album"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintHorizontal_bias="0.5"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toBottomOf="@+id/ibMusicPortada">
 
@@ -186,17 +194,31 @@
 
           <EditText
               android:id="@+id/etNumeroCancion"
-              android:layout_width="150dp"
+              android:layout_width="300dp"
               android:layout_height="wrap_content"
-              android:layout_marginEnd="15dp"
+              android:layout_marginTop="20dp"
               android:ems="10"
-              android:hint="Nº Cancion"
+              android:hint="Nº Canción"
               android:inputType="number"
               android:textColor="@color/texto_principal"
               android:textColorHint="@color/texto_secundario"
-              app:layout_constraintBottom_toBottomOf="@+id/spGeneroMusic"
               app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/spGeneroMusic" />
+              app:layout_constraintHorizontal_bias="0.5"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/spGeneroMusic" />
+
+          <Button
+              android:id="@+id/btnCancion"
+              android:layout_width="300dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="40dp"
+              android:backgroundTint="#7A0B15"
+              android:text="Elegir canción"
+              android:textColor="@color/texto_principal"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintHorizontal_bias="0.502"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/etDescripcionMusic" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

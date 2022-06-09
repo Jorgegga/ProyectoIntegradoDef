@@ -13,4 +13,6 @@
     <color name="texto_principal">#EFF3F5</color>
     <color name="texto_secundario">#C8CDD0</color>
     <color name="text_terciario">#6c757d</color>
+    <color name="btn_negativo">#7A0B15</color>
+    <color name="btn_positivo">#FF1E4916</color>
 </resources>

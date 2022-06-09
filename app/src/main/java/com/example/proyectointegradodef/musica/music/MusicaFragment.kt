@@ -1,6 +1,5 @@
 package com.example.proyectointegradodef.musica.music
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,19 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentMusicaBinding
 import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.preferences.AppUse
-import com.example.proyectointegradodef.room.Musica
-import com.example.proyectointegradodef.room.MusicaDatabase
-import com.example.proyectointegradodef.room.MusicaRoomAdapter
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -52,7 +45,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
-    var introPlaylist: MutableList<ReadPlaylist> = ArrayList()
+    var introPlaylist: MutableList<AnnadirPlaylistMusic> = ArrayList()
     var reproducir = false
 
     var nombre = ""
@@ -130,7 +123,8 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     fun reproducir() {
         try {
-            player.seekTo(AppUse.recyclerPosition, 0)
+            Log.d("------------------------", idSong.toString())
+            player.seekTo(idSong, 0)
             player.prepare()
             player.playWhenReady = true
             binding.videoView.player = player
@@ -219,62 +213,68 @@ class MusicaFragment : Fragment(), Player.Listener {
         }
     }
 
+    @Synchronized
     private fun rellenarDatos() {
         introTotal.clear()
         if (idAutor != 0) {
             filtrarDatos()
         }
-        player.clearMediaItems()
-        for (x in introMusic) {
-            var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
-            storageRef.downloadUrl.addOnSuccessListener() {
-                var url = it.toString()
-                player.addMediaItem(
-                    MediaItem.Builder().setUri(Uri.parse(url)).build()
-                )
+        if(introAlbum.isNotEmpty() && introAutor.isNotEmpty() && introMusic.isNotEmpty()) {
+            player.clearMediaItems()
+            introPlaylist.clear()
+            for (x in introMusic) {
+                var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
+                storageRef.downloadUrl.addOnSuccessListener() {
+                    var mediaItem = MediaItem.Builder().setUri(it).build()
+                    introPlaylist.add(AnnadirPlaylistMusic(x.id, mediaItem))
+                }
+                var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+                var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                var temp: ReadMusicaAlbumAutor
+                if (alb != null && aut != null) {
+                    temp = ReadMusicaAlbumAutor(
+                        x.id,
+                        x.nombre,
+                        x.album_id,
+                        alb.titulo,
+                        x.autor_id,
+                        aut.nombre,
+                        x.ruta,
+                        x.portada,
+                        x.descripcion
+                    )
+                } else {
+                    temp = ReadMusicaAlbumAutor(
+                        x.id,
+                        "default",
+                        x.album_id,
+                        alb!!.titulo,
+                        x.autor_id,
+                        "default",
+                        x.ruta,
+                        x.portada,
+                        x.descripcion
+                    )
+                }
+                introTotal.add(temp)
             }
-            var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
-            var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
-            var temp: ReadMusicaAlbumAutor
-            if (alb != null && aut != null) {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    x.nombre,
-                    x.album_id,
-                    alb.titulo,
-                    x.autor_id,
-                    aut.nombre,
-                    x.ruta,
-                    x.portada,
-                    x.descripcion
-                )
-            } else {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    "default",
-                    x.album_id,
-                    alb!!.titulo,
-                    x.autor_id,
-                    "default",
-                    x.ruta,
-                    x.portada,
-                    x.descripcion
-                )
+            if (idSong != 0) {
+                var tempMusic = introMusic.find { it.id == idSong }
+                var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
+                if (tempMusic != null) {
+                    actualizarReproductorCancion(tempMusic)
+                }
+                if (tempAutor != null) {
+                    actualizarReproductorAutor(tempAutor)
+                }
             }
-            introTotal.add(temp)
+            Log.d("-----------------------", introPlaylist.toString())
+            introPlaylist.sortBy { it.id }
+            var arrayMediaItems = introPlaylist.map { it.ruta }
+            player.addMediaItems(arrayMediaItems)
+            binding.loadingPanel.visibility = View.GONE
+            setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
         }
-        if (idSong != 0) {
-            var tempMusic = introMusic.find { it.id == idSong }
-            var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
-            if (tempMusic != null) {
-                actualizarReproductorCancion(tempMusic)
-            }
-            if (tempAutor != null) {
-                actualizarReproductorAutor(tempAutor)
-            }
-        }
-        binding.loadingPanel.visibility = View.GONE
-        setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
     }
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {

@@ -46,7 +46,7 @@ class CrearMusicActivity : AppCompatActivity() {
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
 
     var imagen: Uri = "".toUri()
-    var rutaAudio: Uri = "".toUri()
+    var audio: Uri = "".toUri()
     var nombre = ""
     var descripcion = ""
     var autor = 0
@@ -58,6 +58,7 @@ class CrearMusicActivity : AppCompatActivity() {
     val PICK_AUDIO_REQUEST = 150
     var crearId = 0
     var rutaImagen = ""
+    var rutaAudio = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,17 +91,22 @@ class CrearMusicActivity : AppCompatActivity() {
             if(comprobarCampos()){
                 buscarId()
             }
+        }
 
+        binding.btnCancion.setOnClickListener {
+            subirMusica()
         }
 
         binding.ddAutorMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 autor = adapterAutor.getItem(position)!!.id
             }
+
         binding.ddGeneroMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 genero = adapterGenero.getItem(position)!!.id
             }
+
         binding.ddAlbumMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 album = adapterAlbum.getItem(position)!!.id
@@ -120,6 +126,7 @@ class CrearMusicActivity : AppCompatActivity() {
                 this,
                 R.drawable.default_album
             ))
+        binding.etNumeroCancion.text.clear()
         imagen = "".toUri()
         nombre = ""
         descripcion = ""
@@ -128,6 +135,9 @@ class CrearMusicActivity : AppCompatActivity() {
         genero = 0
         album = 0
         numCancion = 0
+        audio = "".toUri()
+        rutaImagen = ""
+        binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_negativo))
     }
 
     private fun setSpinnerAutor(){
@@ -252,8 +262,11 @@ class CrearMusicActivity : AppCompatActivity() {
             var filePath = data!!.data
             imagen = filePath!!
             binding.ibMusicPortada.setImageURI(filePath)
+            rutaImagen = ""
         }else if(requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK){
-            
+            var filePath = data!!.data
+            audio = filePath!!
+            binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_positivo))
         }
     }
 
@@ -342,32 +355,45 @@ class CrearMusicActivity : AppCompatActivity() {
     private fun annadirMusic() {
         val storageRef = storage.reference
         var randomString = UUID.randomUUID().toString()
-        if(imagen.toString().equals("") && rutaImagen == ""){
+        if(audio.toString() == ""){
+            rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"
+        }else{
+            rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/$randomString"
+            val musicRef = storageRef.child("proyecto/musica/$randomString.mp3")
+            val uploadTask = musicRef.putFile(audio)
+            uploadTask.addOnFailureListener{
+                Toast.makeText(this, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
+                return@addOnFailureListener
+            }.addOnSuccessListener {
+                Toast.makeText(this, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
+            }
+        }
+        if(imagen.toString() == "" && rutaImagen == ""){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
-            referenceMusic.child(randomString).setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio.toString()))
-            Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG).show()
-            limpiar()
+            referenceMusic.child(randomString).setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio))
+            Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
         }else if(rutaImagen != "") {
             referenceMusic.child(randomString)
-                .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, rutaImagen, rutaAudio.toString()))
-            Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG)
+                .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, rutaImagen, rutaAudio))
+            Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                 .show()
-            limpiar()
         }else if(imagen.toString() != ""){
-            val imageRef = storageRef.child("proyecto/album/${randomString}.png")
+            val imageRef = storageRef.child("proyecto/musica/portada/${randomString}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                return@addOnFailureListener
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$randomString"
                 referenceMusic.child(randomString)
-                    .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio.toString()))
-                Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG)
+                    .setValue(ReadMusica(nombre, autor, album, descripcion, genero, crearId, numCancion, ruta, rutaAudio))
+                Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                     .show()
-                limpiar()
             }
         }
+
+        limpiar()
 
     }
 

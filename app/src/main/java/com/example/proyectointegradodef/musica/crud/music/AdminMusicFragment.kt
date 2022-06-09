@@ -179,24 +179,24 @@ class AdminMusicFragment : Fragment() {
         binding.recyclerViewCrudMusic.adapter = AdminMusicAdapter(lista,{
             //recogerNombreGenero(it)
         },{
-            /*MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Borrar album")
-                .setMessage("¿Quieres borrar el album " + it.titulo + " de la base de datos?")
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Borrar cancion")
+                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de la base de datos?")
                 .setNeutralButton("Cancelar") { dialog, which ->
                     // Respond to neutral button press
                 }
                 .setNegativeButton("Rechazar") { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha borrado el album",
+                        "No se ha borrado la cancion",
                         Toast.LENGTH_LONG
                     ).show()
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
-                    borrarAlbum(it.id, it.portada)
+                    borrarMusic(it.id, it.portada, it.ruta)
 
                 }
-                .show()*/
+                .show()
         })
         binding.recyclerViewCrudMusic.scrollToPosition(0)
         binding.recyclerViewCrudMusic.layoutManager = linearLayoutManager
@@ -220,12 +220,48 @@ class AdminMusicFragment : Fragment() {
         })
     }
 
+    private fun borrarMusic(id: Int, foto: String, ruta: String){
+        referenceMusic.get()
+        var query = referenceMusic.orderByChild("id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (messageSnapshot in snapshot.children) {
+                    if (messageSnapshot.child("id").value.toString() == id.toString()) {
+                        val storageRef = storage.reference
+                            if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" && foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
+                                if(foto.contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada") && !foto.contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/album")) {
+                                    val imageRef =
+                                        storageRef.child("proyecto/musica/portada/${messageSnapshot.key}.png")
+                                    imageRef.delete()
+                                }
+                            }
+
+                        if(ruta != "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"){
+                            val rutaRef = storageRef.child("proyecto/musica/${messageSnapshot.key}.mp3")
+                            rutaRef.delete()
+                        }
+                        messageSnapshot.ref.removeValue()
+                        Toast.makeText(requireContext(), "Se ha borrado la cancion correctamente", Toast.LENGTH_LONG).show()
+                        setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
+                        return
+                    }
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAutor = db.getReference("autors")
         referenceAlbum = db.getReference("albums")
         referenceGenero = db.getReference("generos")
         referenceMusic = db.getReference("music")
+
     }
 
     companion object {
