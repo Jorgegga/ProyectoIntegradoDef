@@ -20,9 +20,13 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.async
+import okhttp3.Response
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MusicaFragment : Fragment(), Player.Listener {
     lateinit var binding: FragmentMusicaBinding
@@ -56,6 +60,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var recyclerVacio = false
     var crearId = 0
     var existeCancion = false
+    var cambioMusic = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,9 +94,13 @@ class MusicaFragment : Fragment(), Player.Listener {
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         extractorsFactory = DefaultExtractorsFactory()
         recogerBundle()
+
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
+
+        rellenarDatos()
+
 
     }
 
@@ -123,8 +132,7 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     fun reproducir() {
         try {
-            Log.d("------------------------", idSong.toString())
-            player.seekTo(idSong, 0)
+            player.seekTo(buscarCancion(idSong), 0)
             player.prepare()
             player.playWhenReady = true
             binding.videoView.player = player
@@ -149,6 +157,7 @@ class MusicaFragment : Fragment(), Player.Listener {
                         introMusic.add(music)
                     }
                 }
+                cambioMusic = true
                 rellenarDatos()
             }
 
@@ -213,71 +222,90 @@ class MusicaFragment : Fragment(), Player.Listener {
         }
     }
 
-    @Synchronized
+    suspend fun recogerPlaylist(music: ReadMusica) {
+        var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
+        storageRef.downloadUrl.addOnSuccessListener() {
+            var mediaItem = MediaItem.Builder().setUri(it).build()
+            introPlaylist.add(AnnadirPlaylistMusic(music.id, mediaItem))
+        }.await()
+    }
+
+    fun rellenarPlaylist() {
+        introPlaylist.sortByDescending { it.id }
+        var arrayMediaItems = introPlaylist.map { it.ruta }
+        player.addMediaItems(arrayMediaItems)
+    }
+
+    fun buscarCancion(id: Int): Int {
+        return introPlaylist.indexOfFirst { it.id == id }
+    }
+
+
     private fun rellenarDatos() {
-        introTotal.clear()
-        if (idAutor != 0) {
-            filtrarDatos()
-        }
-        if(introAlbum.isNotEmpty() && introAutor.isNotEmpty() && introMusic.isNotEmpty()) {
-            player.clearMediaItems()
-            introPlaylist.clear()
-            for (x in introMusic) {
-                var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
-                storageRef.downloadUrl.addOnSuccessListener() {
-                    var mediaItem = MediaItem.Builder().setUri(it).build()
-                    introPlaylist.add(AnnadirPlaylistMusic(x.id, mediaItem))
-                }
-                var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
-                var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
-                var temp: ReadMusicaAlbumAutor
-                if (alb != null && aut != null) {
-                    temp = ReadMusicaAlbumAutor(
-                        x.id,
-                        x.nombre,
-                        x.album_id,
-                        alb.titulo,
-                        x.autor_id,
-                        aut.nombre,
-                        x.ruta,
-                        x.portada,
-                        x.descripcion,
-                        x.genero_id,
-                        x.numCancion
-                    )
-                } else {
-                    temp = ReadMusicaAlbumAutor(
-                        x.id,
-                        "default",
-                        x.album_id,
-                        alb!!.titulo,
-                        x.autor_id,
-                        "default",
-                        x.ruta,
-                        x.portada,
-                        x.descripcion,
-                        x.genero_id,
-                        x.numCancion
-                    )
-                }
-                introTotal.add(temp)
+        if (introAlbum.isNotEmpty() && introAutor.isNotEmpty() && introMusic.isNotEmpty()) {
+            introTotal.clear()
+            if (idAutor != 0) {
+                filtrarDatos()
             }
-            if (idSong != 0) {
-                var tempMusic = introMusic.find { it.id == idSong }
-                var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
-                if (tempMusic != null) {
-                    actualizarReproductorCancion(tempMusic)
-                }
-                if (tempAutor != null) {
-                    actualizarReproductorAutor(tempAutor)
-                }
+            if(cambioMusic) {
+                player.clearMediaItems()
+                introPlaylist.clear()
             }
-            Log.d("-----------------------", introPlaylist.toString())
-            introPlaylist.sortBy { it.id }
-            var arrayMediaItems = introPlaylist.map { it.ruta }
-            player.addMediaItems(arrayMediaItems)
-            binding.loadingPanel.visibility = View.GONE
-            setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+            CoroutineScope(Dispatchers.Main).launch {
+                for (x in introMusic) {
+                    if(cambioMusic) {
+                        recogerPlaylist(x)
+                    }
+                    var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+                    var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                    var temp: ReadMusicaAlbumAutor
+                    if (alb != null && aut != null) {
+                        temp = ReadMusicaAlbumAutor(
+                            x.id,
+                            x.nombre,
+                            x.album_id,
+                            alb.titulo,
+                            x.autor_id,
+                            aut.nombre,
+                            x.ruta,
+                            x.portada,
+                            x.descripcion,
+                            x.genero_id,
+                            x.numCancion
+                        )
+                    } else {
+                        temp = ReadMusicaAlbumAutor(
+                            x.id,
+                            "default",
+                            x.album_id,
+                            alb!!.titulo,
+                            x.autor_id,
+                            "default",
+                            x.ruta,
+                            x.portada,
+                            x.descripcion,
+                            x.genero_id,
+                            x.numCancion
+                        )
+                    }
+                    introTotal.add(temp)
+                }
+                introTotal.sortByDescending{it.id}
+                cambioMusic = false
+                if (idSong != 0) {
+                    var tempMusic = introMusic.find { it.id == idSong }
+                    var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
+                    if (tempMusic != null) {
+                        actualizarReproductorCancion(tempMusic)
+                    }
+                    if (tempAutor != null) {
+                        actualizarReproductorAutor(tempAutor)
+                    }
+                }
+                rellenarPlaylist()
+                binding.loadingPanel.visibility = View.GONE
+                setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+            }
         }
     }
 
@@ -335,7 +363,8 @@ class MusicaFragment : Fragment(), Player.Listener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (crearId == 0) {
                     for (messageSnapshot in snapshot.children) {
-                        crearId = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)!!.id + 1
+                        crearId =
+                            messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)!!.id + 1
                         filtrarDatosPlaylist(music)
                     }
                 }

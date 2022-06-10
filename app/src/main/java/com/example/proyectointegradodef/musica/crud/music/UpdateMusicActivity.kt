@@ -65,6 +65,7 @@ class UpdateMusicActivity : AppCompatActivity() {
     var album = ""
     var numCancion = 0
     val PERMISO_CODE_FICHERO = 200
+    val PERMISO_CODE_MUSICA = 250
     val PICK_IMAGE_REQUEST = 100
     val PICK_AUDIO_REQUEST = 150
     var crearId = 0
@@ -98,7 +99,7 @@ class UpdateMusicActivity : AppCompatActivity() {
             if(isPermisosConcedidosFichero()){
                 cogerFichero()
             }else{
-                permisosFichero()
+                permisosFichero(PERMISO_CODE_FICHERO)
             }
         }
         binding.btnUpdateMusic.setOnClickListener {
@@ -108,7 +109,12 @@ class UpdateMusicActivity : AppCompatActivity() {
         }
 
         binding.btnCancion.setOnClickListener {
-            subirMusica()
+            if(isPermisosConcedidosFichero()){
+                subirMusica()
+            }else{
+                permisosFichero(PERMISO_CODE_MUSICA)
+            }
+
         }
 
         binding.ddAutorMusic.onItemClickListener =
@@ -147,7 +153,6 @@ class UpdateMusicActivity : AppCompatActivity() {
             genero_id_temp = genero_id
             album_id_temp = album_id
         }
-        Log.d("--------------------------------", rutaImagen)
         if(rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" || rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
             binding.ibMusicPortada.setImageDrawable(
                 AppCompatResources.getDrawable(
@@ -262,10 +267,10 @@ class UpdateMusicActivity : AppCompatActivity() {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
-    private fun permisosFichero(){
+    private fun permisosFichero(codigo: Int){
         var checkPermisos = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         if(checkPermisos != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISO_CODE_FICHERO)
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), codigo)
         }else{
             Toast.makeText(this, resources.getString(R.string.noHasProporcionadoPermisos), Toast.LENGTH_SHORT).show()
         }
@@ -281,6 +286,13 @@ class UpdateMusicActivity : AppCompatActivity() {
             PERMISO_CODE_FICHERO->{
                 if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     cogerFichero()
+                }else{
+                    Toast.makeText(this, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
+                }
+            }
+            PERMISO_CODE_MUSICA->{
+                if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    subirMusica()
                 }else{
                     Toast.makeText(this, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
                 }
@@ -381,7 +393,6 @@ class UpdateMusicActivity : AppCompatActivity() {
     private fun actualizarMusic() {
         val storageRef = storage.reference
         if(audio.toString() == ""){
-            rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"
             if(imagen.toString() == "" && rutaImagen == ""){
                 referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
                 Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()

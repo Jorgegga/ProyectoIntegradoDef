@@ -54,6 +54,7 @@ class CrearMusicActivity : AppCompatActivity() {
     var album = 0
     var numCancion = 0
     val PERMISO_CODE_FICHERO = 200
+    val PERMISO_CODE_MUSICA = 250
     val PICK_IMAGE_REQUEST = 100
     val PICK_AUDIO_REQUEST = 150
     var crearId = 0
@@ -84,7 +85,7 @@ class CrearMusicActivity : AppCompatActivity() {
             if(isPermisosConcedidosFichero()){
                 cogerFichero()
             }else{
-                permisosFichero()
+                permisosFichero(PERMISO_CODE_FICHERO)
             }
         }
         binding.btnCrearMusic.setOnClickListener {
@@ -97,7 +98,7 @@ class CrearMusicActivity : AppCompatActivity() {
             if(isPermisosConcedidosFichero()){
                 subirMusica()
             }else{
-                permisosFichero()
+                permisosFichero(PERMISO_CODE_MUSICA)
             }
 
         }
@@ -235,10 +236,10 @@ class CrearMusicActivity : AppCompatActivity() {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
     }
 
-    private fun permisosFichero(){
+    private fun permisosFichero(codigo: Int){
         var checkPermisos = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         if(checkPermisos != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISO_CODE_FICHERO)
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), codigo)
         }else{
             Toast.makeText(this, resources.getString(R.string.noHasProporcionadoPermisos), Toast.LENGTH_SHORT).show()
         }
@@ -254,6 +255,13 @@ class CrearMusicActivity : AppCompatActivity() {
             PERMISO_CODE_FICHERO->{
                 if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                     cogerFichero()
+                }else{
+                    Toast.makeText(this, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
+                }
+            }
+            PERMISO_CODE_MUSICA->{
+                if(grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    subirMusica()
                 }else{
                     Toast.makeText(this, resources.getString(R.string.rechazarPermisos), Toast.LENGTH_SHORT).show()
                 }
