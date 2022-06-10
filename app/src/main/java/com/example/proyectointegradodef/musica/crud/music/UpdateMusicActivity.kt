@@ -134,7 +134,7 @@ class UpdateMusicActivity : AppCompatActivity() {
             crearId = bundle!!.getInt("id", 0)
             autor_id = bundle.getInt("autor_id", 0)
             autor = bundle.getString("autor", "Default")
-            nombre = bundle.getString("titulo", "Default")
+            nombre = bundle.getString("nombre", "Default")
             rutaImagen = bundle.getString("portada", "Default")
             descripcion = bundle.getString("descripcion", "No hay descripción disponible")
             genero_id = bundle.getInt("genero_id", 0)
@@ -332,6 +332,9 @@ class UpdateMusicActivity : AppCompatActivity() {
         if(album_id == 0){
             album_id = 1
         }
+        if(binding.etNumeroCancion.text.isNotEmpty()){
+            numCancion = binding.etNumeroCancion.text.toString().toInt()
+        }
         return true
     }
 
@@ -377,6 +380,35 @@ class UpdateMusicActivity : AppCompatActivity() {
         val storageRef = storage.reference
         if(audio.toString() == ""){
             rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"
+            if(imagen.toString() == "" && rutaImagen == ""){
+                referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
+                Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
+                updateHecho = true
+                recuperarDatos()
+            }else if(rutaImagen != "") {
+                referenceMusic.child(key)
+                    .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
+                Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
+                    .show()
+                updateHecho = true
+                recuperarDatos()
+            }else if(imagen.toString() != ""){
+                val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
+                val uploadTask = imageRef.putFile(imagen)
+                uploadTask.addOnFailureListener {
+                    Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                    return@addOnFailureListener
+                }.addOnCompleteListener {
+                    var ruta =
+                        "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/$key"
+                    referenceMusic.child(key)
+                        .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
+                    Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
+                        .show()
+                    updateHecho = true
+                    recuperarDatos()
+                }
+            }
         }else{
             rutaAudio = "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/$key"
             val musicRef = storageRef.child("proyecto/musica/$key.mp3")
@@ -385,38 +417,39 @@ class UpdateMusicActivity : AppCompatActivity() {
                 Toast.makeText(this, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
                 return@addOnFailureListener
             }.addOnSuccessListener {
-                Toast.makeText(this, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
+                if(imagen.toString() == "" && rutaImagen == ""){
+                    referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
+                    Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
+                    updateHecho = true
+                    recuperarDatos()
+                }else if(rutaImagen != "") {
+                    referenceMusic.child(key)
+                        .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
+                    Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
+                        .show()
+                    updateHecho = true
+                    recuperarDatos()
+                }else if(imagen.toString() != ""){
+                    val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
+                    val uploadTask = imageRef.putFile(imagen)
+                    uploadTask.addOnFailureListener {
+                        Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                        return@addOnFailureListener
+                    }.addOnCompleteListener {
+                        var ruta =
+                            "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/$key"
+                        referenceMusic.child(key)
+                            .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
+                        Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
+                            .show()
+                        updateHecho = true
+                        recuperarDatos()
+                    }
+                }
             }
         }
-        if(imagen.toString() == "" && rutaImagen == ""){
-            referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
-            Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
-            updateHecho = true
-            recuperarDatos()
-        }else if(rutaImagen != "") {
-            referenceMusic.child(key)
-                .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
-            Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
-                .show()
-            updateHecho = true
-            recuperarDatos()
-        }else if(imagen.toString() != ""){
-            val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
-            val uploadTask = imageRef.putFile(imagen)
-            uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
-                return@addOnFailureListener
-            }.addOnCompleteListener {
-                var ruta =
-                    "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
-                referenceMusic.child(key)
-                    .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
-                Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
-                    .show()
-                updateHecho = true
-                recuperarDatos()
-            }
-        }
+
 
 
     }

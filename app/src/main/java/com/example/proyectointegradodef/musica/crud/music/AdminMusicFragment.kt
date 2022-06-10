@@ -254,13 +254,11 @@ class AdminMusicFragment : Fragment() {
                 for (messageSnapshot in snapshot.children) {
                     if (messageSnapshot.child("id").value.toString() == id.toString()) {
                         val storageRef = storage.reference
-                            if(foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" && foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
-                                if(foto.contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada") && !foto.contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/album")) {
-                                    val imageRef =
-                                        storageRef.child("proyecto/musica/portada/${messageSnapshot.key}.png")
-                                    imageRef.delete()
-                                }
-                            }
+                        if(!foto.contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/album") && foto != "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default") {
+                            val imageRef =
+                                storageRef.child("proyecto/musica/portada/${messageSnapshot.key}.png")
+                            imageRef.delete()
+                        }
 
                         if(ruta != "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default"){
                             val rutaRef = storageRef.child("proyecto/musica/${messageSnapshot.key}.mp3")
