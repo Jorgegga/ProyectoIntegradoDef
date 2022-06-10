@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -146,6 +147,7 @@ class UpdateMusicActivity : AppCompatActivity() {
             genero_id_temp = genero_id
             album_id_temp = album_id
         }
+        Log.d("--------------------------------", rutaImagen)
         if(rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" || rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
             binding.ibMusicPortada.setImageDrawable(
                 AppCompatResources.getDrawable(
@@ -399,10 +401,10 @@ class UpdateMusicActivity : AppCompatActivity() {
                     Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                     return@addOnFailureListener
                 }.addOnCompleteListener {
-                    var ruta =
+                    rutaImagen =
                         "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/$key"
                     referenceMusic.child(key)
-                        .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
+                        .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
                     Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                         .show()
                     updateHecho = true
