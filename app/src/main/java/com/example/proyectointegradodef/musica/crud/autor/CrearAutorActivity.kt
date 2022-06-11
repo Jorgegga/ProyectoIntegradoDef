@@ -7,6 +7,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -61,6 +63,10 @@ class CrearAutorActivity : AppCompatActivity() {
         }
         binding.btnCrearAutor.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
         }
@@ -79,6 +85,8 @@ class CrearAutorActivity : AppCompatActivity() {
         }else {
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/$randomString"
@@ -93,6 +101,8 @@ class CrearAutorActivity : AppCompatActivity() {
     }
 
     private fun limpiar() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.loadingPanel.visibility = View.GONE
         binding.etNombreAutor.text.clear()
         binding.etDescripcionAutor.text.clear()
         binding.ibAutor.setImageDrawable(

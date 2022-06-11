@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -78,6 +80,10 @@ class CrearAlbumActivity : AppCompatActivity() {
         }
         binding.btnCrearAlbum.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
 
@@ -105,6 +111,8 @@ class CrearAlbumActivity : AppCompatActivity() {
     }
 
     private fun limpiar() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.loadingPanel.visibility = View.GONE
         binding.etNombreAlbum.text.clear()
         binding.etDescripcionAlbum.text.clear()
         binding.spAutorAlbum.editText!!.text.clear()
@@ -268,6 +276,8 @@ class CrearAlbumActivity : AppCompatActivity() {
         }else {
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$randomString"

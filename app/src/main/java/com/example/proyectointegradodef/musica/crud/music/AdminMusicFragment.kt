@@ -139,45 +139,45 @@ class AdminMusicFragment : Fragment() {
     }
 
     private fun rellenarDatos() {
-        introMusicAdapter.clear()
-
-        for (x in introMusic) {
-            var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
-            var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
-            var temp: ReadMusicaAlbumAutor
-            if (alb != null && aut != null) {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    x.nombre,
-                    x.album_id,
-                    alb.titulo,
-                    x.autor_id,
-                    aut.nombre,
-                    x.ruta,
-                    x.portada,
-                    x.descripcion,
-                    x.genero_id,
-                    x.numCancion
-                )
-            } else {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    "default",
-                    x.album_id,
-                    alb!!.titulo,
-                    x.autor_id,
-                    "default",
-                    x.ruta,
-                    x.portada,
-                    x.descripcion,
-                    x.genero_id,
-                    x.numCancion
-                )
+        if(introMusic.isNotEmpty() && introAlbum.isNotEmpty() && introAutor.isNotEmpty()) {
+            introMusicAdapter.clear()
+            for (x in introMusic) {
+                var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+                var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                var temp: ReadMusicaAlbumAutor
+                if (alb != null && aut != null) {
+                    temp = ReadMusicaAlbumAutor(
+                        x.id,
+                        x.nombre,
+                        x.album_id,
+                        alb.titulo,
+                        x.autor_id,
+                        aut.nombre,
+                        x.ruta,
+                        x.portada,
+                        x.descripcion,
+                        x.genero_id,
+                        x.numCancion
+                    )
+                } else {
+                    temp = ReadMusicaAlbumAutor(
+                        x.id,
+                        "default",
+                        x.album_id,
+                        alb!!.titulo,
+                        x.autor_id,
+                        "default",
+                        x.ruta,
+                        x.portada,
+                        x.descripcion,
+                        x.genero_id,
+                        x.numCancion
+                    )
+                }
+                introMusicAdapter.add(temp)
             }
-            introMusicAdapter.add(temp)
+            setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
         }
-        //binding.loadingPanel.visibility = View.GONE
-        setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
     }
 
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){

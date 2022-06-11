@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -62,12 +64,18 @@ class CrearGeneroActivity : AppCompatActivity() {
         }
         binding.btnCrearGenero.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
         }
     }
 
     private fun limpiar() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.loadingPanel.visibility = View.GONE
         binding.etNombreGenero.text.clear()
         binding.ibGenero.setImageDrawable(
             AppCompatResources.getDrawable(
@@ -168,6 +176,8 @@ class CrearGeneroActivity : AppCompatActivity() {
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/$randomString"

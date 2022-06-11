@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -104,6 +106,10 @@ class UpdateMusicActivity : AppCompatActivity() {
         }
         binding.btnUpdateMusic.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
         }
@@ -231,7 +237,6 @@ class UpdateMusicActivity : AppCompatActivity() {
                     }
                 }
                 setSpinnerAutor()
-                //binding.loadingPanel.visibility = View.GONE
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -254,7 +259,7 @@ class UpdateMusicActivity : AppCompatActivity() {
                     }
                 }
                 setSpinnerAlbum()
-                //binding.loadingPanel.visibility = View.GONE
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -398,6 +403,8 @@ class UpdateMusicActivity : AppCompatActivity() {
                 referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
                 Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
                 updateHecho = true
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
                 recuperarDatos()
             }else if(rutaImagen != "") {
                 referenceMusic.child(key)
@@ -405,6 +412,8 @@ class UpdateMusicActivity : AppCompatActivity() {
                 Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                     .show()
                 updateHecho = true
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
                 recuperarDatos()
             }else if(imagen.toString() != ""){
                 val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
@@ -420,6 +429,8 @@ class UpdateMusicActivity : AppCompatActivity() {
                     Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                         .show()
                     updateHecho = true
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    binding.loadingPanel.visibility = View.GONE
                     recuperarDatos()
                 }
             }
@@ -431,11 +442,12 @@ class UpdateMusicActivity : AppCompatActivity() {
                 Toast.makeText(this, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
                 return@addOnFailureListener
             }.addOnSuccessListener {
-                //Toast.makeText(this, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
                 if(imagen.toString() == "" && rutaImagen == ""){
                     referenceMusic.child(key).setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
                     Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG).show()
                     updateHecho = true
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    binding.loadingPanel.visibility = View.GONE
                     recuperarDatos()
                 }else if(rutaImagen != "") {
                     referenceMusic.child(key)
@@ -443,6 +455,8 @@ class UpdateMusicActivity : AppCompatActivity() {
                     Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                         .show()
                     updateHecho = true
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    binding.loadingPanel.visibility = View.GONE
                     recuperarDatos()
                 }else if(imagen.toString() != ""){
                     val imageRef = storageRef.child("proyecto/musica/portada/${key}.png")
@@ -451,13 +465,15 @@ class UpdateMusicActivity : AppCompatActivity() {
                         Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                         return@addOnFailureListener
                     }.addOnCompleteListener {
-                        var ruta =
+                        rutaImagen =
                             "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/$key"
                         referenceMusic.child(key)
-                            .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, ruta, rutaAudio))
+                            .setValue(ReadMusica(nombre, autor_id, album_id, descripcion, genero_id, crearId, numCancion, rutaImagen, rutaAudio))
                         Toast.makeText(this, "Se ha subido la canción correctamente", Toast.LENGTH_LONG)
                             .show()
                         updateHecho = true
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        binding.loadingPanel.visibility = View.GONE
                         recuperarDatos()
                     }
                 }

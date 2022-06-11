@@ -11,6 +11,7 @@ import android.view.Display
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -38,6 +39,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.*
 
 
 class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
@@ -64,7 +66,6 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setContentView(binding.root)
         setToolbar()
         initDb()
-        setHeader()
         annadirUsuario()
         title="Scarlet Perception"
         fragmentPortada = PortadaFragment()
@@ -126,6 +127,14 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 val option = RequestOptions().error(R.drawable.keystoneback)
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(header.findViewById<ImageView>(R.id.ivPerfil))
             }
+        }.addOnFailureListener {
+            Toast.makeText(this, "No se han podido recuperar los datos de la imagen, volviendolo a intentar en 10 segundos...", Toast.LENGTH_LONG).show()
+            CoroutineScope(Dispatchers.Main).launch{
+                    delay(10000)
+                    setHeader()
+                }
+
+
         }
 
         val display: Display = windowManager.defaultDisplay
@@ -150,7 +159,14 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 AppUse.user_id = it.value.toString().toInt()
             }
         }.addOnFailureListener {
-            Log.d("-----------------------------------", "Algo ha ocurrido")
+            Toast.makeText(this, "No se han podido recuperar los datos del usuario, volviendolo a intentar en 10 segundos...", Toast.LENGTH_LONG).show()
+            runBlocking {
+                CoroutineScope(Dispatchers.IO).launch{
+                    delay(10000)
+                    annadirUsuario()
+                }
+
+            }
         }
 
     }
@@ -279,7 +295,6 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
-
         if (count == 0) {
             super.onBackPressed()
             //additional code

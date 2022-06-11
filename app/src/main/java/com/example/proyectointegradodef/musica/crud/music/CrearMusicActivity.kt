@@ -7,6 +7,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -90,11 +92,15 @@ class CrearMusicActivity : AppCompatActivity() {
         }
         binding.btnCrearMusic.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
         }
 
-        binding.btnCancion.setOnClickListener {
+        binding.btnSelectCancion.setOnClickListener {
             if(isPermisosConcedidosFichero()){
                 subirMusica()
             }else{
@@ -122,6 +128,8 @@ class CrearMusicActivity : AppCompatActivity() {
     }
 
     private fun limpiar() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.loadingPanel.visibility = View.GONE
         binding.etNombreMusic.text.clear()
         binding.etDescripcionMusic.text.clear()
         binding.spGeneroMusic.editText!!.text.clear()
@@ -143,7 +151,7 @@ class CrearMusicActivity : AppCompatActivity() {
         numCancion = 0
         audio = "".toUri()
         rutaImagen = ""
-        binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_negativo))
+        binding.btnSelectCancion.setBackgroundColor(resources.getColor(R.color.btn_negativo))
     }
 
     private fun setSpinnerAutor(){
@@ -279,7 +287,7 @@ class CrearMusicActivity : AppCompatActivity() {
         }else if(requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK){
             var filePath = data!!.data
             audio = filePath!!
-            binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_positivo))
+            binding.btnSelectCancion.setBackgroundColor(resources.getColor(R.color.btn_positivo))
         }
     }
 
@@ -383,6 +391,8 @@ class CrearMusicActivity : AppCompatActivity() {
                 val uploadTask = imageRef.putFile(imagen)
                 uploadTask.addOnFailureListener {
                     Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    binding.loadingPanel.visibility = View.GONE
                     return@addOnFailureListener
                 }.addOnCompleteListener {
                     var ruta =
@@ -400,6 +410,8 @@ class CrearMusicActivity : AppCompatActivity() {
             val uploadTask = musicRef.putFile(audio)
             uploadTask.addOnFailureListener{
                 Toast.makeText(this, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
                 return@addOnFailureListener
             }.addOnSuccessListener {
                 Toast.makeText(this, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
@@ -419,6 +431,8 @@ class CrearMusicActivity : AppCompatActivity() {
                     val uploadTask = imageRef.putFile(imagen)
                     uploadTask.addOnFailureListener {
                         Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        binding.loadingPanel.visibility = View.GONE
                         return@addOnFailureListener
                     }.addOnCompleteListener {
                         var ruta =

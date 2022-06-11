@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -69,6 +71,10 @@ class UpdateAutorActivity : AppCompatActivity() {
         }
         binding.btnCrearAutor.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarKey()
             }
         }
@@ -81,9 +87,13 @@ class UpdateAutorActivity : AppCompatActivity() {
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadAutor(crearId, nombre, foto, descripcion))
             Toast.makeText(this, "Se ha actualizado el autor correctamente", Toast.LENGTH_LONG).show()
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.loadingPanel.visibility = View.GONE
         }else {
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/$key"
@@ -91,6 +101,8 @@ class UpdateAutorActivity : AppCompatActivity() {
                     .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
                 Toast.makeText(this, "Se ha actualizado el autor correctamente", Toast.LENGTH_LONG)
                     .show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }
         }
     }

@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -92,6 +94,10 @@ class UpdateAlbumActivity : AppCompatActivity() {
         }
         binding.btnCrearAlbum.setOnClickListener {
             if(comprobarCampos()){
+                binding.loadingPanel.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 buscarId()
             }
 
@@ -263,7 +269,6 @@ class UpdateAlbumActivity : AppCompatActivity() {
                     }
                 }
                 setSpinnerAutor()
-                //binding.loadingPanel.visibility = View.GONE
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -293,17 +298,20 @@ class UpdateAlbumActivity : AppCompatActivity() {
 
     private fun actualizarAlbum() {
         val storageRef = storage.reference
-        Log.d("-------------------------", key)
         val imageRef = storageRef.child("proyecto/album/${key}.png")
         val uploadTask = imageRef.putFile(imagen)
-        if(imagen.toString().equals("")){
+        if(imagen.toString() == ""){
             referenceAlbum.child(key).setValue(ReadAlbum(crearId, autor_id, titulo, foto, descripcion, genero_id))
             Toast.makeText(this, "Se ha actualizado el album correctamente", Toast.LENGTH_LONG).show()
             updateHecho = true
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.loadingPanel.visibility = View.GONE
             recuperarDatos()
         }else {
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
                 var ruta =
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
@@ -312,6 +320,8 @@ class UpdateAlbumActivity : AppCompatActivity() {
                 Toast.makeText(this, "Se ha actualizado el album correctamente", Toast.LENGTH_LONG)
                     .show()
                 updateHecho = true
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                binding.loadingPanel.visibility = View.GONE
                 recuperarDatos()
             }
         }

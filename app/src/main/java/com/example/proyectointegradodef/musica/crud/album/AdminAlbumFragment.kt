@@ -32,8 +32,6 @@ class AdminAlbumFragment : Fragment() {
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
     var introAlbumAdapter: MutableList<ReadAlbumAutor> = ArrayList()
 
-    var idAutor = 0
-    var recyclerVacio = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,20 +122,37 @@ class AdminAlbumFragment : Fragment() {
     }
 
     private fun rellenarDatos(){
-        introAlbumAdapter.clear()
-        for(x in introAlbum){
-            var aut : ReadAutorId? = introAutor.find{it.id == x.autor_id}
-            var temp : ReadAlbumAutor
-            if(aut != null) {
-                temp = ReadAlbumAutor(x.id, x.autor_id, aut.nombre, x.titulo, x.portada, x.descripcion, x.genero_id)
-            }else{
-                temp = ReadAlbumAutor(x.id, x.autor_id,"default", x.titulo, x.portada, x.descripcion, x.genero_id)
-            }
-            if (temp != null){
-                introAlbumAdapter.add(temp)
+        if(introAlbum.isNotEmpty() && introAutor.isNotEmpty()) {
+            introAlbumAdapter.clear()
+            for (x in introAlbum) {
+                var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                var temp: ReadAlbumAutor
+                if (aut != null) {
+                    temp = ReadAlbumAutor(
+                        x.id,
+                        x.autor_id,
+                        aut.nombre,
+                        x.titulo,
+                        x.portada,
+                        x.descripcion,
+                        x.genero_id
+                    )
+                } else {
+                    temp = ReadAlbumAutor(
+                        x.id,
+                        x.autor_id,
+                        "default",
+                        x.titulo,
+                        x.portada,
+                        x.descripcion,
+                        x.genero_id
+                    )
+                }
+                if (temp != null) {
+                    introAlbumAdapter.add(temp)
+                }
             }
         }
-        //binding.loadingPanel.visibility = View.GONE
         setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
     }
 

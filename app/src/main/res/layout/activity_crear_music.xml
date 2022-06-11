@@ -118,7 +118,7 @@
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintHorizontal_bias="0.5"
               app:layout_constraintStart_toEndOf="@+id/btnResetMusic"
-              app:layout_constraintTop_toBottomOf="@+id/btnCancion" />
+              app:layout_constraintTop_toBottomOf="@+id/btnSelectCancion" />
 
           <Button
               android:id="@+id/btnResetMusic"
@@ -133,7 +133,7 @@
               app:layout_constraintEnd_toStartOf="@+id/btnCrearMusic"
               app:layout_constraintHorizontal_bias="0.5"
               app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/btnCancion" />
+              app:layout_constraintTop_toBottomOf="@+id/btnSelectCancion" />
 
           <com.google.android.material.textfield.TextInputLayout
               android:id="@+id/spAutorMusic"
@@ -208,7 +208,7 @@
               app:layout_constraintTop_toBottomOf="@+id/spGeneroMusic" />
 
           <Button
-              android:id="@+id/btnCancion"
+              android:id="@+id/btnSelectCancion"
               android:layout_width="300dp"
               android:layout_height="wrap_content"
               android:layout_marginTop="40dp"
@@ -226,5 +226,18 @@
 
     </com.google.android.material.card.MaterialCardView>
   </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <RelativeLayout
+      android:id="@+id/loadingPanel"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:visibility="invisible">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true" />
+  </RelativeLayout>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
