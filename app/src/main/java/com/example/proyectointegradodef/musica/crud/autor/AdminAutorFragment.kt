@@ -124,6 +124,7 @@ class AdminAutorFragment : Fragment() {
                 }
                 .show()
         })
+        binding.loadingPanel.visibility = View.GONE
         binding.recyclerViewCrudAutor.scrollToPosition(0)
         binding.recyclerViewCrudAutor.layoutManager = linearLayoutManager
 

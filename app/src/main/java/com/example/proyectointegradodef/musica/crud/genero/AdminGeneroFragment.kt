@@ -124,6 +124,7 @@ class AdminGeneroFragment : Fragment() {
                 }
                 .show()
         })
+        binding.loadingPanel.visibility = View.GONE
         binding.recyclerViewCrudGenero.scrollToPosition(0)
         binding.recyclerViewCrudGenero.layoutManager = linearLayoutManager
     }

@@ -204,6 +204,7 @@ class AdminMusicFragment : Fragment() {
                 }
                 .show()
         })
+        binding.loadingPanel.visibility = View.GONE
         binding.recyclerViewCrudMusic.scrollToPosition(0)
         binding.recyclerViewCrudMusic.layoutManager = linearLayoutManager
     }

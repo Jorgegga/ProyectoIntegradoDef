@@ -165,6 +165,7 @@ class AdminAlbumFragment : Fragment() {
                 }
                 .show()
         })
+        binding.loadingPanel.visibility = View.GONE
         binding.recyclerViewCrudAlbum.scrollToPosition(0)
         binding.recyclerViewCrudAlbum.layoutManager = linearLayoutManager
     }

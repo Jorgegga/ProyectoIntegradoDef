@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -273,10 +274,11 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-                    //binding.loadingPanel.visibility = View.GONE
+
                     setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
                 }
             }
+
         }
     }
 
@@ -303,6 +305,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                 .show()
 
         })
+        binding.loadingPanel.visibility = View.GONE
         binding.recyclerViewAlbum.adapter = musicaAdapter
         binding.recyclerViewAlbum.layoutManager = linearLayoutManager
         binding.recyclerViewAlbum.scrollToPosition(0)
