@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Musica(
-    @PrimaryKey(autoGenerate = true) val uid : Int = 1,
+    @PrimaryKey(autoGenerate = true)
+    val uid : Int? = null,
     val nombre: String,
     val autor: String,
     val musica: String
