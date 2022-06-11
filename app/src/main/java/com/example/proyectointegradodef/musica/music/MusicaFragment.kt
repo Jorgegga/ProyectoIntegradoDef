@@ -226,7 +226,7 @@ class MusicaFragment : Fragment(), Player.Listener {
         var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
         storageRef.downloadUrl.addOnSuccessListener() {
             var mediaItem = MediaItem.Builder().setUri(it).build()
-            introPlaylist.add(AnnadirPlaylistMusic(music.id, mediaItem))
+            introPlaylist.add(AnnadirPlaylistMusic(music.id, music.numCancion, mediaItem))
         }.await()
     }
 

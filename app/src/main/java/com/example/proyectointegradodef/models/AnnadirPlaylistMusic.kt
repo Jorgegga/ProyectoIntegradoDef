@@ -6,10 +6,12 @@ import com.google.android.exoplayer2.MediaItem
 
 class AnnadirPlaylistMusic {
     constructor()
-    constructor(id: Int, ruta: MediaItem){
+    constructor(id: Int, numCancion: Int, ruta: MediaItem){
         this.id = id
         this.ruta = ruta
+        this.numCancion = numCancion
     }
     var id = 0
     var ruta = MediaItem.EMPTY
+    var numCancion = 0
 }

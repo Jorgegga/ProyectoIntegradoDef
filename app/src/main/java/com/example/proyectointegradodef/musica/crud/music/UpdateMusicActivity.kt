@@ -149,6 +149,7 @@ class UpdateMusicActivity : AppCompatActivity() {
             album_id = bundle.getInt("album_id", 0)
             album = bundle.getString("album", "Default")
             numCancion = bundle.getInt("numCancion", 0)
+            rutaAudio = bundle.getString("ruta", "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default")
             autor_id_temp = autor_id
             genero_id_temp = genero_id
             album_id_temp = album_id

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,17 +17,19 @@ import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.ActivityAlbumBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.*
-import com.example.proyectointegradodef.musica.music.MusicaAdapter
 import com.example.proyectointegradodef.preferences.AppUse
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,15 +51,17 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     lateinit var extractorsFactory: DefaultExtractorsFactory
 
     var storageFire = FirebaseStorage.getInstance()
-    var music: MutableList<ReadMusica> = ArrayList()
-    var album_id = 0
-    var recyclerVacio = true
+    var introMusic: MutableList<ReadMusica> = ArrayList()
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
-    var introPlaylist: MutableList<ReadPlaylist> = ArrayList()
+    var introPlaylist: MutableList<AnnadirPlaylistMusic> = ArrayList()
+    var album_id = 0
+    var recyclerVacio = true
     var ruta = ""
+    var idSong = 0
     var reproducir = false
     var crearId = 0
+    var cambioMusic = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,18 +138,19 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     }
 
     fun recogerDatosMusica(){
-        music.clear()
+        introMusic.clear()
         referenceMusic.get()
         referenceMusic.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                music.clear()
+                introMusic.clear()
                 for(messageSnapshot in snapshot.children){
                     val tema = messageSnapshot.getValue<ReadMusica>(ReadMusica::class.java)
                     if(tema != null){
-                        music.add(tema)
+                        introMusic.add(tema)
                     }
                 }
-                filtrarDatos()
+                cambioMusic = true
+                rellenarDatos()
 
             }
 
@@ -170,7 +174,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                         introAutor.add(music)
                     }
                 }
-                filtrarDatos()
+                rellenarDatos()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -180,67 +184,86 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
+    suspend fun recogerPlaylist(music: ReadMusica) {
+        var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
+        storageRef.downloadUrl.addOnSuccessListener() {
+            var mediaItem = MediaItem.Builder().setUri(it).build()
+            introPlaylist.add(AnnadirPlaylistMusic(music.id, music.numCancion, mediaItem))
+        }.await()
+    }
+
+    fun rellenarPlaylist() {
+        introPlaylist.sortBy { it.numCancion }
+        var arrayMediaItems = introPlaylist.map { it.ruta }
+        player.addMediaItems(arrayMediaItems)
+    }
+
     fun filtrarDatos(){
-        var musicaAgrupada = music.groupBy { it.album_id }
+        var musicaAgrupada = introMusic.groupBy { it.album_id }
         if(musicaAgrupada[album_id] != null) {
-            music = musicaAgrupada[album_id] as ArrayList
+            introMusic = musicaAgrupada[album_id] as ArrayList
+            introMusic.sortBy { it.numCancion }
             recyclerVacio = false
         }else {
             recyclerVacio = true
         }
-        rellenarDatos()
     }
 
-    private fun rellenarDatos(){
-        introTotal.clear()
-        if(!recyclerVacio){
-            player.clearMediaItems()
-        for (x in music) {
-            //var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
+    fun buscarCancion(id: Int): Int {
+        return introPlaylist.indexOfFirst { it.id == id }
+    }
 
-            var storageRef = storageFire.getReferenceFromUrl(x!!.ruta + ".mp3")
-            storageRef.downloadUrl.addOnSuccessListener() {
-                var url = it.toString()
-                player.addMediaItem(
-                    MediaItem.Builder().setUri(Uri.parse(url)).build()
-                )
-            }
-
-            var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
-            var temp: ReadMusicaAlbumAutor
-            if (aut != null) {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    x.nombre,
-                    x.album_id,
-                    "",
-                    x.autor_id,
-                    aut.nombre,
-                    x.ruta,
-                    x.portada,
-                    x.descripcion,
-                    x.genero_id,
-                    x.numCancion
-                )
-            } else {
-                temp = ReadMusicaAlbumAutor(
-                    x.id,
-                    "default",
-                    x.album_id,
-                    "",
-                    x.autor_id,
-                    "default",
-                    x.ruta,
-                    x.portada,
-                    x.descripcion,
-                    x.genero_id,
-                    x.numCancion
-                )
-            }
-            introTotal.add(temp)
-        }
-        }
-        /*if(AppUse.id != 0) {
+    private fun rellenarDatos() {
+        if (introMusic.isNotEmpty() && introAutor.isNotEmpty()) {
+            introTotal.clear()
+            filtrarDatos()
+            if (!recyclerVacio) {
+                if (cambioMusic) {
+                    player.clearMediaItems()
+                    introPlaylist.clear()
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    for (x in introMusic) {
+                        if (cambioMusic) {
+                            recogerPlaylist(x)
+                        }
+                        //var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
+                        var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                        var temp: ReadMusicaAlbumAutor
+                        if (aut != null) {
+                            temp = ReadMusicaAlbumAutor(
+                                x.id,
+                                x.nombre,
+                                x.album_id,
+                                "",
+                                x.autor_id,
+                                aut.nombre,
+                                x.ruta,
+                                x.portada,
+                                x.descripcion,
+                                x.genero_id,
+                                x.numCancion
+                            )
+                        } else {
+                            temp = ReadMusicaAlbumAutor(
+                                x.id,
+                                "default",
+                                x.album_id,
+                                "",
+                                x.autor_id,
+                                "default",
+                                x.ruta,
+                                x.portada,
+                                x.descripcion,
+                                x.genero_id,
+                                x.numCancion
+                            )
+                        }
+                        introTotal.add(temp)
+                    }
+                    cambioMusic = false
+                    rellenarPlaylist()
+                    /*if(AppUse.id != 0) {
             var tempMusic = introMusic.find { it.id == AppUse.id }
             var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
             if (tempMusic != null) {
@@ -250,14 +273,18 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                 actualizarReproductorAutor(tempAutor)
             }
         }*/
-        //binding.loadingPanel.visibility = View.GONE
-        setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+                    //binding.loadingPanel.visibility = View.GONE
+                    setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+                }
+            }
+        }
     }
 
     fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(this)
-        val musicaAdapter = MusicaAdapter(lista,{
+        val musicaAdapter = AlbumActivityAdapter(lista,{
             ruta = it.ruta
+            idSong = it.id
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
@@ -283,7 +310,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     private fun reproducir() {
         try {
-            player.seekTo(AppUse.recyclerPosition, 0)
+            player.seekTo(buscarCancion(idSong), 0)
             player.prepare()
             player.playWhenReady = true
             binding.videoView.player = player
@@ -296,20 +323,17 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
-    private fun buscarId(music: Int){
-        introPlaylist.clear()
+    private fun buscarId(music: Int) {
         referencePlaylist.get()
-        referencePlaylist.addValueEventListener(object: ValueEventListener{
+        var query = referencePlaylist.orderByChild("id").limitToLast(1)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                introPlaylist.clear()
-                if(crearId == 0) {
+                if (crearId == 0) {
                     for (messageSnapshot in snapshot.children) {
-                        var playlist = messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)
-                        if (playlist != null) {
-                            introPlaylist.add(playlist)
-                        }
+                        crearId =
+                            messageSnapshot.getValue<ReadPlaylist>(ReadPlaylist::class.java)!!.id + 1
+                        filtrarDatosPlaylist(music)
                     }
-                    filtrarDatosPlaylist(music)
                 }
             }
 
@@ -319,12 +343,11 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    private fun filtrarDatosPlaylist(music: Int){
-        if(crearId == 0) {
-            var tempPlaylist = introPlaylist.maxByOrNull { it.id }
-            crearId = tempPlaylist!!.id + 1
+    private fun filtrarDatosPlaylist(music: Int) {
+        if (crearId != 0) {
             var randomString = UUID.randomUUID().toString()
-            referencePlaylist.child(randomString).setValue(ReadPlaylist(crearId, music, AppUse.user_id))
+            referencePlaylist.child(randomString)
+                .setValue(ReadPlaylist(crearId, music, AppUse.user_id))
         }
     }
 
