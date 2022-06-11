@@ -157,7 +157,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     fun cambioObserver(){
         actualizarRoom.observe(this, Observer {
             allMusic = actualizarRoom.value!!
-            rellenarDatos()
         })
     }
 
