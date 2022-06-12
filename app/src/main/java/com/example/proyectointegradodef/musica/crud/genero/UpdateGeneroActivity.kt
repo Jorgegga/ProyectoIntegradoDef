@@ -154,14 +154,14 @@ class UpdateGeneroActivity : AppCompatActivity() {
 
     private fun actualizarGenero() {
         val storageRef = storage.reference
-        val imageRef = storageRef.child("proyecto/genero/${key}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadGenero(crearId, nombre, foto))
             Toast.makeText(this, "Se ha actualizado el genero correctamente", Toast.LENGTH_LONG).show()
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             binding.loadingPanel.visibility = View.GONE
         }else {
+            val imageRef = storageRef.child("proyecto/genero/${key}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

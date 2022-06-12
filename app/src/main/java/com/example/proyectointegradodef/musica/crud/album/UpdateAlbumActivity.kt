@@ -298,8 +298,6 @@ class UpdateAlbumActivity : AppCompatActivity() {
 
     private fun actualizarAlbum() {
         val storageRef = storage.reference
-        val imageRef = storageRef.child("proyecto/album/${key}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString() == ""){
             referenceAlbum.child(key).setValue(ReadAlbum(crearId, autor_id, titulo, foto, descripcion, genero_id))
             Toast.makeText(this, "Se ha actualizado el album correctamente", Toast.LENGTH_LONG).show()
@@ -308,6 +306,8 @@ class UpdateAlbumActivity : AppCompatActivity() {
             binding.loadingPanel.visibility = View.GONE
             recuperarDatos()
         }else {
+            val imageRef = storageRef.child("proyecto/album/${key}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

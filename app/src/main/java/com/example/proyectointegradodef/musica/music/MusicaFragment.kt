@@ -136,7 +136,10 @@ class MusicaFragment : Fragment(), Player.Listener {
         nombre =  player.mediaMetadata.title.toString()
         album = player.mediaMetadata.albumTitle.toString()
         autor = player.mediaMetadata.artist.toString()
-        requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
+        if(isAdded) {
+            requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text =
+                "$nombre - $album - $autor"
+        }
     }
 
     fun reproducir() {
@@ -353,8 +356,11 @@ class MusicaFragment : Fragment(), Player.Listener {
     }
 
     private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {
-        if (requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text != "") {
-            requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text = x!!.nombre + " - " + x.album + " - " + x.autor
+        if(isAdded) {
+            if (requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text != "") {
+                requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text =
+                    x!!.nombre + " - " + x.album + " - " + x.autor
+            }
         }
     }
 

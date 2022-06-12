@@ -75,14 +75,14 @@ class CrearAutorActivity : AppCompatActivity() {
     private fun annadirAutor() {
         val storageRef = storage.reference
         var randomString = UUID.randomUUID().toString()
-        val imageRef = storageRef.child("proyecto/autor/${randomString}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/default"
             reference.child(randomString).setValue(ReadAutor(crearId, nombre, ruta, descripcion))
             Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG).show()
             limpiar()
         }else {
+            val imageRef = storageRef.child("proyecto/autor/${randomString}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

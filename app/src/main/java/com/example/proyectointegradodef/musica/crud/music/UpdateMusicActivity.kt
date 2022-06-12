@@ -126,16 +126,19 @@ class UpdateMusicActivity : AppCompatActivity() {
         binding.ddAutorMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 autor_id = adapterAutor.getItem(position)!!.id
+                autor = binding.spAutorMusic.editText!!.text.toString()
             }
 
         binding.ddGeneroMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 genero_id = adapterGenero.getItem(position)!!.id
+                genero = binding.spGeneroMusic.editText!!.text.toString()
             }
 
         binding.ddAlbumMusic.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 album_id = adapterAlbum.getItem(position)!!.id
+                album = binding.spAlbumMusic.editText!!.text.toString()
                 buscarAlbum()
             }
 
@@ -156,9 +159,6 @@ class UpdateMusicActivity : AppCompatActivity() {
             album = bundle.getString("album", "Default")
             numCancion = bundle.getInt("numCancion", 0)
             rutaAudio = bundle.getString("ruta", "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/default")
-            autor_id_temp = autor_id
-            genero_id_temp = genero_id
-            album_id_temp = album_id
         }
         if(rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default" || rutaImagen == "gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/portada/default"){
             binding.ibMusicPortada.setImageDrawable(
@@ -176,9 +176,6 @@ class UpdateMusicActivity : AppCompatActivity() {
         binding.spGeneroMusic.editText!!.setText(genero)
         binding.spAlbumMusic.editText!!.setText(album)
         binding.etNumeroCancion.setText(""+numCancion)
-        autor_id = autor_id_temp
-        genero_id = genero_id_temp
-        album_id = album_id_temp
         imagen = "".toUri()
         audio = "".toUri()
         binding.btnCancion.setBackgroundColor(resources.getColor(R.color.btn_negativo))

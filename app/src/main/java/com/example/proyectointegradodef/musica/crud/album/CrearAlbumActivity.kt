@@ -266,14 +266,14 @@ class CrearAlbumActivity : AppCompatActivity() {
     private fun annadirAlbum() {
         val storageRef = storage.reference
         var randomString = UUID.randomUUID().toString()
-        val imageRef = storageRef.child("proyecto/album/${randomString}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
             referenceAlbum.child(randomString).setValue(ReadAlbum(crearId, autor, nombre, ruta, descripcion, genero))
             Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG).show()
             limpiar()
         }else {
+            val imageRef = storageRef.child("proyecto/album/${randomString}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

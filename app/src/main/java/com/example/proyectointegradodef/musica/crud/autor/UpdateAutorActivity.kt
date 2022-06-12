@@ -82,14 +82,14 @@ class UpdateAutorActivity : AppCompatActivity() {
 
     private fun actualizarAutor() {
         val storageRef = storage.reference
-        val imageRef = storageRef.child("proyecto/autor/${key}.png")
-        val uploadTask = imageRef.putFile(imagen)
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadAutor(crearId, nombre, foto, descripcion))
             Toast.makeText(this, "Se ha actualizado el autor correctamente", Toast.LENGTH_LONG).show()
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             binding.loadingPanel.visibility = View.GONE
         }else {
+            val imageRef = storageRef.child("proyecto/autor/${key}.png")
+            val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
                 Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
