@@ -423,6 +423,7 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
+
     private fun initDb() {
         db =
             FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")

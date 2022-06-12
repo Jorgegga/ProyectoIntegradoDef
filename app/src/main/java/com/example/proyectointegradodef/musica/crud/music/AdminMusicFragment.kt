@@ -2,7 +2,6 @@ package com.example.proyectointegradodef.musica.crud.music
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,10 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminMusicBinding
 import com.example.proyectointegradodef.models.*
-import com.example.proyectointegradodef.musica.crud.album.AdminAlbumAdapter
-import com.example.proyectointegradodef.musica.crud.album.CrearAlbumActivity
-import com.example.proyectointegradodef.musica.crud.album.UpdateAlbumActivity
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -31,6 +26,7 @@ class AdminMusicFragment : Fragment() {
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceGenero: DatabaseReference
     lateinit var referenceMusic: DatabaseReference
+    lateinit var referencePlaylist: DatabaseReference
     lateinit var storage: FirebaseStorage
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
@@ -200,7 +196,7 @@ class AdminMusicFragment : Fragment() {
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     borrarMusic(it.id, it.portada, it.ruta)
-
+                    borrarPlaylist(it.id)
                 }
                 .show()
         })
@@ -292,12 +288,32 @@ class AdminMusicFragment : Fragment() {
 
     }
 
+
+    private fun borrarPlaylist(id: Int){
+        referencePlaylist.get()
+        var query = referencePlaylist.orderByChild("music_id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    messageSnapshot.ref.removeValue()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAutor = db.getReference("autors")
         referenceAlbum = db.getReference("albums")
         referenceGenero = db.getReference("generos")
         referenceMusic = db.getReference("music")
+        referencePlaylist = db.getReference("playlists")
 
     }
 
