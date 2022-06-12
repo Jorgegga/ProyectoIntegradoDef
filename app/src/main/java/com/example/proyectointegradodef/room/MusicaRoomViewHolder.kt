@@ -26,6 +26,7 @@ class MusicaRoomViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
     fun render(musica : Musica){
         binding.tvTitulo.text = musica.nombre
         binding.tvAutor.text = musica.autor
+        binding.tvAlbum.text = musica.album
         GlideApp.with(itemView.context).load(R.drawable.default_album).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(binding.ivMusica)
     }
 }

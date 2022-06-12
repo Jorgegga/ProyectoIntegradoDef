@@ -9,5 +9,6 @@ data class Musica(
     val uid : Int? = null,
     val nombre: String,
     val autor: String,
+    var album: String,
     val musica: String
 )

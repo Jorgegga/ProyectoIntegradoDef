@@ -104,7 +104,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         rellenarDatosMusic()
         rellenarDatos()
 
-
     }
 
     override fun onPause() {

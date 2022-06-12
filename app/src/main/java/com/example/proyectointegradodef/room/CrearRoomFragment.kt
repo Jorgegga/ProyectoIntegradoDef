@@ -57,7 +57,7 @@ class CrearRoomFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK){
-            database.MusicaDao().insertMusic(Musica(nombre = binding.insertarNombreLocal.text.toString(), autor = binding.insertarAutorLocal.text.toString(), musica = data!!.data!!.toString()))
+            database.MusicaDao().insertMusic(Musica(nombre = binding.insertarNombreLocal.text.toString(), autor = binding.insertarAutorLocal.text.toString(), album = binding.insertarAlbumLocal.text.toString(),  musica = data!!.data!!.toString()))
             Toast.makeText(context, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
             reset()
         }
@@ -83,10 +83,16 @@ class CrearRoomFragment : Fragment() {
     }
 
     fun comprobarVacios(): Boolean{
-        if(binding.insertarNombreLocal.text.toString().equals("")){
+        if(binding.insertarNombreLocal.text.toString() == ("")){
+            Toast.makeText(requireContext(), "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
             return false
         }
-        if(binding.insertarAutorLocal.text.toString().equals("")){
+        if(binding.insertarAutorLocal.text.toString() == ("")){
+            Toast.makeText(requireContext(), "Tienes que poner un autor", Toast.LENGTH_LONG).show()
+            return false
+        }
+        if(binding.insertarAlbumLocal.text.toString() == ""){
+            Toast.makeText(requireContext(), "Tienes que poner un album", Toast.LENGTH_LONG).show()
             return false
         }
         return true
@@ -95,7 +101,7 @@ class CrearRoomFragment : Fragment() {
     fun reset(){
         binding.insertarNombreLocal.setText("")
         binding.insertarAutorLocal.setText("")
-
+        binding.insertarAlbumLocal.setText("")
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

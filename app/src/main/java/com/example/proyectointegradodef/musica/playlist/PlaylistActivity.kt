@@ -282,7 +282,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     fun roomPlaylist() {
         for (x in allMusic) {
-            var metadata = MediaMetadata.Builder().setTitle(x.nombre).setAlbumTitle("").setArtist(x.autor).build()
+            var metadata = MediaMetadata.Builder().setTitle(x.nombre).setAlbumTitle(x.album).setArtist(x.autor).build()
             player.addMediaItem(
                 MediaItem.Builder().setUri(Uri.parse(x!!.musica)).setMediaMetadata(metadata).build()
             )
@@ -418,7 +418,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                     borrarPlaylist(it.id)
                     Toast.makeText(
                         this,
-                        "Se ha borrado la canción de tu playlist",
+                        "Se ha borrado la canción ${it.nombre} de tu playlist",
                         Toast.LENGTH_LONG
                     ).show()
 
@@ -447,7 +447,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                     ).show()
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
-                    borrarRoom(Musica(it.uid, it.nombre, it.autor, it.musica))
+                    borrarRoom(Musica(it.uid, it.nombre, it.autor, it.album, it.musica))
                     Toast.makeText(this,"Se ha borrado la canción ${it.nombre} de tu playlist", Toast.LENGTH_LONG).show()
                     rellenarDatos()
                 }
@@ -489,7 +489,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun borrarRoom(cancion: Musica){
-        database.MusicaDao().deleteMusic(Musica(cancion.uid, cancion.nombre, cancion.autor, cancion.musica))
+        database.MusicaDao().deleteMusic(Musica(cancion.uid, cancion.nombre, cancion.autor, cancion.album, cancion.musica))
         actualizarRoom.value = database.MusicaDao().getAllMusic()
     }
 
