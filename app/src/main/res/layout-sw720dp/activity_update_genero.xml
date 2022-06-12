@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/ToolBar"
     android:fitsSystemWindows="true"
-    tools:context=".musica.crud.autor.CrearAutorActivity">
+    tools:context=".musica.crud.genero.CrearGeneroActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -37,9 +37,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="25dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,9 +52,9 @@
                 android:background="@color/fondo_cards">
 
                 <ImageButton
-                    android:id="@+id/ibAutor"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:id="@+id/ibGenero"
+                    android:layout_width="350dp"
+                    android:layout_height="350dp"
                     android:layout_marginTop="60dp"
                     android:adjustViewBounds="true"
                     android:background="@color/fondo_cards"
@@ -63,64 +63,50 @@
                     app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/default_autor" />
+                    app:srcCompat="@drawable/default_album" />
 
                 <EditText
-                    android:id="@+id/etNombreAutor"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/etNombreGenero"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
                     android:ems="15"
                     android:hint="@string/nombre"
                     android:inputType="textPersonName"
                     android:maxLength="50"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
+                    app:layout_constraintBottom_toTopOf="@+id/btnActualizarGenero"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_bias="0.499"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ibAutor" />
-
-                <EditText
-                    android:id="@+id/etDescripcionAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:ems="15"
-                    android:gravity="start|top"
-                    android:hint="@string/descripcion"
-                    android:inputType="textMultiLine"
-                    android:maxLength="120"
-                    android:maxLines="4"
-                    android:textColor="@color/texto_principal"
-                    android:textColorHint="@color/texto_secundario"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etNombreAutor" />
+                    app:layout_constraintTop_toBottomOf="@+id/ibGenero"
+                    app:layout_constraintVertical_bias="0.112" />
 
                 <Button
-                    android:id="@+id/btnCrearAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnActualizarGenero"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
                     android:backgroundTint="@color/ToolBar"
-                    android:text="@string/tvCrear"
+                    android:text="@string/actualizar"
                     android:textColor="@color/texto_principal"
-                    app:layout_constraintBottom_toBottomOf="@+id/btnResetAutor"
+                    android:textSize="38dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnResetGenero"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/btnResetAutor" />
+                    app:layout_constraintStart_toEndOf="@+id/btnResetGenero" />
 
                 <Button
-                    android:id="@+id/btnResetAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnResetGenero"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
                     android:layout_marginBottom="75dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvReset"
                     android:textColor="@color/texto_principal"
+                    android:textSize="38dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnCrearAutor"
+                    app:layout_constraintEnd_toStartOf="@+id/btnActualizarGenero"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -135,8 +121,8 @@
         android:visibility="invisible">
 
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:indeterminate="true" />
     </RelativeLayout>
 

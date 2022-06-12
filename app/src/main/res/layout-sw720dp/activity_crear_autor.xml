@@ -53,8 +53,8 @@
 
                 <ImageButton
                     android:id="@+id/ibAutor"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="350dp"
+                    android:layout_height="350dp"
                     android:layout_marginTop="60dp"
                     android:adjustViewBounds="true"
                     android:background="@color/fondo_cards"
@@ -67,7 +67,7 @@
 
                 <EditText
                     android:id="@+id/etNombreAutor"
-                    android:layout_width="wrap_content"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
                     android:ems="15"
@@ -76,6 +76,7 @@
                     android:maxLength="50"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +84,7 @@
 
                 <EditText
                     android:id="@+id/etDescripcionAutor"
-                    android:layout_width="wrap_content"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:ems="15"
@@ -94,6 +95,7 @@
                     android:maxLines="4"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -101,11 +103,12 @@
 
                 <Button
                     android:id="@+id/btnCrearAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvCrear"
                     android:textColor="@color/texto_principal"
+                    android:textSize="38dp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnResetAutor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -113,12 +116,13 @@
 
                 <Button
                     android:id="@+id/btnResetAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
                     android:layout_marginBottom="75dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvReset"
                     android:textColor="@color/texto_principal"
+                    android:textSize="38dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnCrearAutor"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -135,8 +139,8 @@
         android:visibility="invisible">
 
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:indeterminate="true" />
     </RelativeLayout>
 

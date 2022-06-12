@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    app:strokeColor="@null">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fondo_oscuro">
+
+        <ImageView
+            android:id="@+id/ivAlbumCrud"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/divider2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/default_album" />
+
+        <TextView
+            android:id="@+id/tvNombreAlbum"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            android:textColor="@color/texto_principal"
+            android:textSize="32dp"
+            app:layout_constraintStart_toEndOf="@+id/ivAlbumCrud"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAutorAlbum"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="TextView"
+            android:textColor="@color/texto_secundario"
+            android:textSize="30dp"
+            app:layout_constraintStart_toEndOf="@+id/ivAlbumCrud"
+            app:layout_constraintTop_toBottomOf="@+id/tvNombreAlbum" />
+
+        <TextView
+            android:id="@+id/tvDescripcionAlbum"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:text="TextView"
+            android:textColor="@color/text_terciario"
+            android:textSize="28dp"
+            app:layout_constraintStart_toEndOf="@+id/ivAlbumCrud"
+            app:layout_constraintTop_toBottomOf="@+id/tvAutorAlbum" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="600dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/text_terciario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescripcionAlbum" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

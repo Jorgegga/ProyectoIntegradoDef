@@ -36,4 +36,12 @@
     <string name="playlist">Tu Playlist</string>
     <string name="channel_name">5000</string>
     <string name="channel_desc">6000</string>
+    <string name="autor">Autor</string>
+    <string name="album">Álbum</string>
+    <string name="genero">Género</string>
+    <string name="nombre">Nombre/Titulo</string>
+    <string name="descripcion">Descripción</string>
+    <string name="nCancion">Nº canción</string>
+    <string name="elegirCancion">Elige una canción para subir</string>
+    <string name="actualizar">Actualizar</string>
 </resources>

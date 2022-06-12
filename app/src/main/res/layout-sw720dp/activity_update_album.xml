@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/ToolBar"
     android:fitsSystemWindows="true"
-    tools:context=".musica.crud.autor.CrearAutorActivity">
+    tools:context=".musica.crud.album.CrearAlbumActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -52,10 +52,10 @@
                 android:background="@color/fondo_cards">
 
                 <ImageButton
-                    android:id="@+id/ibAutor"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="60dp"
+                    android:id="@+id/ibAlbumPortada"
+                    android:layout_width="350dp"
+                    android:layout_height="350dp"
+                    android:layout_marginTop="20dp"
                     android:adjustViewBounds="true"
                     android:background="@color/fondo_cards"
                     android:scaleType="fitXY"
@@ -63,29 +63,30 @@
                     app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/default_autor" />
+                    app:srcCompat="@drawable/default_album" />
 
                 <EditText
-                    android:id="@+id/etNombreAutor"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/etNombreAlbum"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="28dp"
                     android:ems="15"
                     android:hint="@string/nombre"
                     android:inputType="textPersonName"
                     android:maxLength="50"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ibAutor" />
+                    app:layout_constraintTop_toBottomOf="@+id/spGeneroAlbum" />
 
                 <EditText
-                    android:id="@+id/etDescripcionAutor"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/etDescripcionAlbum"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="32dp"
                     android:ems="15"
                     android:gravity="start|top"
                     android:hint="@string/descripcion"
@@ -94,35 +95,81 @@
                     android:maxLines="4"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etNombreAutor" />
+                    app:layout_constraintTop_toBottomOf="@+id/etNombreAlbum" />
 
                 <Button
-                    android:id="@+id/btnCrearAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnCrearAlbum"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
                     android:backgroundTint="@color/ToolBar"
-                    android:text="@string/tvCrear"
+                    android:text="@string/actualizar"
                     android:textColor="@color/texto_principal"
-                    app:layout_constraintBottom_toBottomOf="@+id/btnResetAutor"
+                    android:textSize="38dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnResetAlbum"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/btnResetAutor" />
+                    app:layout_constraintStart_toEndOf="@+id/btnResetAlbum" />
 
                 <Button
-                    android:id="@+id/btnResetAutor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="75dp"
+                    android:id="@+id/btnResetAlbum"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="24dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvReset"
                     android:textColor="@color/texto_principal"
+                    android:textSize="38dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnCrearAutor"
+                    app:layout_constraintEnd_toStartOf="@+id/btnCrearAlbum"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/spAutorAlbum"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="600dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:hint="@string/autor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ibAlbumPortada">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/ddAutorAlbum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="34dp"
+                        tools:visibility="invisible" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/spGeneroAlbum"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="600dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:hint="@string/genero"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spAutorAlbum">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/ddGeneroAlbum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="34dp"
+                        tools:visibility="invisible" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -135,8 +182,8 @@
         android:visibility="invisible">
 
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:indeterminate="true" />
     </RelativeLayout>
 

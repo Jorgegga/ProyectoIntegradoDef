@@ -32,8 +32,8 @@
 
                 <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/ivCrearRoom"
-                    android:layout_width="145dp"
-                    android:layout_height="135dp"
+                    android:layout_width="356dp"
+                    android:layout_height="345dp"
                     android:layout_marginTop="19dp"
                     android:src="@drawable/imagen2"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
 
                 <EditText
                     android:id="@+id/insertarNombreLocal"
-                    android:layout_width="300dp"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
                     android:ems="10"
@@ -51,6 +51,7 @@
                     android:inputType="textPersonName"
                     android:textColor="#C8CDD0"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -61,9 +62,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
-                    android:text="@string/tvCrearLocal"
+                    android:text="Crear localmente"
                     android:textColor="#C8CDD0"
-                    android:textSize="20sp"
+                    android:textSize="48dp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -72,7 +73,7 @@
 
                 <EditText
                     android:id="@+id/insertarAutorLocal"
-                    android:layout_width="300dp"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:ems="10"
@@ -80,6 +81,7 @@
                     android:inputType="textPersonName"
                     android:textColor="#C8CDD0"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -87,19 +89,20 @@
 
                 <Button
                     android:id="@+id/btnCrear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="238dp"
+                    android:layout_height="98dp"
                     android:layout_marginEnd="53dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvCrear"
                     android:textColor="#C8CDD0"
+                    android:textSize="38dp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnReset"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/btnReset" />
 
                 <EditText
                     android:id="@+id/insertarAlbumLocal"
-                    android:layout_width="300dp"
+                    android:layout_width="600dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:ems="10"
@@ -107,6 +110,7 @@
                     android:inputType="textPersonName"
                     android:textColor="@color/texto_principal"
                     android:textColorHint="@color/texto_secundario"
+                    android:textSize="34dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -114,13 +118,14 @@
 
                 <Button
                     android:id="@+id/btnReset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="238dp"
+                    android:layout_height="98dp"
                     android:layout_marginStart="53dp"
                     android:layout_marginTop="50dp"
                     android:backgroundTint="@color/ToolBar"
                     android:text="@string/tvReset"
                     android:textColor="@color/texto_principal"
+                    android:textSize="38dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/insertarAutorLocal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
