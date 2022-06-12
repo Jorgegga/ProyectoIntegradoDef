@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,6 +64,9 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     var reproducir = false
     var crearId = 0
     var cambioMusic = false
+    var nombre = ""
+    var autor = ""
+    var album = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -264,16 +268,12 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                     }
                     cambioMusic = false
                     rellenarPlaylist()
-                    /*if(AppUse.id != 0) {
-            var tempMusic = introMusic.find { it.id == AppUse.id }
-            var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
-            if (tempMusic != null) {
-                actualizarReproductorCancion(tempMusic)
-            }
-            if (tempAutor != null) {
-                actualizarReproductorAutor(tempAutor)
-            }
-        }*/
+                    if (idSong != 0) {
+                        var tempMusic = introTotal.find { it.id == idSong }
+                        if (tempMusic != null) {
+                            actualizarReproductor(tempMusic)
+                        }
+                    }
 
                     setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
                 }
@@ -282,11 +282,20 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {
+        if (findViewById<TextView>(R.id.tv_player_nombre).text != "") {
+            findViewById<TextView>(R.id.tv_player_nombre).text = x!!.nombre + " - " + x.album + " - " + x.autor
+        }
+    }
+
     fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(this)
         val musicaAdapter = AlbumActivityAdapter(lista,{
             ruta = it.ruta
             idSong = it.id
+            nombre = it.nombre
+            album = it.album
+            autor = it.autor
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
@@ -318,8 +327,8 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
             player.playWhenReady = true
             binding.videoView.player = player
             binding.videoView.useArtwork = false
-            //binding.tvAutorReproductor.text = autor
-            //binding.tvNombreReproductor.text = nombre
+            findViewById<TextView>(R.id.tv_player_nombre).isSelected = true
+            findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
@@ -27,8 +28,10 @@ import com.example.proyectointegradodef.room.MusicaRoomAdapter
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
@@ -74,6 +77,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     var userId = 0
     var nombre = ""
     var autor = ""
+    var album = ""
     var idAutor = 0
     var cancion = ""
     var idSong = 0
@@ -133,6 +137,14 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         return true
     }
 
+    override fun onTracksChanged(
+        trackGroups: TrackGroupArray,
+        trackSelections: TrackSelectionArray
+    ) {
+        super.onTracksChanged(trackGroups, trackSelections)
+        Log.d("------------------------------", introPlaylist.size.toString())
+    }
+
     override fun onPause() {
         super.onPause()
         if (reproducir) {
@@ -167,8 +179,8 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             player.playWhenReady = true
             binding.videoView.player = player
             binding.videoView.useArtwork = false
-            binding.tvAutorReproductor.text = autor
-            binding.tvNombreReproductor.text = nombre
+            findViewById<TextView>(R.id.tv_player_nombre).isSelected = true
+            findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -349,16 +361,12 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                         }
                         introTotal.add(temp)
                     }
-                    /*if(idSong != 0) {
-            var tempMusic = introMusic.find { it.id == idSong }
-            var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
-            if (tempMusic != null) {
-                actualizarReproductorCancion(tempMusic)
-            }
-            if (tempAutor != null) {
-                actualizarReproductorAutor(tempAutor)
-            }
-        }*/
+                    if (idSong != 0) {
+                        var tempMusic = introTotal.find { it.id == idSong }
+                        if (tempMusic != null) {
+                            actualizarReproductor(tempMusic)
+                        }
+                    }
                 } else if (allMusic.isEmpty()) {
                     Toast.makeText(this@PlaylistActivity, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG)
                         .show()
@@ -369,11 +377,18 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {
+        if (findViewById<TextView>(R.id.tv_player_nombre).text != "") {
+            findViewById<TextView>(R.id.tv_player_nombre).text = x!!.nombre + " - " + x.album + " - " + x.autor
+        }
+    }
+
     private fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>) {
         val linearLayoutManager = LinearLayoutManager(this)
         var musica = MusicaAdapter(lista, {
             nombre = it.nombre
             autor = it.autor
+            album = it.album
             cancion = it.ruta
             idSong = it.id
             AppUse.recyclerPosition = allMusic.size + AppUse.recyclerPosition
@@ -407,6 +422,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
 
         var musicaRoom = MusicaRoomAdapter(allMusic as ArrayList<Musica>, {
+            album = ""
             nombre = it.nombre
             autor = it.autor
             cancion = it.musica

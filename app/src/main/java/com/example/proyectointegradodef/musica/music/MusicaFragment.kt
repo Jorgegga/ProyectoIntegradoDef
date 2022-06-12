@@ -1,10 +1,14 @@
 package com.example.proyectointegradodef.musica.music
 
+//import android.media.session.MediaSession
+
 import android.os.Bundle
+import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,13 +24,13 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.async
-import okhttp3.Response
 import java.io.IOException
 import java.util.*
+
 
 class MusicaFragment : Fragment(), Player.Listener {
     lateinit var binding: FragmentMusicaBinding
@@ -38,7 +42,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
     lateinit var extractorsFactory: DefaultExtractorsFactory
-
+    lateinit var mediaSession: MediaSessionCompat
     lateinit var renderersFactory: DefaultRenderersFactory
     lateinit var trackSelectionFactory: AdaptiveTrackSelection.Factory
     lateinit var trackSelectSelector: DefaultTrackSelector
@@ -52,6 +56,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var introPlaylist: MutableList<AnnadirPlaylistMusic> = ArrayList()
     var reproducir = false
 
+
     var nombre = ""
     var autor = ""
     var idAutor = 0
@@ -61,7 +66,7 @@ class MusicaFragment : Fragment(), Player.Listener {
     var crearId = 0
     var existeCancion = false
     var cambioMusic = false
-
+    var album = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,10 +86,6 @@ class MusicaFragment : Fragment(), Player.Listener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDb()
-        binding.btnReproducir.isEnabled = false
-        binding.tvNombreReproductor.isSelected = true
-        binding.tvAutorReproductor.isSelected = true
-
         renderersFactory = DefaultRenderersFactory(requireContext())
         trackSelectionFactory = AdaptiveTrackSelection.Factory()
         trackSelectSelector = DefaultTrackSelector(requireContext(), trackSelectionFactory)
@@ -93,12 +94,11 @@ class MusicaFragment : Fragment(), Player.Listener {
         player.addListener(this)
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         extractorsFactory = DefaultExtractorsFactory()
-        recogerBundle()
 
+        recogerBundle()
         rellenarDatosAlbum()
         rellenarDatosAutor()
         rellenarDatosMusic()
-
         rellenarDatos()
 
 
@@ -137,8 +137,8 @@ class MusicaFragment : Fragment(), Player.Listener {
             player.playWhenReady = true
             binding.videoView.player = player
             binding.videoView.useArtwork = false
-            binding.tvAutorReproductor.text = autor
-            binding.tvNombreReproductor.text = nombre
+            requireActivity().findViewById<TextView>(R.id.tv_player_nombre).isSelected = true
+            requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -234,12 +234,13 @@ class MusicaFragment : Fragment(), Player.Listener {
         introPlaylist.sortByDescending { it.id }
         var arrayMediaItems = introPlaylist.map { it.ruta }
         player.addMediaItems(arrayMediaItems)
+
+
     }
 
     fun buscarCancion(id: Int): Int {
         return introPlaylist.indexOfFirst { it.id == id }
     }
-
 
     private fun rellenarDatos() {
         if (introAlbum.isNotEmpty() && introAutor.isNotEmpty() && introMusic.isNotEmpty()) {
@@ -250,6 +251,9 @@ class MusicaFragment : Fragment(), Player.Listener {
             if(cambioMusic) {
                 player.clearMediaItems()
                 introPlaylist.clear()
+                if(this::mediaSession.isInitialized) {
+                    mediaSession.release()
+                }
             }
             CoroutineScope(Dispatchers.Main).launch {
                 for (x in introMusic) {
@@ -293,13 +297,9 @@ class MusicaFragment : Fragment(), Player.Listener {
                 introTotal.sortByDescending{it.id}
                 cambioMusic = false
                 if (idSong != 0) {
-                    var tempMusic = introMusic.find { it.id == idSong }
-                    var tempAutor = introAutor.find { it.id == tempMusic!!.autor_id }
+                    var tempMusic = introTotal.find { it.id == idSong }
                     if (tempMusic != null) {
-                        actualizarReproductorCancion(tempMusic)
-                    }
-                    if (tempAutor != null) {
-                        actualizarReproductorAutor(tempAutor)
+                        actualizarReproductor(tempMusic)
                     }
                 }
                 rellenarPlaylist()
@@ -316,6 +316,7 @@ class MusicaFragment : Fragment(), Player.Listener {
             autor = it.autor
             cancion = it.ruta
             idSong = it.id
+            album = it.album
             reproducir()
         }, {
             MaterialAlertDialogBuilder(requireContext())
@@ -343,17 +344,10 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     }
 
-    private fun actualizarReproductorCancion(x: ReadMusica) {
-        if (binding.tvNombreReproductor.text != "") {
-            binding.tvNombreReproductor.text = x.nombre
+    private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {
+        if (requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text != "") {
+            requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text = x!!.nombre + " - " + x.album + " - " + x.autor
         }
-    }
-
-    private fun actualizarReproductorAutor(x: ReadAutorId) {
-        if (binding.tvAutorReproductor.text != "") {
-            binding.tvAutorReproductor.text = x.nombre
-        }
-
     }
 
     private fun buscarId(music: Int) {

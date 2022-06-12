@@ -34,5 +34,6 @@
     <string name="tiendaMusica">Localización de la tienda de música</string>
     <string name="darPermisos">Debes dar los permisos requiridos</string>
     <string name="playlist">Tu Playlist</string>
-
+    <string name="channel_name">5000</string>
+    <string name="channel_desc">6000</string>
 </resources>
