@@ -23,11 +23,22 @@
             android:layout_height="match_parent"
             android:background="#2f3d49">
 
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/ivCrearRoom"
+                android:layout_width="145dp"
+                android:layout_height="135dp"
+                android:layout_marginTop="44dp"
+                android:src="@drawable/imagen2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/btnLogin"
                 android:layout_width="0dp"
                 android:layout_height="59dp"
-                android:layout_marginBottom="176dp"
+                android:layout_marginBottom="64dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

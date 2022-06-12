@@ -67,6 +67,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setToolbar()
         initDb()
         annadirUsuario()
+        setHeader()
         title="Scarlet Perception"
         fragmentPortada = PortadaFragment()
         fragmentWeb = WebFragment()
