@@ -70,7 +70,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
     var introTotal: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var introPlaylist: MutableList<ReadPlaylist> = ArrayList()
     var musicTemp: MutableList<ReadMusica> = ArrayList()
-    var musicFiltrada: MutableList<ReadMusica> = ArrayList()
+    var musicFiltrada: MutableList<ReadMusicaAlbumAutor> = ArrayList()
     var reproducir = false
 
     val user = Firebase.auth.currentUser
@@ -142,7 +142,10 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         trackSelections: TrackSelectionArray
     ) {
         super.onTracksChanged(trackGroups, trackSelections)
-        Log.d("------------------------------", introPlaylist.size.toString())
+        nombre =  player.mediaMetadata.title.toString()
+        album = player.mediaMetadata.albumTitle.toString()
+        autor = player.mediaMetadata.artist.toString()
+        findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
     }
 
     override fun onPause() {
@@ -279,22 +282,24 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     fun roomPlaylist() {
         for (x in allMusic) {
+            var metadata = MediaMetadata.Builder().setTitle(x.nombre).setAlbumTitle("").setArtist(x.autor).build()
             player.addMediaItem(
-                MediaItem.Builder().setUri(Uri.parse(x!!.musica)).build()
+                MediaItem.Builder().setUri(Uri.parse(x!!.musica)).setMediaMetadata(metadata).build()
             )
         }
     }
 
-    suspend fun recogerPlaylist(musica: ReadPlaylist){
-        var music = introMusic.find { it.id == musica.music_id }
-            var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
+    suspend fun recogerPlaylist(musica: ReadMusicaAlbumAutor){
+            var storageRef = storageFire.getReferenceFromUrl(musica!!.ruta + ".mp3")
             storageRef.downloadUrl.addOnSuccessListener() {
                 var url = it.toString()
+                var metadata = MediaMetadata.Builder().setTitle(musica.nombre).setAlbumTitle(musica.album).setArtist(musica.autor).build()
                 player.addMediaItem(
-                    MediaItem.Builder().setUri(Uri.parse(url)).build()
+                    MediaItem.Builder().setUri(Uri.parse(url)).setMediaMetadata(metadata).build()
                 )
+                musicFiltrada.add(musica!!)
             }.await()
-            musicFiltrada.add(music!!)
+
     }
 
     suspend fun filtrarDatos() {
@@ -308,9 +313,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 introPlaylist = playlistAgrupada[AppUse.user_id] as ArrayList
                 recyclerVacio = false
                 introPlaylist.sortByDescending { it.id }
-                for (x in introPlaylist) {
-                    recogerPlaylist(x)
-                }
                 //if(musicTemp.isNotEmpty()) {
                 //    musicFiltrada.addAll(musicTemp.toMutableList())
                 //}
@@ -326,38 +328,42 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                 introTotal.clear()
                 filtrarDatos()
                 if (!recyclerVacio) {
-                    for (x in musicFiltrada) {
-                        var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
-                        var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                    for (x in introPlaylist) {
+                        var music = introMusic.find { it.id == x.music_id }
+                        var alb: ReadAlbum? = introAlbum.find { it.id == music!!.album_id }
+                        var aut: ReadAutorId? = introAutor.find { it.id == music!!.autor_id }
                         var temp: ReadMusicaAlbumAutor
                         if (alb != null && aut != null) {
                             temp = ReadMusicaAlbumAutor(
-                                x.id,
-                                x.nombre,
-                                x.album_id,
+                                music!!.id,
+                                music.nombre,
+                                music.album_id,
                                 alb.titulo,
-                                x.autor_id,
+                                music.autor_id,
                                 aut.nombre,
-                                x.ruta,
-                                x.portada,
-                                x.descripcion,
-                                x.genero_id,
-                                x.numCancion
+                                music.ruta,
+                                music.portada,
+                                music.descripcion,
+                                music.genero_id,
+                                music.numCancion
                             )
                         } else {
                             temp = ReadMusicaAlbumAutor(
                                 x.id,
                                 "default",
-                                x.album_id,
+                                music!!.album_id,
                                 alb!!.titulo,
-                                x.autor_id,
+                                music.autor_id,
                                 "default",
-                                x.ruta,
-                                x.portada,
-                                x.descripcion,
-                                x.genero_id,
-                                x.numCancion
+                                music.ruta,
+                                music.portada,
+                                music.descripcion,
+                                music.genero_id,
+                                music.numCancion
                             )
+                        }
+                        if(musicFiltrada.find { it.id == music.id } == null) {
+                            recogerPlaylist(temp)
                         }
                         introTotal.add(temp)
                     }

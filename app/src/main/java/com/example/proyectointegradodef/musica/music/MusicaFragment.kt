@@ -4,6 +4,7 @@ package com.example.proyectointegradodef.musica.music
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +19,10 @@ import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.preferences.AppUse
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
@@ -125,9 +128,15 @@ class MusicaFragment : Fragment(), Player.Listener {
         reproducir = isPlaying
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        super.onPlayerStateChanged(playWhenReady, playbackState)
-
+    override fun onTracksChanged(
+        trackGroups: TrackGroupArray,
+        trackSelections: TrackSelectionArray
+    ) {
+        super.onTracksChanged(trackGroups, trackSelections)
+        nombre =  player.mediaMetadata.title.toString()
+        album = player.mediaMetadata.albumTitle.toString()
+        autor = player.mediaMetadata.artist.toString()
+        requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
     }
 
     fun reproducir() {
@@ -222,10 +231,11 @@ class MusicaFragment : Fragment(), Player.Listener {
         }
     }
 
-    suspend fun recogerPlaylist(music: ReadMusica) {
+    suspend fun recogerPlaylist(music: ReadMusicaAlbumAutor) {
         var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
         storageRef.downloadUrl.addOnSuccessListener() {
-            var mediaItem = MediaItem.Builder().setUri(it).build()
+            var metadata = MediaMetadata.Builder().setTitle(music.nombre).setAlbumTitle(music.album).setArtist(music.autor).build()
+            var mediaItem = MediaItem.Builder().setUri(it).setMediaMetadata(metadata).build()
             introPlaylist.add(AnnadirPlaylistMusic(music.id, music.numCancion, mediaItem))
         }.await()
     }
@@ -251,15 +261,9 @@ class MusicaFragment : Fragment(), Player.Listener {
             if(cambioMusic) {
                 player.clearMediaItems()
                 introPlaylist.clear()
-                if(this::mediaSession.isInitialized) {
-                    mediaSession.release()
-                }
             }
             CoroutineScope(Dispatchers.Main).launch {
                 for (x in introMusic) {
-                    if(cambioMusic) {
-                        recogerPlaylist(x)
-                    }
                     var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
                     var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
                     var temp: ReadMusicaAlbumAutor
@@ -291,6 +295,11 @@ class MusicaFragment : Fragment(), Player.Listener {
                             x.genero_id,
                             x.numCancion
                         )
+                    }
+                    if(cambioMusic) {
+                        if(introPlaylist.find { it.id == x.id } == null){
+                            recogerPlaylist(temp)
+                        }
                     }
                     introTotal.add(temp)
                 }
@@ -341,7 +350,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         binding.recyclerview.adapter = musica
         binding.recyclerview.layoutManager = linearLayoutManager
         binding.recyclerview.scrollToPosition(0)
-
     }
 
     private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {

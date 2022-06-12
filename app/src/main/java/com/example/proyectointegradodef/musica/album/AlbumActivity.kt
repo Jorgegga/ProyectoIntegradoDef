@@ -1,7 +1,6 @@
 package com.example.proyectointegradodef.musica.album
 
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,8 +21,10 @@ import com.example.proyectointegradodef.models.*
 import com.example.proyectointegradodef.preferences.AppUse
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
@@ -131,6 +132,17 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         reproducir = isPlaying
     }
 
+    override fun onTracksChanged(
+        trackGroups: TrackGroupArray,
+        trackSelections: TrackSelectionArray
+    ) {
+        super.onTracksChanged(trackGroups, trackSelections)
+        nombre =  player.mediaMetadata.title.toString()
+        album = player.mediaMetadata.albumTitle.toString()
+        autor = player.mediaMetadata.artist.toString()
+        findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
+    }
+
     fun introducirDatos(){
         val bundle = intent.extras
         album_id = bundle!!.getInt("id", 0)
@@ -189,10 +201,11 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
-    suspend fun recogerPlaylist(music: ReadMusica) {
+    suspend fun recogerPlaylist(music: ReadMusicaAlbumAutor) {
         var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
         storageRef.downloadUrl.addOnSuccessListener() {
-            var mediaItem = MediaItem.Builder().setUri(it).build()
+            var metadata = MediaMetadata.Builder().setTitle(music.nombre).setAlbumTitle(music.album).setArtist(music.autor).build()
+            var mediaItem = MediaItem.Builder().setUri(it).setMediaMetadata(metadata).build()
             introPlaylist.add(AnnadirPlaylistMusic(music.id, music.numCancion, mediaItem))
         }.await()
     }
@@ -220,18 +233,16 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     private fun rellenarDatos() {
         if (introMusic.isNotEmpty() && introAutor.isNotEmpty()) {
-            introTotal.clear()
             filtrarDatos()
             if (!recyclerVacio) {
+                introTotal.clear()
                 if (cambioMusic) {
                     player.clearMediaItems()
                     introPlaylist.clear()
                 }
                 CoroutineScope(Dispatchers.Main).launch {
                     for (x in introMusic) {
-                        if (cambioMusic) {
-                            recogerPlaylist(x)
-                        }
+
                         //var alb : ReadAlbum? = introAlbum.find{it.id == x.album_id}
                         var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
                         var temp: ReadMusicaAlbumAutor
@@ -263,6 +274,9 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                                 x.genero_id,
                                 x.numCancion
                             )
+                        }
+                        if (cambioMusic) {
+                            recogerPlaylist(temp)
                         }
                         introTotal.add(temp)
                     }
@@ -309,7 +323,6 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     comprobarExistePlaylist(it.id)
-
                 }
                 .show()
 
