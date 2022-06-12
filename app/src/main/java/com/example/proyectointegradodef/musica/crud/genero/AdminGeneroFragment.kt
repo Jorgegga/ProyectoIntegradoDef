@@ -11,9 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminGeneroBinding
-import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.models.ReadGenero
-import com.example.proyectointegradodef.musica.crud.autor.CrearAutorActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -24,7 +22,9 @@ class AdminGeneroFragment : Fragment() {
 
     lateinit var binding : FragmentAdminGeneroBinding
     lateinit var db: FirebaseDatabase
-    lateinit var reference: DatabaseReference
+    lateinit var referenceGenero: DatabaseReference
+    lateinit var referenceAlbum: DatabaseReference
+    lateinit var referenceMusic: DatabaseReference
     lateinit var storage: FirebaseStorage
 
     var introGenero: MutableList<ReadGenero> = ArrayList()
@@ -72,8 +72,8 @@ class AdminGeneroFragment : Fragment() {
 
     private fun recogerDatosGenero(){
         introGenero.clear()
-        reference.get()
-        reference.addValueEventListener(object: ValueEventListener{
+        referenceGenero.get()
+        referenceGenero.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 introGenero.clear()
                 for(messageSnapshot in snapshot.children){
@@ -120,7 +120,7 @@ class AdminGeneroFragment : Fragment() {
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     borrarGenero(it.id, it.portada)
-
+                    ponerDefault(it.id)
                 }
                 .show()
         })
@@ -130,8 +130,8 @@ class AdminGeneroFragment : Fragment() {
     }
 
     private fun borrarGenero(id: Int, foto: String){
-        reference.get()
-        var query = reference.orderByChild("id").equalTo(id.toDouble())
+        referenceGenero.get()
+        var query = referenceGenero.orderByChild("id").equalTo(id.toDouble())
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (messageSnapshot in snapshot.children) {
@@ -157,9 +157,45 @@ class AdminGeneroFragment : Fragment() {
         })
     }
 
+    private fun ponerDefault(id: Int){
+        referenceMusic.get()
+        referenceAlbum.get()
+        val values = HashMap<String, Any>()
+        values["genero_id"] = 1
+        var query = referenceMusic.orderByChild("genero_id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    messageSnapshot.ref.updateChildren(values)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        var query2 = referenceAlbum.orderByChild("genero_id").equalTo(id.toDouble())
+        query2.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    messageSnapshot.ref.updateChildren(values)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
-        reference = db.getReference("generos")
+        referenceGenero = db.getReference("generos")
+        referenceAlbum = db.getReference("albums")
+        referenceMusic = db.getReference("music")
     }
 
     companion object {

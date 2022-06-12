@@ -27,6 +27,7 @@ class AdminAlbumFragment : Fragment() {
     lateinit var referenceAutor: DatabaseReference
     lateinit var referenceAlbum: DatabaseReference
     lateinit var referenceGenero: DatabaseReference
+    lateinit var referenceMusic: DatabaseReference
     lateinit var storage: FirebaseStorage
     var introAutor: MutableList<ReadAutorId> = ArrayList()
     var introAlbum: MutableList<ReadAlbum> = ArrayList()
@@ -176,7 +177,7 @@ class AdminAlbumFragment : Fragment() {
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     borrarAlbum(it.id, it.portada)
-
+                    ponerDefault(it.id)
                 }
                 .show()
         })
@@ -247,11 +248,36 @@ class AdminAlbumFragment : Fragment() {
         })
     }
 
+    private fun ponerDefault(id: Int){
+        referenceMusic.get()
+        val values = HashMap<String, Any>()
+        values["album_id"] = 1
+        var query = referenceMusic.orderByChild("album_id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    if(messageSnapshot.child("ruta").value.toString().contains("gs://proyectointegradodam-eef79.appspot.com/proyecto/album") && messageSnapshot.child("ruta").value.toString() != "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"){
+                        values["ruta"] = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
+                    }else{
+                        values.remove("ruta")
+                    }
+                    messageSnapshot.ref.updateChildren(values)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
         referenceAutor = db.getReference("autors")
         referenceAlbum = db.getReference("albums")
         referenceGenero = db.getReference("generos")
+        referenceMusic = db.getReference("music")
     }
 
     companion object {

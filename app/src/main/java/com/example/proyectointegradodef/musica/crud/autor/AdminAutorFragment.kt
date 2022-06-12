@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAdminAutorBinding
 import com.example.proyectointegradodef.models.ReadAutor
-import com.example.proyectointegradodef.models.ReadGenero
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -23,7 +22,9 @@ class AdminAutorFragment : Fragment() {
 
     lateinit var binding: FragmentAdminAutorBinding
     lateinit var db: FirebaseDatabase
-    lateinit var reference: DatabaseReference
+    lateinit var referenceAutor: DatabaseReference
+    lateinit var referenceAlbum: DatabaseReference
+    lateinit var referenceMusic: DatabaseReference
     lateinit var storage: FirebaseStorage
     var autor: MutableList<ReadAutor> = ArrayList()
 
@@ -71,8 +72,8 @@ class AdminAutorFragment : Fragment() {
 
     private fun recogerDatosAutor(){
         autor.clear()
-        reference.get()
-        reference.addValueEventListener(object: ValueEventListener {
+        referenceAutor.get()
+        referenceAutor.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 autor.clear()
                 for(messageSnapshot in snapshot.children){
@@ -120,7 +121,7 @@ class AdminAutorFragment : Fragment() {
                 }
                 .setPositiveButton("Aceptar") { dialog, which ->
                     borrarAutor(it.id, it.foto)
-
+                    ponerDefault(it.id)
                 }
                 .show()
         })
@@ -131,8 +132,8 @@ class AdminAutorFragment : Fragment() {
     }
 
     private fun borrarAutor(id: Int, foto: String){
-        reference.get()
-        var query = reference.orderByChild("id").equalTo(id.toDouble())
+        referenceAutor.get()
+        var query = referenceAutor.orderByChild("id").equalTo(id.toDouble())
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                     for (messageSnapshot in snapshot.children) {
@@ -158,11 +159,45 @@ class AdminAutorFragment : Fragment() {
         })
     }
 
+    private fun ponerDefault(id: Int){
+        referenceMusic.get()
+        referenceAlbum.get()
+        val values = HashMap<String, Any>()
+        values["autor_id"] = 1
+        var query = referenceMusic.orderByChild("autor_id").equalTo(id.toDouble())
+        query.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    messageSnapshot.ref.updateChildren(values)
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        var query2 = referenceAlbum.orderByChild("autor_id").equalTo(id.toDouble())
+        query2.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(messageSnapshot in snapshot.children) {
+                    messageSnapshot.ref.updateChildren(values)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 
     private fun initDb(){
         db = FirebaseDatabase.getInstance("https://proyectointegradodam-eef79-default-rtdb.europe-west1.firebasedatabase.app/")
-        reference = db.getReference("autors")
+        referenceAutor = db.getReference("autors")
+        referenceAlbum = db.getReference("albums")
+        referenceMusic = db.getReference("music")
     }
 
     companion object {

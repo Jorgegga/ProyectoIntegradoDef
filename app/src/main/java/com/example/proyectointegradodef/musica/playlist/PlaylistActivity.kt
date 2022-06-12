@@ -352,7 +352,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                                 x.id,
                                 "default",
                                 music!!.album_id,
-                                alb!!.titulo,
+                                "default",
                                 music.autor_id,
                                 "default",
                                 music.ruta,

@@ -164,7 +164,7 @@ class AdminMusicFragment : Fragment() {
                         x.id,
                         "default",
                         x.album_id,
-                        alb!!.titulo,
+                        "default",
                         x.autor_id,
                         "default",
                         x.ruta,
