@@ -52,7 +52,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerview"/>
+            app:layout_constraintTop_toBottomOf="@+id/recyclerview"
+            app:hide_on_touch="false"
+            app:show_timeout="0"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

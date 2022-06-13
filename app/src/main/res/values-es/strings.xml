@@ -15,7 +15,7 @@
     <string name="tvMaps">Nuestra dirección</string>
     <string name="tvWeb">Nuestra página web</string>
     <string name="tvPortadaDescripcion">Esta es una base de datos donde puedes subir tu música favorita.
-        ¡Puedes subirlas a nuestro servidor o añadirlas desde tu almacenamiento!
+        ¡Puedes añadirlas desde tu almacenamiento local y escucharlas junto con la música en la nube!
         Para empezar abre el menu que hay arriba a la izquierda.</string>
     <string name="tvCrearBase">Añadir a la base de datos</string>
     <string name="tvNombre">Titulo:</string>
