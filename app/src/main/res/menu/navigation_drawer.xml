@@ -13,26 +13,27 @@
         <item
             android:id="@+id/group1"
             android:title="@string/tvMusica">
-            <menu >
+            <menu>
                 <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/btnCanciones"
-                        android:enabled="true"
                         android:checkable="false"
+                        android:enabled="true"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvListaMusica" />
                     <item
                         android:id="@+id/btnPlaylist"
-                        android:enabled="true"
                         android:checkable="false"
+                        android:enabled="true"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/playlist" />
                     <item
                         android:id="@+id/btnCrud"
-                        android:enabled="true"
                         android:checkable="false"
+                        android:enabled="true"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvSubirMusica" />
+
                     <item
                         android:id="@+id/btnSubirLocal"
                         android:enabled="true"

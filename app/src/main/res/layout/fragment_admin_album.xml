@@ -19,6 +19,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/ToolBar"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"

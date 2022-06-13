@@ -305,7 +305,7 @@ class MusicaFragment : Fragment(), Player.Listener {
                     }
                     introTotal.add(temp)
                 }
-                introTotal.sortByDescending{it.id}
+
                 cambioMusic = false
                 if (idSong != 0) {
                     var tempMusic = introTotal.find { it.id == idSong }
@@ -313,6 +313,7 @@ class MusicaFragment : Fragment(), Player.Listener {
                         actualizarReproductor(tempMusic)
                     }
                 }
+                introTotal.sortByDescending{it.id}
                 rellenarPlaylist()
                 binding.loadingPanel.visibility = View.GONE
                 setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)

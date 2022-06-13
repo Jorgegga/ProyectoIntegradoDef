@@ -1,14 +1,16 @@
 package com.example.proyectointegradodef
 
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Display
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -20,13 +22,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.example.proyectointegradodef.musica.music.CrearFragment
-import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.CrearPerfil
 import com.example.proyectointegradodef.musica.MusicaActivity
 import com.example.proyectointegradodef.musica.crud.CrudActivity
+import com.example.proyectointegradodef.musica.music.CrearFragment
+import com.example.proyectointegradodef.musica.music.MusicaFragment
 import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
 import com.example.proyectointegradodef.perfil.PerfilFragment
 import com.example.proyectointegradodef.preferences.AppUse
@@ -65,6 +67,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         binding = ActivityInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setToolbar()
+        //hideItem()
         initDb()
         annadirUsuario()
         setHeader()
@@ -87,10 +90,14 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
+
+    }
+
     fun setToolbar(){
         val toolbar: Toolbar = binding.mainToolbar
         setSupportActionBar(toolbar)
-
         var drawerLayout = binding.drawerLayout
         var navigationView = binding.navView
 
@@ -112,6 +119,16 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         var header = navView.getHeaderView(0)
         var tvCorreo = header.findViewById<TextView>(R.id.tvCorreo)
         tvCorreo.text = prefs.leerEmail()
+
+        reference.child(user!!.uid).child("permisos").get().addOnSuccessListener {
+            if (it.value == 1) {
+                val nav_Menu: Menu = binding.navView.menu
+                nav_Menu.findItem(R.id.btnCrud).isVisible = true
+                setToolbar()
+            }
+        }.addOnFailureListener {
+
+        }
 
         var referencia2 = ""
         reference.child(user!!.uid).child("ruta").get().addOnSuccessListener {
@@ -150,6 +167,11 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             cambiarSubtitulos()
         }
 
+    }
+
+    private fun hideItem() {
+        val nav_Menu: Menu = binding.navView.menu
+        nav_Menu.findItem(R.id.btnCrud).isVisible = false
     }
 
     private fun annadirUsuario(){

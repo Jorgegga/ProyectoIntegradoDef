@@ -8,8 +8,6 @@ class AppUse: Application() {
     companion object{
         lateinit var appContext : Context
         lateinit var prefs: Prefs
-        var reproduciendo : MutableLiveData<Boolean> = MutableLiveData(false)
-        var reproduciendoLocal : MutableLiveData<Boolean> = MutableLiveData(false)
         var nombre = ""
         var autor = ""
         var cancion = ""
@@ -18,6 +16,7 @@ class AppUse: Application() {
         var autor_id = 0
         var user_id = 0
         var recyclerPosition = 0
+        var permisos = 0
     }
 
     override fun onCreate() {
