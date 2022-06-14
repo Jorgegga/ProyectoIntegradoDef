@@ -72,6 +72,7 @@
                     <item
                         android:id="@+id/btnWeb"
                         android:enabled="true"
+                        android:checkable="false"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvWeb" />
                 </group>
