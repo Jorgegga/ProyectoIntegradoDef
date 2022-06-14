@@ -44,4 +44,6 @@
     <string name="nCancion">Nº canción</string>
     <string name="elegirCancion">Elige una canción para subir</string>
     <string name="actualizar">Actualizar</string>
+    <string name="aboutus1">Esta aplicación esta basada en una página web que cumple la misma funcionalidad que esta, la de reproducir música en la nube ordenada en albumes, autores y generos. Tiene menos funcionalidades que la original, pero sigue siendo igual de útil.</string>
+    <string name="aboutus2">"Algunos de los controles de la página son: \n \t - Clicka en una canción para reproducirla. \n \t - Mantén pulsada una canción para añadirla a tu playlist o borrarla de esta. \n\t - Cuando reproduzcas una canción, haz click en la parte inferior de la pantalla para ver los controles del reproductor."</string>
 </resources>

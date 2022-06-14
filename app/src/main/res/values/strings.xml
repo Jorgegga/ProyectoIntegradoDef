@@ -44,4 +44,6 @@
     <string name="nCancion">Nº song</string>
     <string name="elegirCancion">Choose a song to upload</string>
     <string name="actualizar">Update</string>
+    <string name="aboutus1">This app is made based on a webpage that has the same functionality as this, play music from cloud order by albums, authors and genders. The app has less functionality than the webpage, but its useful as well. </string>
+    <string name="aboutus2">"Some controls of the app are: \n \t - Click on a song to start play it. \n \t - Hold a song to add it to your playlist or remove from it. \n\t - When you play a song, click on the bottom of the screen to see the controls of the player."</string>
 </resources>
