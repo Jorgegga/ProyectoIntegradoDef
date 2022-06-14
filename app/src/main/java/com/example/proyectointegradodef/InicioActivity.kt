@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Display
 import android.view.Menu
 import android.view.MenuItem
@@ -67,7 +68,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         binding = ActivityInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setToolbar()
-        //hideItem()
+        hideItem()
         initDb()
         annadirUsuario()
         setHeader()
@@ -121,10 +122,12 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         tvCorreo.text = prefs.leerEmail()
 
         reference.child(user!!.uid).child("permisos").get().addOnSuccessListener {
-            if (it.value == 1) {
-                val nav_Menu: Menu = binding.navView.menu
-                nav_Menu.findItem(R.id.btnCrud).isVisible = true
-                setToolbar()
+            if(it.value != null) {
+                var x: Int = it.value.toString().toInt()
+                if (x == 1) {
+                    val nav_Menu: Menu = binding.navView.menu
+                    nav_Menu.findItem(R.id.btnCrud).isVisible = true
+                }
             }
         }.addOnFailureListener {
 
