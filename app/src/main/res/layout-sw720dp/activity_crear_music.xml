@@ -45,7 +45,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@null">
+        app:strokeColor="@null"
+        app:strokeWidth="0dp">
 
       <androidx.core.widget.NestedScrollView
           android:layout_width="match_parent"

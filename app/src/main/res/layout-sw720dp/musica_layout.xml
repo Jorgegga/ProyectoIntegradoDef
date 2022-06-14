@@ -8,7 +8,8 @@
     android:layout_margin="10dp"
     android:backgroundTint="#212E36"
     android:clickable="true"
-    app:strokeColor="@null">
+    app:strokeColor="@null"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

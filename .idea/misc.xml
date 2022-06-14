@@ -6,10 +6,23 @@
         <entry key="..\:/Users/6002109/.gradle/caches/transforms-3/5d24652b763738f78778d34e805e1e4a/transformed/exoplayer-ui-2.17.1/res/drawable/exo_rounded_rectangle.xml" value="0.3675" />
         <entry key="..\:/Users/6002109/.gradle/caches/transforms-3/5d24652b763738f78778d34e805e1e4a/transformed/exoplayer-ui-2.17.1/res/layout/exo_player_control_view.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/.gradle/caches/transforms-3/5d24652b763738f78778d34e805e1e4a/transformed/exoplayer-ui-2.17.1/res/layout/exo_player_view.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.305" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/activity_crear_music.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/activity_update_album.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/activity_update_autor.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/activity_update_genero.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/activity_update_music.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/admin_autor_layout.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/admin_genero_layout.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/admin_music_layout.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/album_layout.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/autor_layout.xml" value="0.275" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout-sw720dp/fragment_crear_room.xml" value="0.275" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_album.xml" value="0.33" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_autor.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_album.xml" value="0.5" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_autor.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_genero.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_crear_music.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_crud.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_inicio.xml" value="0.36666666666666664" />
@@ -17,6 +30,8 @@
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_musica.xml" value="0.25" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_album.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_autor.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_genero.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/activity_update_music.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/admin_album_layout.xml" value="0.25729166666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/admin_autor_layout.xml" value="0.67" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/admin_genero_layout.xml" value="0.36666666666666664" />
@@ -26,14 +41,17 @@
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/autor_layout.xml" value="0.5" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/crud_autor_layout.xml" value="0.9251231527093596" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/exo_player_control_view.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_admin_album.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_admin_autor.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_admin_genero.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_admin_music.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_album.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_autor.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_autor_crud.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_autor_crud_list.xml" value="0.35260416666666666" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_camara.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_crear.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_crear_room.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_crud_autor.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_musica.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/6002109/Desktop/cosas/proyecto/ProyectoIntegradoDef/app/src/main/res/layout/fragment_perfil.xml" value="0.20416666666666666" />
