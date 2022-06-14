@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.proyectointegradodef.aboutus.AboutusFragment
 import com.example.proyectointegradodef.databinding.ActivityInicioBinding
 import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.CrearPerfil
@@ -62,6 +63,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     lateinit var fragmentRead : Fragment
     lateinit var fragmentCrearLocal : Fragment
     lateinit var fragmentCamara : Fragment
+    lateinit var fragmentAboutus : Fragment
 
     var storageFire = FirebaseStorage.getInstance()
     val user = Firebase.auth.currentUser
@@ -84,6 +86,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         fragmentRead = MusicaFragment()
         fragmentCrearLocal = CrearRoomFragment()
         fragmentCamara = PerfilFragment()
+        fragmentAboutus = AboutusFragment()
         supportFragmentManager.beginTransaction().add(R.id.fragmentContainerView, fragmentPortada).commit()
 
     }
@@ -325,6 +328,14 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
             R.id.btnPerfil ->{
                 transaction.replace(R.id.fragmentContainerView, fragmentCamara).commit()
+                transaction.addToBackStack(null)
+                item.isChecked = true
+                binding.drawerLayout.close()
+                return true
+            }
+
+            R.id.btnAboutus ->{
+                transaction.replace(R.id.fragmentContainerView, fragmentAboutus).commit()
                 transaction.addToBackStack(null)
                 item.isChecked = true
                 binding.drawerLayout.close()

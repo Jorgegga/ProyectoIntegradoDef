@@ -75,6 +75,11 @@
                         android:checkable="false"
                         android:icon="@drawable/keystoneback"
                         android:title="@string/tvWeb" />
+                    <item
+                        android:id="@+id/btnAboutus"
+                        android:enabled="true"
+                        android:icon="@drawable/keystoneback"
+                        android:title="About us" />
                 </group>
             </menu>
         </item>
