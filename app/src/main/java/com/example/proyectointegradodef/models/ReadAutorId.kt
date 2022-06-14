@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Read autor id
+ *
+ * @constructor Create empty Read autor id
+ */
 class ReadAutorId {
     constructor()
     constructor(id: Int, nom: String){

@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Read genero
+ *
+ * @constructor Create empty Read genero
+ */
 class ReadGenero {
     constructor()
     constructor(id: Int, nombre: String, portada: String){

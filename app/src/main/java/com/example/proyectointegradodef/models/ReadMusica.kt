@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Read musica
+ *
+ * @constructor Create empty Read musica
+ */
 class ReadMusica {
     constructor()
     constructor(nombre: String, autor_id: Int, album_id: Int, descripcion: String, genero_id: Int, id: Int, numCancion: Int, portada: String, ruta: String){

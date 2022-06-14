@@ -25,6 +25,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Crear genero activity
+ *
+ * @constructor Create empty Crear genero activity
+ */
 class CrearGeneroActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCrearGeneroBinding
@@ -136,6 +141,10 @@ class CrearGeneroActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")

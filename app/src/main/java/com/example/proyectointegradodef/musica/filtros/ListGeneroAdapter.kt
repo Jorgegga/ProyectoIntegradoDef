@@ -13,6 +13,15 @@ import androidx.annotation.LayoutRes
 import com.example.proyectointegradodef.models.ReadAutor
 import com.example.proyectointegradodef.models.ReadGenero
 
+/**
+ * List genero adapter
+ *
+ * @property layoutResource
+ * @property genero
+ * @constructor
+ *
+ * @param context
+ */
 class ListGeneroAdapter(context: Context, @LayoutRes private val layoutResource: Int, private val genero: ArrayList<ReadGenero>):
     ArrayAdapter<ReadGenero>(context, layoutResource, genero), Filterable {
 

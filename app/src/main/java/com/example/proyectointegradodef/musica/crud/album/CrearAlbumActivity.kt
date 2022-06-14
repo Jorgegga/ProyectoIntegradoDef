@@ -30,6 +30,11 @@ import com.google.firebase.storage.ktx.storage
 import java.util.*
 
 
+/**
+ * Crear album activity
+ *
+ * @constructor Create empty Crear album activity
+ */
 class CrearAlbumActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCrearAlbumBinding
@@ -191,6 +196,10 @@ class CrearAlbumActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")

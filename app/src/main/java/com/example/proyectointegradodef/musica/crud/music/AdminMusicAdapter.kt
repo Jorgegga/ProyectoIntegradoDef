@@ -6,6 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 
+/**
+ * Admin music adapter
+ *
+ * @property lista
+ * @property clickListener
+ * @property onLongClickListener
+ * @constructor Create empty Admin music adapter
+ */
 class AdminMusicAdapter(private val lista: ArrayList<ReadMusicaAlbumAutor>, private val clickListener: (ReadMusicaAlbumAutor) -> Unit, private val onLongClickListener: (ReadMusicaAlbumAutor) -> Unit): RecyclerView.Adapter<AdminMusicViewholder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminMusicViewholder {
         val inflater = AdminMusicViewholder(LayoutInflater.from(parent.context).inflate(R.layout.admin_music_layout, parent, false),{

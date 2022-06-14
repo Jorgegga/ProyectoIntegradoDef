@@ -11,6 +11,15 @@ import com.example.proyectointegradodef.PortadaFragment
 import com.example.proyectointegradodef.musica.album.AlbumFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 
+/**
+ * Autor adapter activity
+ *
+ * @property bundle
+ * @constructor
+ *
+ * @param fragmentManager
+ * @param lifecycle
+ */
 class AutorAdapterActivity(fragmentManager: FragmentManager, lifecycle: Lifecycle, var bundle: Bundle) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 2

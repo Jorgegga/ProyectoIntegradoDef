@@ -11,6 +11,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Admin album viewholder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ * @param longClickAtPosition
+ */
 class AdminAlbumViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AdminAlbumLayoutBinding.bind(v)
     val storageFire = FirebaseStorage.getInstance()
@@ -25,6 +34,11 @@ class AdminAlbumViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
         }
     }
 
+    /**
+     * Render
+     *
+     * @param album
+     */
     fun render(album: ReadAlbumAutor){
         binding.tvNombreAlbum.text = album.titulo
         binding.tvAutorAlbum.text = album.autor

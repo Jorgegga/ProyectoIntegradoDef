@@ -37,6 +37,11 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Album activity
+ *
+ * @constructor Create empty Album activity
+ */
 class AlbumActivity : AppCompatActivity(), Player.Listener {
     lateinit var binding: ActivityAlbumBinding
     lateinit var db: FirebaseDatabase
@@ -69,6 +74,11 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     var autor = ""
     var album = ""
 
+    /**
+     * On create
+     *
+     * @param savedInstanceState
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlbumBinding.inflate(layoutInflater)
@@ -95,11 +105,23 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     }
 
+    /**
+     * On create options menu
+     *
+     * @param menu
+     * @return
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * On options item selected
+     *
+     * @param item
+     * @return
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.homeButton->{
@@ -111,6 +133,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * On pause
+     *
+     */
     override fun onPause() {
         super.onPause()
         if(reproducir){
@@ -120,6 +146,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     }
 
+    /**
+     * On resume
+     *
+     */
     override fun onResume() {
         super.onResume()
         if(reproducir) {
@@ -127,11 +157,22 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    /**
+     * On is playing changed
+     *
+     * @param isPlaying
+     */
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         reproducir = isPlaying
     }
 
+    /**
+     * On tracks changed
+     *
+     * @param trackGroups
+     * @param trackSelections
+     */
     override fun onTracksChanged(
         trackGroups: TrackGroupArray,
         trackSelections: TrackSelectionArray
@@ -143,6 +184,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         findViewById<TextView>(R.id.tv_player_nombre).text = "$nombre - $album - $autor"
     }
 
+    /**
+     * Introducir datos
+     *
+     */
     fun introducirDatos(){
         val bundle = intent.extras
         album_id = bundle!!.getInt("id", 0)
@@ -154,6 +199,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
     }
 
+    /**
+     * Recoger datos musica
+     *
+     */
     fun recogerDatosMusica(){
         introMusic.clear()
         referenceMusic.get()
@@ -179,6 +228,10 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
     }
 
 
+    /**
+     * Recoger datos autor
+     *
+     */
     private fun recogerDatosAutor(){
         introAutor.clear()
         referenceAutor.get()
@@ -201,6 +254,11 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
+    /**
+     * Recoger playlist
+     *
+     * @param music
+     */
     suspend fun recogerPlaylist(music: ReadMusicaAlbumAutor) {
         var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
         storageRef.downloadUrl.addOnSuccessListener() {
@@ -210,12 +268,20 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         }.await()
     }
 
+    /**
+     * Rellenar playlist
+     *
+     */
     fun rellenarPlaylist() {
         introPlaylist.sortBy { it.numCancion }
         var arrayMediaItems = introPlaylist.map { it.ruta }
         player.addMediaItems(arrayMediaItems)
     }
 
+    /**
+     * Filtrar datos
+     *
+     */
     fun filtrarDatos(){
         var musicaAgrupada = introMusic.groupBy { it.album_id }
         if(musicaAgrupada[album_id] != null) {
@@ -227,10 +293,20 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    /**
+     * Buscar cancion
+     *
+     * @param id
+     * @return
+     */
     fun buscarCancion(id: Int): Int {
         return introPlaylist.indexOfFirst { it.id == id }
     }
 
+    /**
+     * Rellenar datos
+     *
+     */
     private fun rellenarDatos() {
         if (introMusic.isNotEmpty() && introAutor.isNotEmpty()) {
             filtrarDatos()
@@ -296,12 +372,22 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    /**
+     * Actualizar reproductor
+     *
+     * @param x
+     */
     private fun actualizarReproductor(x: ReadMusicaAlbumAutor?) {
         if (findViewById<TextView>(R.id.tv_player_nombre).text != "") {
             findViewById<TextView>(R.id.tv_player_nombre).text = x!!.nombre + " - " + x.album + " - " + x.autor
         }
     }
 
+    /**
+     * Set recycler
+     *
+     * @param lista
+     */
     fun setRecycler(lista: ArrayList<ReadMusicaAlbumAutor>){
         val linearLayoutManager = LinearLayoutManager(this)
         val musicaAdapter = AlbumActivityAdapter(lista,{

@@ -7,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.proyectointegradodef.databinding.FragmentPortadaBinding
 
+/**
+ * Portada fragment
+ *
+ * @constructor Create empty Portada fragment
+ */
 class PortadaFragment : Fragment() {
     lateinit var binding: FragmentPortadaBinding
 

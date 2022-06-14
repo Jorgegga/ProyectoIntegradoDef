@@ -3,7 +3,16 @@ package com.example.proyectointegradodef.fullscreen
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Principal
+ *
+ * @constructor Create empty Principal
+ */
 open class Principal: AppCompatActivity() {
+    /**
+     * Pantalla completa
+     *
+     */
     @Suppress("DEPRECATION")
     public fun pantallaCompleta() {
         // Enables regular immersive mode.

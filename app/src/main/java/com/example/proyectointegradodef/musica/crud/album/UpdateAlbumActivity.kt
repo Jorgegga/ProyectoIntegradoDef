@@ -35,6 +35,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Update album activity
+ *
+ * @constructor Create empty Update album activity
+ */
 class UpdateAlbumActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityUpdateAlbumBinding
@@ -114,6 +119,10 @@ class UpdateAlbumActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Recuperar datos
+     *
+     */
     fun recuperarDatos(){
         val bundle = intent.extras
         if(!updateHecho) {
@@ -226,6 +235,10 @@ class UpdateAlbumActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")

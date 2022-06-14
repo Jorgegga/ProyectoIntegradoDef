@@ -11,6 +11,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadGenero
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Admin genero viewholder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ * @param longClickAtPosition
+ */
 class AdminGeneroViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AdminGeneroLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
@@ -25,6 +34,11 @@ class AdminGeneroViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAt
         }
     }
 
+    /**
+     * Render
+     *
+     * @param genero
+     */
     fun render(genero: ReadGenero){
         binding.tvNombreGenero.text = genero.nombre
         if(genero.portada == "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/default"){

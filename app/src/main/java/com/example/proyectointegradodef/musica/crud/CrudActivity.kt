@@ -10,6 +10,11 @@ import com.example.proyectointegradodef.musica.MusicaAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * Crud activity
+ *
+ * @constructor Create empty Crud activity
+ */
 class CrudActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCrudBinding

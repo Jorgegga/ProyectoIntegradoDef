@@ -13,6 +13,11 @@ import com.example.proyectointegradodef.musica.playlist.PlaylistActivity
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * Musica activity
+ *
+ * @constructor Create empty Musica activity
+ */
 class MusicaActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMusicaBinding

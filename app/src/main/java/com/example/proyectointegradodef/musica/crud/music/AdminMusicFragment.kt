@@ -18,6 +18,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
+/**
+ * Admin music fragment
+ *
+ * @constructor Create empty Admin music fragment
+ */
 class AdminMusicFragment : Fragment() {
 
     lateinit var binding: FragmentAdminMusicBinding

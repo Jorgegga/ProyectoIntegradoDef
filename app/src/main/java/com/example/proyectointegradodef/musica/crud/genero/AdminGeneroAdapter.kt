@@ -6,6 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadGenero
 
+/**
+ * Admin genero adapter
+ *
+ * @property lista
+ * @property clickListener
+ * @property onLongClickListener
+ * @constructor Create empty Admin genero adapter
+ */
 class AdminGeneroAdapter(private val lista: ArrayList<ReadGenero>, private val clickListener: (ReadGenero) -> Unit, private val onLongClickListener: (ReadGenero) -> Unit): RecyclerView.Adapter<AdminGeneroViewholder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminGeneroViewholder {
         val inflater = AdminGeneroViewholder(LayoutInflater.from(parent.context).inflate(R.layout.admin_genero_layout, parent, false),{

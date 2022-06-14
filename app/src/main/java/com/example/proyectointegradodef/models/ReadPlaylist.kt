@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Read playlist
+ *
+ * @constructor Create empty Read playlist
+ */
 class ReadPlaylist {
     constructor()
     constructor(id: Int, music_id: Int, user_id: Int){

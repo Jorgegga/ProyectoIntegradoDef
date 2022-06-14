@@ -4,6 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 
+/**
+ * App use
+ *
+ * @constructor Create empty App use
+ */
 class AppUse: Application() {
     companion object{
         lateinit var appContext : Context

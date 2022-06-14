@@ -24,6 +24,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Crear fragment
+ *
+ * @constructor Create empty Crear fragment
+ */
 class CrearFragment : Fragment() {
 
     lateinit var binding: FragmentCrearBinding
@@ -108,6 +113,11 @@ class CrearFragment : Fragment() {
         }
     }
 
+    /**
+     * Comprobar vacios
+     *
+     * @return
+     */
     fun comprobarVacios(): Boolean{
         if(binding.insertarNombre.text.toString().equals("")){
             return false
@@ -118,6 +128,10 @@ class CrearFragment : Fragment() {
         return true
     }
 
+    /**
+     * Reset
+     *
+     */
     fun reset(){
         binding.insertarNombre.setText("")
         binding.insertarAutor.setText("")

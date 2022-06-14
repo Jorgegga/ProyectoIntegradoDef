@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Crear perfil
+ *
+ * @constructor Create empty Crear perfil
+ */
 class CrearPerfil {
     constructor()
     constructor(id: Int, permisos: Int){

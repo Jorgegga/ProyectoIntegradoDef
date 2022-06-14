@@ -13,6 +13,13 @@ import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Album adapter
+ *
+ * @property lista
+ * @property clickListener
+ * @constructor Create empty Album adapter
+ */
 class AlbumAdapter(private val lista: ArrayList<ReadAlbumAutor>, private val clickListener: (ReadAlbumAutor) -> Unit): RecyclerView.Adapter<AlbumViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val inflater = AlbumViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.album_layout, parent, false)){

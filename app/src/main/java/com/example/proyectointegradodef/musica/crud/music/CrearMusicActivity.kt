@@ -31,6 +31,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Crear music activity
+ *
+ * @constructor Create empty Crear music activity
+ */
 class CrearMusicActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCrearMusicBinding
@@ -291,6 +296,10 @@ class CrearMusicActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")

@@ -40,6 +40,11 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 
 
+/**
+ * Perfil fragment
+ *
+ * @constructor Create empty Perfil fragment
+ */
 class PerfilFragment : Fragment() {
     lateinit var binding : FragmentPerfilBinding
     lateinit var db: FirebaseDatabase
@@ -76,6 +81,10 @@ class PerfilFragment : Fragment() {
 
     }
 
+    /**
+     * Listeners
+     *
+     */
     fun listeners(){
         binding.btnCamara.setOnClickListener {
             if(isPermisosConcedidosCamara()){
@@ -163,6 +172,10 @@ class PerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Permisos camara
+     *
+     */
     fun permisosCamara(){
         var checkPermisos = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
         var checkPermisos2 = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -173,6 +186,10 @@ class PerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Permisos fichero
+     *
+     */
     fun permisosFichero(){
         var checkPermisos = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
         if(checkPermisos != PackageManager.PERMISSION_GRANTED){
@@ -182,12 +199,20 @@ class PerfilFragment : Fragment() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         startActivityForResult(i, PICK_IMAGE_REQUEST)
     }
 
+    /**
+     * Tomar foto
+     *
+     */
     fun tomarFoto(){
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())

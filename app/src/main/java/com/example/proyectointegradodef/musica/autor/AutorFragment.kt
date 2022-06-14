@@ -16,6 +16,11 @@ import com.example.proyectointegradodef.models.ReadAutorId
 import com.example.proyectointegradodef.musica.album.AlbumAdapter
 import com.google.firebase.database.*
 
+/**
+ * Autor fragment
+ *
+ * @constructor Create empty Autor fragment
+ */
 class AutorFragment : Fragment() {
     lateinit var binding: FragmentAutorBinding
     lateinit var db: FirebaseDatabase

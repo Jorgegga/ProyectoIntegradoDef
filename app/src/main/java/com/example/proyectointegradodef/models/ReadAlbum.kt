@@ -1,5 +1,10 @@
 package com.example.proyectointegradodef.models
 
+/**
+ * Read album
+ *
+ * @constructor Create empty Read album
+ */
 class ReadAlbum {
     constructor()
     constructor(id: Int, autor_id: Int, titulo: String, portada: String, descripcion: String, genero_id: Int){

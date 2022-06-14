@@ -20,6 +20,11 @@ import com.example.proyectointegradodef.databinding.FragmentCrearRoomBinding
 import com.example.proyectointegradodef.room.Musica
 import com.example.proyectointegradodef.room.MusicaDatabase
 
+/**
+ * Crear room fragment
+ *
+ * @constructor Create empty Crear room fragment
+ */
 class CrearRoomFragment : Fragment() {
     lateinit var binding : FragmentCrearRoomBinding
     val PERMISO_CODE = 150
@@ -82,6 +87,11 @@ class CrearRoomFragment : Fragment() {
         }
     }
 
+    /**
+     * Comprobar vacios
+     *
+     * @return
+     */
     fun comprobarVacios(): Boolean{
         if(binding.insertarNombreLocal.text.toString() == ("")){
             Toast.makeText(requireContext(), "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
@@ -98,6 +108,10 @@ class CrearRoomFragment : Fragment() {
         return true
     }
 
+    /**
+     * Reset
+     *
+     */
     fun reset(){
         binding.insertarNombreLocal.setText("")
         binding.insertarAutorLocal.setText("")

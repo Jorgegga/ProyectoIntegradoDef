@@ -18,6 +18,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
+/**
+ * Admin genero fragment
+ *
+ * @constructor Create empty Admin genero fragment
+ */
 class AdminGeneroFragment : Fragment() {
 
     lateinit var binding : FragmentAdminGeneroBinding

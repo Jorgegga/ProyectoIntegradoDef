@@ -13,6 +13,15 @@ import androidx.annotation.LayoutRes
 import com.example.proyectointegradodef.models.ReadAutor
 
 
+/**
+ * List autor adapter
+ *
+ * @property layoutResource
+ * @property autor
+ * @constructor
+ *
+ * @param context
+ */
 class ListAutorAdapter(context: Context, @LayoutRes private val layoutResource: Int, private val autor: ArrayList<ReadAutor>):
     ArrayAdapter<ReadAutor>(context, layoutResource, autor), Filterable {
 

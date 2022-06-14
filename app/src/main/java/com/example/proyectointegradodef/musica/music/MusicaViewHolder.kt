@@ -11,6 +11,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Musica view holder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ * @param longClickAtPosition
+ */
 class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v){
     val binding = MusicaLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
@@ -25,6 +34,11 @@ class MusicaViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosit
         }
     }
 
+    /**
+     * Render
+     *
+     * @param musica
+     */
     fun render(musica : ReadMusicaAlbumAutor){
         binding.tvTitulo.text = musica.nombre
         binding.tvAlbum.text = musica.album

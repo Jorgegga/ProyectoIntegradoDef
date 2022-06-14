@@ -13,6 +13,11 @@ import com.example.proyectointegradodef.models.ReadAutorId
 import com.google.firebase.database.*
 
 
+/**
+ * Album fragment
+ *
+ * @constructor Create empty Album fragment
+ */
 class AlbumFragment : Fragment() {
     lateinit var binding: FragmentAlbumBinding
     lateinit var db: FirebaseDatabase
@@ -29,6 +34,14 @@ class AlbumFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    /**
+     * On create view
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +51,12 @@ class AlbumFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * On view created
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDb()
@@ -92,6 +111,10 @@ class AlbumFragment : Fragment() {
         })
     }
 
+    /**
+     * Filtrar datos
+     *
+     */
     fun filtrarDatos(){
         var albumsAgrupados = album.groupBy { it.autor_id }
         if(albumsAgrupados[idAutor] != null) {

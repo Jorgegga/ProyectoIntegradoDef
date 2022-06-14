@@ -35,6 +35,11 @@ import java.io.IOException
 import java.util.*
 
 
+/**
+ * Musica fragment
+ *
+ * @constructor Create empty Musica fragment
+ */
 class MusicaFragment : Fragment(), Player.Listener {
     lateinit var binding: FragmentMusicaBinding
     lateinit var db: FirebaseDatabase
@@ -141,6 +146,10 @@ class MusicaFragment : Fragment(), Player.Listener {
         }
     }
 
+    /**
+     * Reproducir
+     *
+     */
     fun reproducir() {
         try {
             player.seekTo(buscarCancion(idSong), 0)
@@ -223,6 +232,10 @@ class MusicaFragment : Fragment(), Player.Listener {
         })
     }
 
+    /**
+     * Filtrar datos
+     *
+     */
     fun filtrarDatos() {
         var musicaAgrupada = introMusic.groupBy { it.autor_id }
         if (musicaAgrupada[idAutor] != null) {
@@ -233,6 +246,11 @@ class MusicaFragment : Fragment(), Player.Listener {
         }
     }
 
+    /**
+     * Recoger playlist
+     *
+     * @param music
+     */
     suspend fun recogerPlaylist(music: ReadMusicaAlbumAutor) {
         var storageRef = storageFire.getReferenceFromUrl(music!!.ruta + ".mp3")
         storageRef.downloadUrl.addOnSuccessListener() {
@@ -242,6 +260,10 @@ class MusicaFragment : Fragment(), Player.Listener {
         }.await()
     }
 
+    /**
+     * Rellenar playlist
+     *
+     */
     fun rellenarPlaylist() {
         introPlaylist.sortByDescending { it.id }
         var arrayMediaItems = introPlaylist.map { it.ruta }
@@ -250,6 +272,12 @@ class MusicaFragment : Fragment(), Player.Listener {
 
     }
 
+    /**
+     * Buscar cancion
+     *
+     * @param id
+     * @return
+     */
     fun buscarCancion(id: Int): Int {
         return introPlaylist.indexOfFirst { it.id == id }
     }

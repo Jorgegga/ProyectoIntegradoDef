@@ -10,6 +10,14 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Autor view holder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ */
 class AutorViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AutorLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
@@ -20,6 +28,11 @@ class AutorViewHolder(v: View, clickAtPosition: (Int) -> Unit): RecyclerView.Vie
         }
     }
 
+    /**
+     * Render
+     *
+     * @param autor
+     */
     fun render(autor: ReadAutor){
         binding.tvNombreRecycler.text = autor.nombre
         binding.tvDescripcionRecycler.text = autor.descripcion

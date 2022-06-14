@@ -13,6 +13,14 @@ import com.example.proyectointegradodef.musica.crud.genero.AdminGeneroFragment
 import com.example.proyectointegradodef.musica.crud.music.AdminMusicFragment
 import com.example.proyectointegradodef.musica.music.MusicaFragment
 
+/**
+ * Crud adapter
+ *
+ * @constructor
+ *
+ * @param fragmentManager
+ * @param lifecycle
+ */
 class CrudAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 4

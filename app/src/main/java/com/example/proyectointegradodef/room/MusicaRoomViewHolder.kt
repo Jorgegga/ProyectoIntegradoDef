@@ -10,6 +10,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.preferences.AppUse
 import com.example.proyectointegradodef.room.Musica
 
+/**
+ * Musica room view holder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ * @param longClickAtPosition
+ */
 class MusicaRoomViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = MusicaroomLayoutBinding.bind(v)
 
@@ -23,6 +32,11 @@ class MusicaRoomViewHolder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
         }
     }
 
+    /**
+     * Render
+     *
+     * @param musica
+     */
     fun render(musica : Musica){
         binding.tvTitulo.text = musica.nombre
         binding.tvAutor.text = musica.autor

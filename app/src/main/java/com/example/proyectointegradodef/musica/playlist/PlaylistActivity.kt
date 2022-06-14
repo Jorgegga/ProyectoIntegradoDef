@@ -44,6 +44,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
 
+/**
+ * Playlist activity
+ *
+ * @constructor Create empty Playlist activity
+ */
 class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     lateinit var binding: ActivityPlaylistBinding
@@ -169,12 +174,20 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         reproducir = isPlaying
     }
 
+    /**
+     * Cambio observer
+     *
+     */
     fun cambioObserver(){
         actualizarRoom.observe(this, Observer {
             allMusic = actualizarRoom.value!!
         })
     }
 
+    /**
+     * Reproducir
+     *
+     */
     fun reproducir() {
         try {
             player.seekTo(AppUse.recyclerPosition, 0)
@@ -280,6 +293,10 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         })
     }
 
+    /**
+     * Room playlist
+     *
+     */
     fun roomPlaylist() {
         for (x in allMusic) {
             var metadata = MediaMetadata.Builder().setTitle(x.nombre).setAlbumTitle(x.album).setArtist(x.autor).build()
@@ -289,6 +306,11 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    /**
+     * Recoger playlist
+     *
+     * @param musica
+     */
     suspend fun recogerPlaylist(musica: ReadMusicaAlbumAutor){
             var storageRef = storageFire.getReferenceFromUrl(musica!!.ruta + ".mp3")
             storageRef.downloadUrl.addOnSuccessListener() {
@@ -302,6 +324,10 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
 
     }
 
+    /**
+     * Filtrar datos
+     *
+     */
     suspend fun filtrarDatos() {
         var playlistAgrupada = introPlaylist.groupBy { it.user_id }
 

@@ -9,6 +9,14 @@ import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.MusicaroomLayoutBinding
 import com.example.proyectointegradodef.preferences.AppUse
 
+/**
+ * Musica room adapter
+ *
+ * @property allMusic
+ * @property clickListener
+ * @property longClickListener
+ * @constructor Create empty Musica room adapter
+ */
 class MusicaRoomAdapter(
     private val allMusic: ArrayList<Musica>,
     private val clickListener: (Musica) -> Unit,

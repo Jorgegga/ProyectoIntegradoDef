@@ -45,6 +45,11 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
 
 
+/**
+ * Inicio activity
+ *
+ * @constructor Create empty Inicio activity
+ */
 class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
     lateinit var binding : ActivityInicioBinding
     lateinit var transaction : FragmentTransaction
@@ -96,6 +101,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     }
 
+    /**
+     * Set toolbar
+     *
+     */
     fun setToolbar(){
         val toolbar: Toolbar = binding.mainToolbar
         setSupportActionBar(toolbar)
@@ -114,6 +123,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         navigationView.setNavigationItemSelectedListener(this)
     }
 
+    /**
+     * Set header
+     *
+     */
     fun setHeader(){
         var prefs = Prefs(this)
         var navView = findViewById<NavigationView>(R.id.nav_view)
@@ -227,6 +240,10 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
     }
 
+    /**
+     * Cambiar subtitulos
+     *
+     */
     fun cambiarSubtitulos(){
         var navView = findViewById<NavigationView>(R.id.nav_view)
         var menu = navView.menu
@@ -288,10 +305,12 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
 
             R.id.btnWeb ->{
-                transaction.replace(R.id.fragmentContainerView, fragmentWeb).commit()
+                /*transaction.replace(R.id.fragmentContainerView, fragmentWeb).commit()
                 transaction.addToBackStack(null)
                 item.isChecked = true
                 binding.drawerLayout.close()
+                return true*/
+                Toast.makeText(this, "Proximamente", Toast.LENGTH_LONG).show()
                 return true
             }
 

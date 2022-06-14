@@ -12,6 +12,15 @@ import androidx.annotation.LayoutRes
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadMusica
 
+/**
+ * List album adapter
+ *
+ * @property layoutResource
+ * @property album
+ * @constructor
+ *
+ * @param context
+ */
 class ListAlbumAdapter(context: Context, @LayoutRes private val layoutResource: Int, private val album: ArrayList<ReadAlbum>):
 ArrayAdapter<ReadAlbum>(context, layoutResource, album), Filterable{
     private var mAlbum: ArrayList<ReadAlbum> = album

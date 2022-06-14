@@ -28,6 +28,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Update autor activity
+ *
+ * @constructor Create empty Update autor activity
+ */
 class UpdateAutorActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityUpdateAutorBinding
@@ -161,6 +166,10 @@ class UpdateAutorActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
@@ -186,6 +195,10 @@ class UpdateAutorActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Recuperar datos
+     *
+     */
     fun recuperarDatos(){
         val bundle = intent.extras
         crearId = bundle!!.getInt("id", 0)

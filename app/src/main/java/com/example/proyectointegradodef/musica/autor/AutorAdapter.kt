@@ -12,6 +12,13 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Autor adapter
+ *
+ * @property lista
+ * @property clickListener
+ * @constructor Create empty Autor adapter
+ */
 class AutorAdapter(private val lista: ArrayList<ReadAutor>, private val clickListener: (ReadAutor) -> Unit): RecyclerView.Adapter<AutorViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutorViewHolder {
         val inflater = AutorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.autor_layout, parent, false)){

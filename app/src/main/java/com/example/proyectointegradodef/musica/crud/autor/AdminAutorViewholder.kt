@@ -11,6 +11,15 @@ import com.example.proyectointegradodef.glide.GlideApp
 import com.example.proyectointegradodef.models.ReadAutor
 import com.google.firebase.storage.FirebaseStorage
 
+/**
+ * Admin autor viewholder
+ *
+ * @constructor
+ *
+ * @param v
+ * @param clickAtPosition
+ * @param longClickAtPosition
+ */
 class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtPosition: (Int) -> Unit): RecyclerView.ViewHolder(v) {
     private val binding = AdminAutorLayoutBinding.bind(v)
     var storageFire = FirebaseStorage.getInstance()
@@ -25,6 +34,11 @@ class AdminAutorViewholder(v: View, clickAtPosition: (Int) -> Unit, longClickAtP
         }
     }
 
+    /**
+     * Render
+     *
+     * @param autor
+     */
     fun render(autor: ReadAutor){
         binding.tvNombreAutor.text = autor.nombre
         binding.tvDescripcionAutor.text = autor.descripcion

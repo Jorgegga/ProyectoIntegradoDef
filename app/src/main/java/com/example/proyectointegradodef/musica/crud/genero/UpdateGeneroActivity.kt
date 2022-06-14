@@ -27,6 +27,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.*
 
+/**
+ * Update genero activity
+ *
+ * @constructor Create empty Update genero activity
+ */
 class UpdateGeneroActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityUpdateGeneroBinding
@@ -128,6 +133,10 @@ class UpdateGeneroActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Coger fichero
+     *
+     */
     fun cogerFichero(){
         val i = Intent(Intent.ACTION_PICK)
         i.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
@@ -180,6 +189,10 @@ class UpdateGeneroActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Recuperar datos
+     *
+     */
     fun recuperarDatos(){
         val bundle = intent.extras
         crearId = bundle!!.getInt("id", 0)

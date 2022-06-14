@@ -10,6 +10,11 @@ import com.example.proyectointegradodef.databinding.ActivityAutorBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * Autor activity
+ *
+ * @constructor Create empty Autor activity
+ */
 class AutorActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAutorBinding

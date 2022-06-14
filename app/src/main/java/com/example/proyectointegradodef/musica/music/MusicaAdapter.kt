@@ -7,6 +7,14 @@ import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.models.ReadMusicaAlbumAutor
 import com.example.proyectointegradodef.preferences.AppUse
 
+/**
+ * Musica adapter
+ *
+ * @property lista
+ * @property clickListener
+ * @property longClickListener
+ * @constructor Create empty Musica adapter
+ */
 class MusicaAdapter(
     private val lista: ArrayList<ReadMusicaAlbumAutor>,
     private val clickListener: (ReadMusicaAlbumAutor) -> Unit,

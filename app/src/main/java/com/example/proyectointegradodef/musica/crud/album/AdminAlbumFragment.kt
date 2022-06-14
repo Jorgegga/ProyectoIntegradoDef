@@ -20,6 +20,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
+/**
+ * Admin album fragment
+ *
+ * @constructor Create empty Admin album fragment
+ */
 class AdminAlbumFragment : Fragment() {
 
     lateinit var binding: FragmentAdminAlbumBinding
