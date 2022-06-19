@@ -89,14 +89,14 @@ class UpdateAutorActivity : AppCompatActivity() {
         val storageRef = storage.reference
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadAutor(crearId, nombre, foto, descripcion))
-            Toast.makeText(this, "Se ha actualizado el autor correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.actualizarAutor, Toast.LENGTH_LONG).show()
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             binding.loadingPanel.visibility = View.GONE
         }else {
             val imageRef = storageRef.child("proyecto/autor/${key}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -104,7 +104,7 @@ class UpdateAutorActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/$key"
                 reference.child(key)
                     .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
-                Toast.makeText(this, "Se ha actualizado el autor correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.actualizarAutor, Toast.LENGTH_LONG)
                     .show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
@@ -114,7 +114,7 @@ class UpdateAutorActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreAutor.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             nombre = binding.etNombreAutor.text.toString()

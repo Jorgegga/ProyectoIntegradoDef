@@ -112,19 +112,19 @@ class AdminAutorFragment : Fragment() {
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         },{
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Borrar autor")
-                .setMessage("¿Quieres borrar el autor " + it.nombre + " de la base de datos?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.borrarAutor)
+                .setMessage(resources.getString(R.string.borrarAutorPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha borrado el autor",
+                        R.string.borrarAutorRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     borrarAutor(it.id, it.foto)
                     ponerDefault(it.id)
                 }
@@ -150,7 +150,7 @@ class AdminAutorFragment : Fragment() {
                                 imageRef.delete()
                             }
                             messageSnapshot.ref.removeValue()
-                            Toast.makeText(requireContext(), "Se ha borrado el autor correctamente", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), R.string.autorBorrado, Toast.LENGTH_LONG).show()
                             setRecycler(autor as ArrayList<ReadAutor>)
                             return
                         }

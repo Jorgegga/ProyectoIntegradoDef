@@ -137,7 +137,7 @@ class CrearAlbumActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreAlbum.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             nombre = binding.etNombreAlbum.text.toString()
@@ -278,13 +278,13 @@ class CrearAlbumActivity : AppCompatActivity() {
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/default"
             referenceAlbum.child(randomString).setValue(ReadAlbum(crearId, autor, nombre, ruta, descripcion, genero))
-            Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.crearAlbumCorrecto, Toast.LENGTH_LONG).show()
             limpiar()
         }else {
             val imageRef = storageRef.child("proyecto/album/${randomString}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -292,7 +292,7 @@ class CrearAlbumActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$randomString"
                 referenceAlbum.child(randomString)
                     .setValue(ReadAlbum(crearId, autor, nombre, ruta, descripcion, genero))
-                Toast.makeText(this, "Se ha subido el album correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.crearAlbumCorrecto, Toast.LENGTH_LONG)
                     .show()
                 limpiar()
             }

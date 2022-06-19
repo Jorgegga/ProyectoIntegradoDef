@@ -59,7 +59,6 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     lateinit var fragmentPortada : Fragment
     lateinit var fragmentWeb : Fragment
-    lateinit var fragmentCrear : Fragment
     lateinit var fragmentRead : Fragment
     lateinit var fragmentCrearLocal : Fragment
     lateinit var fragmentCamara : Fragment
@@ -82,7 +81,6 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         title="Scarlet Perception"
         fragmentPortada = PortadaFragment()
         fragmentWeb = WebFragment()
-        fragmentCrear = CrearFragment()
         fragmentRead = MusicaFragment()
         fragmentCrearLocal = CrearRoomFragment()
         fragmentCamara = PerfilFragment()
@@ -165,7 +163,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 GlideApp.with(this).load(gsReference2).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).apply(option).into(header.findViewById<ImageView>(R.id.ivPerfil))
             }
         }.addOnFailureListener {
-            Toast.makeText(this, "No se han podido recuperar los datos de la imagen, volviendolo a intentar en 10 segundos...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.reintentar, Toast.LENGTH_LONG).show()
             CoroutineScope(Dispatchers.Main).launch{
                     delay(10000)
                     setHeader()
@@ -201,7 +199,7 @@ class InicioActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 AppUse.user_id = it.value.toString().toInt()
             }
         }.addOnFailureListener {
-            Toast.makeText(this, "No se han podido recuperar los datos del usuario, volviendolo a intentar en 10 segundos...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.reintentar, Toast.LENGTH_LONG).show()
             runBlocking {
                 CoroutineScope(Dispatchers.IO).launch{
                     delay(10000)

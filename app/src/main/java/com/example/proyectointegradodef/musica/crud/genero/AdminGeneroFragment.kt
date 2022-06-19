@@ -111,19 +111,19 @@ class AdminGeneroFragment : Fragment() {
             requireActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
         },{
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Borrar genero")
-                .setMessage("¿Quieres borrar el genero " + it.nombre + " de la base de datos?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.borrarGenero)
+                .setMessage(resources.getString(R.string.borrarGeneroPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha borrado el genero",
+                        R.string.borrarGeneroRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     borrarGenero(it.id, it.portada)
                     ponerDefault(it.id)
                 }
@@ -148,7 +148,7 @@ class AdminGeneroFragment : Fragment() {
                             imageRef.delete()
                         }
                         messageSnapshot.ref.removeValue()
-                        Toast.makeText(requireContext(), "Se ha borrado el genero correctamente", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), R.string.generoBorrado, Toast.LENGTH_LONG).show()
                         setRecycler(introGenero as ArrayList<ReadGenero>)
                         return
                     }

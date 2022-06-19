@@ -187,19 +187,19 @@ class AdminMusicFragment : Fragment() {
             recogerNombreGenero(it)
         },{
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Borrar cancion")
-                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de la base de datos?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.deleteMusic)
+                .setMessage(resources.getString(R.string.deleteMusicPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha borrado la cancion",
+                        R.string.deleteMusicRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     borrarMusic(it.id, it.portada, it.ruta)
                     borrarPlaylist(it.id)
                 }
@@ -267,7 +267,7 @@ class AdminMusicFragment : Fragment() {
                             rutaRef.delete()
                         }
                         messageSnapshot.ref.removeValue()
-                        Toast.makeText(requireContext(), "Se ha borrado la cancion correctamente", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), R.string.musicBorrado, Toast.LENGTH_LONG).show()
                         setRecycler(introMusicAdapter as ArrayList<ReadMusicaAlbumAutor>)
                         return
                     }

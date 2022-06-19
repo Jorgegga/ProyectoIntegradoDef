@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.proyectointegradodef.R
 import com.example.proyectointegradodef.databinding.FragmentAlbumBinding
 import com.example.proyectointegradodef.models.ReadAlbum
 import com.example.proyectointegradodef.models.ReadAlbumAutor
@@ -126,24 +128,47 @@ class AlbumFragment : Fragment() {
     }
 
     private fun rellenarDatos(){
-        albumAdapter.clear()
-        if(idAutor != 0){
-            filtrarDatos()
-        }
-        for(x in album){
-            var aut : ReadAutorId? = autor.find{it.id == x.autor_id}
-            var temp : ReadAlbumAutor
-            if(aut != null) {
-                temp = ReadAlbumAutor(x.id, x.autor_id, aut.nombre, x.titulo, x.portada, x.descripcion, x.genero_id)
+        if(album.isNotEmpty() && autor.isNotEmpty()) {
+            albumAdapter.clear()
+            if (idAutor != 0) {
+                filtrarDatos()
+            }
+            if (!recyclerVacio) {
+                for (x in album) {
+                    var aut: ReadAutorId? = autor.find { it.id == x.autor_id }
+                    var temp: ReadAlbumAutor
+                    if (aut != null) {
+                        temp = ReadAlbumAutor(
+                            x.id,
+                            x.autor_id,
+                            aut.nombre,
+                            x.titulo,
+                            x.portada,
+                            x.descripcion,
+                            x.genero_id
+                        )
+                    } else {
+                        temp = ReadAlbumAutor(
+                            x.id,
+                            x.autor_id,
+                            "default",
+                            x.titulo,
+                            x.portada,
+                            x.descripcion,
+                            x.genero_id
+                        )
+                    }
+                    if (temp != null) {
+                        albumAdapter.add(temp)
+                    }
+                }
+                binding.loadingPanel.visibility = View.GONE
+                setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
             }else{
-                temp = ReadAlbumAutor(x.id, x.autor_id,"default", x.titulo, x.portada, x.descripcion, x.genero_id)
-            }
-            if (temp != null){
-                albumAdapter.add(temp)
+                binding.loadingPanel.visibility = View.GONE
+                Toast.makeText(requireContext(), R.string.albumVacio, Toast.LENGTH_LONG).show()
             }
         }
-        binding.loadingPanel.visibility = View.GONE
-        setRecycler(albumAdapter as ArrayList<ReadAlbumAutor>)
     }
 
     private fun setRecycler(lista: ArrayList<ReadAlbumAutor>){
@@ -168,7 +193,11 @@ class AlbumFragment : Fragment() {
         reference2 = db.getReference("autors")
     }
 
-    //Al ser reutilizado este fragment en el onclick de autor, para que enseñe cosas
+    /**
+     * Recoger bundle
+     *
+     * Al ser reutilizado este fragment en el onclick de autor, se utiliza para que enseñe cosas filtradas
+     */
     private fun recogerBundle() {
         if (arguments != null) {
             if (arguments?.getInt("id", 0) != 0) {

@@ -28,6 +28,8 @@ import java.util.*
  * Crear fragment
  *
  * @constructor Create empty Crear fragment
+ *
+ * Antiguo fragment para crear musica, ya no lo utilizo
  */
 class CrearFragment : Fragment() {
 
@@ -105,7 +107,6 @@ class CrearFragment : Fragment() {
             uploadTask.addOnFailureListener{
                 Toast.makeText(context, resources.getString(R.string.noSeHaPodidoSubirElArchivo), Toast.LENGTH_LONG).show()
             }.addOnSuccessListener {
-                Log.d("Conseguido: ", "Se ha subido")
                 //reference.child(numeroRandom).setValue(CrearMusica("gs://proyectointegradodam-eef79.appspot.com/proyecto/musica/$numeroRandom", binding.insertarNombre.text.toString(), binding.insertarAutor.text.toString(), numeroRandom))
                 Toast.makeText(context, resources.getString(R.string.audioSubido), Toast.LENGTH_LONG).show()
                 reset()

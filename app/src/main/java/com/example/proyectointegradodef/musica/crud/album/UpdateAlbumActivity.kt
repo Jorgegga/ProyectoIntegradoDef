@@ -169,7 +169,7 @@ class UpdateAlbumActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreAlbum.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             titulo = binding.etNombreAlbum.text.toString()
@@ -313,7 +313,7 @@ class UpdateAlbumActivity : AppCompatActivity() {
         val storageRef = storage.reference
         if(imagen.toString() == ""){
             referenceAlbum.child(key).setValue(ReadAlbum(crearId, autor_id, titulo, foto, descripcion, genero_id))
-            Toast.makeText(this, "Se ha actualizado el album correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.albumActualizado, Toast.LENGTH_LONG).show()
             updateHecho = true
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             binding.loadingPanel.visibility = View.GONE
@@ -322,7 +322,7 @@ class UpdateAlbumActivity : AppCompatActivity() {
             val imageRef = storageRef.child("proyecto/album/${key}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -330,7 +330,7 @@ class UpdateAlbumActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/album/$key"
                 referenceAlbum.child(key)
                     .setValue(ReadAlbum(crearId, autor_id, titulo, ruta, descripcion, genero_id))
-                Toast.makeText(this, "Se ha actualizado el album correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.albumActualizado, Toast.LENGTH_LONG)
                     .show()
                 updateHecho = true
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

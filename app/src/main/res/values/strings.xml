@@ -45,5 +45,61 @@
     <string name="elegirCancion">Choose a song to upload</string>
     <string name="actualizar">Update</string>
     <string name="aboutus1">This app is made based on a webpage that has the same functionality as this, play music from cloud order by albums, authors and genders. The app has less functionality than the webpage, but its useful as well. </string>
-    <string name="aboutus2">"Some controls of the app are: \n \t - Click on a song to start play it. \n \t - Hold a song to add it to your playlist or remove from it. \n\t - When you play a song, click on the bottom of the screen to see the controls of the player."</string>
+    <string name="aboutus2">Some controls of the app are: \n \t - Click on a song to start play it. \n \t - Hold a song to add it to your playlist or remove from it. \n\t - When you play a song, click on the bottom of the screen to see the controls of the player.</string>
+    <string name="albumVacio">This album is empty</string>
+    <string name="musicVacio">There is no song</string>
+
+    <string name="annadirPlaylist">Add to your playlist</string>
+    <string name="annadirPlaylistPregunta">Do you want to add the song %1$S to your playlist?</string>
+    <string name="annadirPlaylistRefuse">The song has not been added to your playlist</string>
+    <string name="playlistVacia">Your playlist is empty</string>
+    <string name="cancionRepetida">The song is already in your playlist</string>
+    <string name="cancionAnnadida">The song has been added to your playlist</string>
+
+    <string name="borrarPlaylist">Delete from playlist</string>
+    <string name="borrarPlaylistPregunta">Do you want to delete the song %1$S from your playlist?</string>
+    <string name="borrarPlaylistRefuse">The song has not been deleted from your playlist</string>
+    <string name="playlistBorrado">The song has been deleted from your playlist</string>
+
+    <string name="borrarAlbum">Delete album</string>
+    <string name="borrarAlbumPregunta">Do you want to delete the album %1$S from the database?</string>
+    <string name="borrarAlbumRefuse">The album has not been deleted</string>
+    <string name="albumBorrado">The album has been deleted</string>
+
+    <string name="crearAlbumCorrecto">The album has been uploaded</string>
+
+    <string name="albumActualizado">The album has been updated</string>
+    <string name="borrarAutor">Delete author</string>
+    <string name="borrarAutorPregunta">Do you want to delete the author %1$S from the database?</string>
+    <string name="borrarAutorRefuse">The author has not been deleted</string>
+    <string name="autorBorrado">The author has been deleted</string>
+
+    <string name="crearAutor">The author has been uploaded</string>
+
+    <string name="actualizarAutor">The author has been updated</string>
+
+    <string name="borrarGenero">Delete music style</string>
+    <string name="borrarGeneroPregunta">Do you want to delete the music style %1$S from the database?</string>
+    <string name="borrarGeneroRefuse">The music style has not been deleted</string>
+    <string name="generoBorrado">The music style has been deleted</string>
+
+    <string name="crearGenero">The music style has been uploaded</string>
+
+    <string name="actualizarGenero">The music style has been updated</string>
+
+    <string name="deleteMusic">Delete song</string>
+    <string name="deleteMusicPregunta">Do you want to delete the song %1$S from the database?</string>
+    <string name="deleteMusicRefuse">The song has not been deleted</string>
+    <string name="musicBorrado">The song has been deleted</string>
+
+    <string name="crearMusic">The song has been uploaded</string>
+
+    <string name="updateMusic">The song has been updated</string>
+
+    <string name="cancelar">Cancel</string>
+    <string name="rechazar">No</string>
+    <string name="aceptar">Yes</string>
+    <string name="nombreVacio">You must write a name</string>
+    <string name="imagenError">Error uploading the image</string>
+    <string name="reintentar">The data couldn\'t be retrieved, retrying…</string>
 </resources>

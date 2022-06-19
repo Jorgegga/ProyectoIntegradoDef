@@ -168,19 +168,19 @@ class AdminAlbumFragment : Fragment() {
             recogerNombreGenero(it)
         },{
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Borrar album")
-                .setMessage("¿Quieres borrar el album " + it.titulo + " de la base de datos?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.borrarAlbum)
+                .setMessage(resources.getString(R.string.borrarAlbumPregunta, it.titulo))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha borrado el album",
+                        R.string.borrarAlbumRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     borrarAlbum(it.id, it.portada)
                     ponerDefault(it.id)
                 }
@@ -239,7 +239,7 @@ class AdminAlbumFragment : Fragment() {
                             imageRef.delete()
                         }
                         messageSnapshot.ref.removeValue()
-                        Toast.makeText(requireContext(), "Se ha borrado el album correctamente", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), R.string.albumBorrado, Toast.LENGTH_LONG).show()
                         setRecycler(introAlbumAdapter as ArrayList<ReadAlbumAutor>)
                         return
                     }

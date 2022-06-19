@@ -99,7 +99,7 @@ class UpdateGeneroActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreGenero.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             nombre = binding.etNombreGenero.text.toString()
@@ -165,14 +165,14 @@ class UpdateGeneroActivity : AppCompatActivity() {
         val storageRef = storage.reference
         if(imagen.toString().equals("")){
             reference.child(key).setValue(ReadGenero(crearId, nombre, foto))
-            Toast.makeText(this, "Se ha actualizado el genero correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.actualizarGenero, Toast.LENGTH_LONG).show()
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             binding.loadingPanel.visibility = View.GONE
         }else {
             val imageRef = storageRef.child("proyecto/genero/${key}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -180,7 +180,7 @@ class UpdateGeneroActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/$key"
                 reference.child(key)
                     .setValue(ReadGenero(crearId, nombre, ruta))
-                Toast.makeText(this, "Se ha actualizado el genero correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.actualizarGenero, Toast.LENGTH_LONG)
                     .show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE

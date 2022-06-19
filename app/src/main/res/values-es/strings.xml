@@ -46,4 +46,61 @@
     <string name="actualizar">Actualizar</string>
     <string name="aboutus1">Esta aplicación esta basada en una página web que cumple la misma funcionalidad que esta, la de reproducir música en la nube ordenada en albumes, autores y generos. Tiene menos funcionalidades que la original, pero sigue siendo igual de útil.</string>
     <string name="aboutus2">"Algunos de los controles de la página son: \n \t - Clicka en una canción para reproducirla. \n \t - Mantén pulsada una canción para añadirla a tu playlist o borrarla de esta. \n\t - Cuando reproduzcas una canción, haz click en la parte inferior de la pantalla para ver los controles del reproductor."</string>
+
+    <string name="albumVacio">Este album esta vacio</string>
+    <string name="musicVacio">No hay canciones</string>
+
+    <string name="annadirPlaylist">Añadir a tu playlist</string>
+    <string name="annadirPlaylistPregunta">¿Quieres añadir la canción %1$S a tu playlist?</string>
+    <string name="annadirPlaylistRefuse">No se ha añadido la canción a tu playlist</string>
+    <string name="playlistVacia">Tu playlist esta vacia</string>
+    <string name="cancionRepetida">Esta canción ya esta en tu playlist</string>
+    <string name="cancionAnnadida">La canción ha sido añadida a tu playlist</string>
+
+    <string name="borrarPlaylist">Borrar en tu playlist</string>
+    <string name="borrarPlaylistPregunta">¿Quieres borrar la canción %1$S de tu playlist?</string>
+    <string name="borrarPlaylistRefuse">La canción no se ha borrado de tu playlist</string>
+    <string name="playlistBorrado">La canción ha sido borrada de tu playlist</string>
+
+    <string name="borrarAlbum">Borrar álbum</string>
+    <string name="borrarAlbumPregunta">¿Quieres borrar el álbum %1$S de tu base de datos?</string>
+    <string name="borrarAlbumRefuse">El álbum no se ha borrado</string>
+    <string name="albumBorrado">El álbum ha sido borrado</string>
+
+    <string name="crearAlbumCorrecto">Se ha subido el álbum</string>
+
+    <string name="albumActualizado">El álbum ha sido actualizado</string>
+    <string name="borrarAutor">Borrar autor</string>
+    <string name="borrarAutorPregunta">¿Quieres borrar el autor %1$S de la base de datos?</string>
+    <string name="borrarAutorRefuse">El autor no ha sido borrado</string>
+    <string name="autorBorrado">Se ha borrado el autor</string>
+
+    <string name="crearAutor">Se ha creado el autor</string>
+
+    <string name="actualizarAutor">El autor ha sido actualizado</string>
+
+    <string name="borrarGenero">Borrar genero</string>
+    <string name="borrarGeneroPregunta">¿Quieres borrar el genero %1$S de la base de datos?</string>
+    <string name="borrarGeneroRefuse">El genero no ha sido borrado</string>
+    <string name="generoBorrado">Se ha borrado el genero</string>
+
+    <string name="crearGenero">Se ha añadido el genero</string>
+
+    <string name="actualizarGenero">El genero de ha actualizado</string>
+
+    <string name="deleteMusic">Borrar canción</string>
+    <string name="deleteMusicPregunta">¿Quieres borrar la canción %1$S de la base de datos?</string>
+    <string name="deleteMusicRefuse">La canción no ha sido borrada</string>
+    <string name="musicBorrado">Se ha borrado la canción</string>
+
+    <string name="crearMusic">Se ha subido la canción</string>
+
+    <string name="updateMusic">La canción se ha actualizado</string>
+
+    <string name="cancelar">Cancel</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="nombreVacio">Debes poner un nombre</string>
+    <string name="imagenError">Error subiendo la imagen</string>
+    <string name="reintentar">No se pudieron recuperar los datos, reintentando…</string>
 </resources>

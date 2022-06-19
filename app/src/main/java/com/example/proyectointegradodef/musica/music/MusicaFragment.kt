@@ -140,6 +140,8 @@ class MusicaFragment : Fragment(), Player.Listener {
         nombre =  player.mediaMetadata.title.toString()
         album = player.mediaMetadata.albumTitle.toString()
         autor = player.mediaMetadata.artist.toString()
+
+        //Comprueba si el fragment esta acoplado a un activity
         if(isAdded) {
             requireActivity().findViewById<TextView>(R.id.tv_player_nombre).text =
                 "$nombre - $album - $autor"
@@ -149,6 +151,8 @@ class MusicaFragment : Fragment(), Player.Listener {
     /**
      * Reproducir
      *
+     * Prepara la cancion seleccionada para reproducirse y actualizar
+     * los textview
      */
     fun reproducir() {
         try {
@@ -162,7 +166,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
     private fun rellenarDatosMusic() {
@@ -268,8 +271,6 @@ class MusicaFragment : Fragment(), Player.Listener {
         introPlaylist.sortByDescending { it.id }
         var arrayMediaItems = introPlaylist.map { it.ruta }
         player.addMediaItems(arrayMediaItems)
-
-
     }
 
     /**
@@ -288,63 +289,68 @@ class MusicaFragment : Fragment(), Player.Listener {
             if (idAutor != 0) {
                 filtrarDatos()
             }
-            if(cambioMusic) {
-                player.clearMediaItems()
-                introPlaylist.clear()
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                for (x in introMusic) {
-                    var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
-                    var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
-                    var temp: ReadMusicaAlbumAutor
-                    if (alb != null && aut != null) {
-                        temp = ReadMusicaAlbumAutor(
-                            x.id,
-                            x.nombre,
-                            x.album_id,
-                            alb.titulo,
-                            x.autor_id,
-                            aut.nombre,
-                            x.ruta,
-                            x.portada,
-                            x.descripcion,
-                            x.genero_id,
-                            x.numCancion
-                        )
-                    } else {
-                        temp = ReadMusicaAlbumAutor(
-                            x.id,
-                            "default",
-                            x.album_id,
-                            "default",
-                            x.autor_id,
-                            "default",
-                            x.ruta,
-                            x.portada,
-                            x.descripcion,
-                            x.genero_id,
-                            x.numCancion
-                        )
+            if (!recyclerVacio) {
+                if (cambioMusic) {
+                    player.clearMediaItems()
+                    introPlaylist.clear()
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    for (x in introMusic) {
+                        var alb: ReadAlbum? = introAlbum.find { it.id == x.album_id }
+                        var aut: ReadAutorId? = introAutor.find { it.id == x.autor_id }
+                        var temp: ReadMusicaAlbumAutor
+                        if (alb != null && aut != null) {
+                            temp = ReadMusicaAlbumAutor(
+                                x.id,
+                                x.nombre,
+                                x.album_id,
+                                alb.titulo,
+                                x.autor_id,
+                                aut.nombre,
+                                x.ruta,
+                                x.portada,
+                                x.descripcion,
+                                x.genero_id,
+                                x.numCancion
+                            )
+                        } else {
+                            temp = ReadMusicaAlbumAutor(
+                                x.id,
+                                "default",
+                                x.album_id,
+                                "default",
+                                x.autor_id,
+                                "default",
+                                x.ruta,
+                                x.portada,
+                                x.descripcion,
+                                x.genero_id,
+                                x.numCancion
+                            )
+                        }
+                        if (cambioMusic) {
+                            if (introPlaylist.find { it.id == x.id } == null) {
+                                recogerPlaylist(temp)
+                            }
+                        }
+                        introTotal.add(temp)
                     }
-                    if(cambioMusic) {
-                        if(introPlaylist.find { it.id == x.id } == null){
-                            recogerPlaylist(temp)
+
+                    cambioMusic = false
+                    if (idSong != 0) {
+                        var tempMusic = introTotal.find { it.id == idSong }
+                        if (tempMusic != null) {
+                            actualizarReproductor(tempMusic)
                         }
                     }
-                    introTotal.add(temp)
+                    introTotal.sortByDescending { it.id }
+                    rellenarPlaylist()
+                    binding.loadingPanel.visibility = View.GONE
+                    setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
                 }
-
-                cambioMusic = false
-                if (idSong != 0) {
-                    var tempMusic = introTotal.find { it.id == idSong }
-                    if (tempMusic != null) {
-                        actualizarReproductor(tempMusic)
-                    }
-                }
-                introTotal.sortByDescending{it.id}
-                rellenarPlaylist()
+            }else{
                 binding.loadingPanel.visibility = View.GONE
-                setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
+                Toast.makeText(requireContext(), R.string.musicVacio, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -360,19 +366,19 @@ class MusicaFragment : Fragment(), Player.Listener {
             reproducir()
         }, {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Añadir a la playlist")
-                .setMessage("¿Quieres añadir la cancion " + it.nombre + " a tu playlist?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.annadirPlaylist)
+                .setMessage(resources.getString(R.string.annadirPlaylistPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         requireContext(),
-                        "No se ha añadido la canción a tu playlist",
+                        R.string.annadirPlaylistRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     comprobarExistePlaylist(it.id)
 
                 }
@@ -429,7 +435,7 @@ class MusicaFragment : Fragment(), Player.Listener {
                     if (messageSnapshot.child("music_id").value.toString() == objectId.toString()) {
                         Toast.makeText(
                             requireContext(),
-                            "Esa cancion ya esta en tu playlist",
+                            R.string.cancionRepetida,
                             Toast.LENGTH_LONG
                         ).show()
                         return
@@ -439,7 +445,7 @@ class MusicaFragment : Fragment(), Player.Listener {
                 buscarId(objectId)
                 Toast.makeText(
                     requireContext(),
-                    "Se ha añadido la cancion a tu playlist",
+                    R.string.cancionAnnadida,
                     Toast.LENGTH_LONG
                 ).show()
                 rellenarDatosMusic()

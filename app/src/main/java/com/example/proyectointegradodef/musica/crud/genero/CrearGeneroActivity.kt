@@ -107,7 +107,7 @@ class CrearGeneroActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreGenero.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             nombre = binding.etNombreGenero.text.toString()
@@ -178,13 +178,13 @@ class CrearGeneroActivity : AppCompatActivity() {
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/default"
             reference.child(randomString).setValue(ReadGenero(crearId, nombre, ruta))
-            Toast.makeText(this, "Se ha subido el genero correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.crearGenero, Toast.LENGTH_LONG).show()
             limpiar()
         }else {
             val imageRef = storageRef.child("proyecto/genero/${randomString}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -192,7 +192,7 @@ class CrearGeneroActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/genero/$randomString"
                 reference.child(randomString)
                     .setValue(ReadGenero(crearId, nombre, ruta))
-                Toast.makeText(this, "Se ha subido el genero correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.crearGenero, Toast.LENGTH_LONG)
                     .show()
                 limpiar()
             }

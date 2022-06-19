@@ -83,13 +83,13 @@ class CrearAutorActivity : AppCompatActivity() {
         if(imagen.toString().equals("")){
             var ruta = "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/default"
             reference.child(randomString).setValue(ReadAutor(crearId, nombre, ruta, descripcion))
-            Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.crearAutor, Toast.LENGTH_LONG).show()
             limpiar()
         }else {
             val imageRef = storageRef.child("proyecto/autor/${randomString}.png")
             val uploadTask = imageRef.putFile(imagen)
             uploadTask.addOnFailureListener {
-                Toast.makeText(this, "No se ha podido subir la imagen", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.imagenError, Toast.LENGTH_LONG).show()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 binding.loadingPanel.visibility = View.GONE
             }.addOnCompleteListener {
@@ -97,7 +97,7 @@ class CrearAutorActivity : AppCompatActivity() {
                     "gs://proyectointegradodam-eef79.appspot.com/proyecto/autor/$randomString"
                 reference.child(randomString)
                     .setValue(ReadAutor(crearId, nombre, ruta, descripcion))
-                Toast.makeText(this, "Se ha subido el autor correctamente", Toast.LENGTH_LONG)
+                Toast.makeText(this, R.string.crearAutor, Toast.LENGTH_LONG)
                     .show()
                 limpiar()
             }
@@ -123,7 +123,7 @@ class CrearAutorActivity : AppCompatActivity() {
 
     private fun comprobarCampos(): Boolean{
         if(binding.etNombreAutor.text.isEmpty()){
-            Toast.makeText(this, "Tienes que poner un nombre", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.nombreVacio, Toast.LENGTH_LONG).show()
             return false
         }else{
             nombre = binding.etNombreAutor.text.toString()

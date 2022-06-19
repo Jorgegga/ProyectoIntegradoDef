@@ -200,7 +200,6 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
     private fun rellenarDatosPlaylist() {
@@ -400,7 +399,7 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
                         }
                     }
                 } else if (allMusic.isEmpty()) {
-                    Toast.makeText(this@PlaylistActivity, "No hay ninguna cancion en la playlist", Toast.LENGTH_LONG)
+                    Toast.makeText(this@PlaylistActivity, R.string.playlistVacia, Toast.LENGTH_LONG)
                         .show()
                 }
                 binding.progressBar.visibility = View.GONE
@@ -427,24 +426,24 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Borrar de la playlist")
-                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de tu playlist?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.borrarPlaylist)
+                .setMessage(resources.getString(R.string.borrarPlaylistPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         this,
-                        "No se ha borrado la canción de tu playlist",
+                        R.string.borrarPlaylistRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     player.clearMediaItems()
                     cambioPlaylist = true
                     borrarPlaylist(it.id)
                     Toast.makeText(
                         this,
-                        "Se ha borrado la canción ${it.nombre} de tu playlist",
+                        R.string.playlistBorrado,
                         Toast.LENGTH_LONG
                     ).show()
 
@@ -461,20 +460,20 @@ class PlaylistActivity : AppCompatActivity(), Player.Listener {
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Borrar de la playlist")
-                .setMessage("¿Quieres borrar la cancion " + it.nombre + " de tu playlist?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.borrarPlaylist)
+                .setMessage(resources.getString(R.string.borrarPlaylistPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
                     Toast.makeText(
                         this,
-                        "No se ha borrado la canción de tu playlist",
+                        R.string.borrarPlaylistRefuse,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     borrarRoom(Musica(it.uid, it.nombre, it.autor, it.album, it.musica))
-                    Toast.makeText(this,"Se ha borrado la canción ${it.nombre} de tu playlist", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,R.string.playlistBorrado, Toast.LENGTH_LONG).show()
                     rellenarDatos()
                 }
                 .show()

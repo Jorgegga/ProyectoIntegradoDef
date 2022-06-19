@@ -367,6 +367,9 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
 
                     setRecycler(introTotal as ArrayList<ReadMusicaAlbumAutor>)
                 }
+            }else{
+                binding.loadingPanel.visibility = View.GONE
+                Toast.makeText(this, R.string.albumVacio, Toast.LENGTH_LONG).show()
             }
 
         }
@@ -399,15 +402,15 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
             reproducir()
         }, {
             MaterialAlertDialogBuilder(this)
-                .setTitle("Añadir a tu playlist")
-                .setMessage("¿Quieres añadir la cancion " + it.nombre + " de tu playlist?")
-                .setNeutralButton("Cancelar") { dialog, which ->
+                .setTitle(R.string.annadirPlaylist)
+                .setMessage(resources.getString(R.string.annadirPlaylistPregunta, it.nombre))
+                .setNeutralButton(R.string.cancelar) { dialog, which ->
                     // Respond to neutral button press
                 }
-                .setNegativeButton("Rechazar") { dialog, which ->
-                    Toast.makeText(this, "No se ha añadido la canción a tu playlist", Toast.LENGTH_LONG).show()
+                .setNegativeButton(R.string.rechazar) { dialog, which ->
+                    Toast.makeText(this, R.string.annadirPlaylistRefuse, Toast.LENGTH_LONG).show()
                 }
-                .setPositiveButton("Aceptar") { dialog, which ->
+                .setPositiveButton(R.string.aceptar) { dialog, which ->
                     comprobarExistePlaylist(it.id)
                 }
                 .show()
@@ -431,7 +434,6 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        Log.d("Escuchando audio...", "Escuchando audio...")
     }
 
     private fun buscarId(music: Int) {
@@ -471,7 +473,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                     if(messageSnapshot.child("music_id").value.toString() == objectId.toString()){
                         Toast.makeText(
                             applicationContext,
-                            "Esa cancion ya esta en tu playlist",
+                            R.string.cancionRepetida,
                             Toast.LENGTH_LONG
                         ).show()
                         return
@@ -481,7 +483,7 @@ class AlbumActivity : AppCompatActivity(), Player.Listener {
                 buscarId(objectId)
                 Toast.makeText(
                     applicationContext,
-                    "Se ha añadido la cancion a tu playlist",
+                    R.string.cancionAnnadida,
                     Toast.LENGTH_LONG
                 ).show()
                 recogerDatosMusica()
