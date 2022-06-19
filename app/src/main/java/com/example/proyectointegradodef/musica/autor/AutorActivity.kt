@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class AutorActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityAutorBinding
-    var tabTitle = arrayOf("Albums", "Musica")
+    var tabTitle = arrayOf("Información", "Albums", "Musica")
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
 

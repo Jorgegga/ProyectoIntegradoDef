@@ -22,17 +22,22 @@ import com.example.proyectointegradodef.musica.music.MusicaFragment
  */
 class AutorAdapterActivity(fragmentManager: FragmentManager, lifecycle: Lifecycle, var bundle: Bundle) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {
         when (position){
             0 -> {
+                var fragment : Fragment = InfoAutorFragment()
+                fragment.arguments = bundle
+                return fragment
+            }
+            1 -> {
                 var fragment : Fragment = AlbumFragment()
                 fragment.arguments = bundle
                 return fragment
             }
-            1 ->{
+            2 ->{
                 var fragment : Fragment = MusicaFragment()
                 fragment.arguments = bundle
                 return fragment

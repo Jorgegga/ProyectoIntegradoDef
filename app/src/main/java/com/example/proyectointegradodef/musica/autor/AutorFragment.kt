@@ -80,6 +80,8 @@ class AutorFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", it.id)
             bundle.putString("nombre", it.nombre)
+            bundle.putString("descripcion", it.descripcion)
+            bundle.putString("foto", it.foto)
             var intent = Intent(context, AutorActivity::class.java)
             intent.putExtras(bundle)
             startActivity(intent)
